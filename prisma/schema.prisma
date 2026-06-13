@@ -1,0 +1,464 @@
+// Prisma schema for the Free Quranic Learning Portal
+// See DATA_MODEL.md for the source entity definitions.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  SUPER_ADMIN
+  TEACHER
+  STUDENT
+  PARENT
+}
+
+enum Language {
+  EN
+  UR
+  AR
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum PathwayLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  WITHDRAWN
+}
+
+enum ClassType {
+  ONE_TO_ONE
+  GROUP
+}
+
+enum ClassStatus {
+  SCHEDULED
+  LIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+}
+
+enum SubmissionContentType {
+  TEXT
+  FILE
+  AUDIO
+}
+
+enum SubmissionStatus {
+  NOT_SUBMITTED
+  SUBMITTED
+  REVIEWED
+}
+
+enum SubjectArea {
+  NAZRA
+  HIFZ
+  TAJWEED
+  TAFSEER
+}
+
+enum NotificationType {
+  CLASS_REMINDER
+  HOMEWORK_ASSIGNED
+  HOMEWORK_GRADED
+  ATTENDANCE_RECORDED
+  MESSAGE
+  CERTIFICATE_ISSUED
+  ANNOUNCEMENT
+}
+
+enum ResourceType {
+  PDF
+  VIDEO
+  AUDIO
+}
+
+// ---------------------------------------------------------------------------
+// Core: User & relationships
+// ---------------------------------------------------------------------------
+
+model User {
+  id                String   @id @default(uuid())
+  name              String
+  email             String   @unique
+  passwordHash      String
+  role              Role
+  preferredLanguage Language @default(EN)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Teacher-specific fields
+  isVolunteer        Boolean?
+  verificationStatus VerificationStatus?
+
+  // Parent <-> Student links
+  childLinks  ParentStudentLink[] @relation("ParentLinks")
+  parentLinks ParentStudentLink[] @relation("StudentLinks")
+
+  // Enrollments (student)
+  enrollments Enrollment[]
+
+  // Teacher availability & sessions
+  availability   TeacherAvailability[]
+  taughtSessions ClassSession[]        @relation("TeacherSessions")
+
+  // Class participation (student)
+  classParticipations ClassParticipant[]
+
+  // Attendance
+  attendances       Attendance[] @relation("StudentAttendance")
+  markedAttendances Attendance[] @relation("MarkerAttendance")
+
+  // Assignments & submissions
+  assignmentsCreated Assignment[] @relation("AssignmentTeacher")
+  submissions        Submission[]
+
+  // Progress
+  progressEntries  ProgressEntry[] @relation("StudentProgress")
+  progressRecorded ProgressEntry[] @relation("ProgressRecorder")
+
+  // Notifications
+  notifications Notification[]
+
+  // Resources
+  resourcesUploaded Resource[]
+
+  // Forum
+  forumPosts   ForumPost[]
+  forumReplies ForumReply[]
+
+  // Certificates
+  certificates Certificate[]
+
+  // Teacher badges
+  badges        TeacherBadge[] @relation("TeacherBadges")
+  badgesAwarded TeacherBadge[] @relation("BadgeAwarder")
+
+  @@map("users")
+}
+
+model ParentStudentLink {
+  id            String   @id @default(uuid())
+  parentUserId  String
+  studentUserId String
+  createdAt     DateTime @default(now())
+
+  parent  User @relation("ParentLinks", fields: [parentUserId], references: [id], onDelete: Cascade)
+  student User @relation("StudentLinks", fields: [studentUserId], references: [id], onDelete: Cascade)
+
+  @@unique([parentUserId, studentUserId])
+  @@map("parent_student_links")
+}
+
+// ---------------------------------------------------------------------------
+// Course & Enrollment
+// ---------------------------------------------------------------------------
+
+model Course {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  enrollments     Enrollment[]
+  classSessions   ClassSession[]
+  assignments     Assignment[]
+  resources       Resource[]
+  certificates    Certificate[]
+  progressEntries ProgressEntry[]
+  forumPosts      ForumPost[]
+
+  @@map("courses")
+}
+
+model Enrollment {
+  id            String           @id @default(uuid())
+  studentUserId String
+  courseId      String
+  pathwayLevel  PathwayLevel     @default(BEGINNER)
+  enrolledAt    DateTime         @default(now())
+  status        EnrollmentStatus @default(ACTIVE)
+
+  student User   @relation(fields: [studentUserId], references: [id], onDelete: Cascade)
+  course  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([studentUserId, courseId])
+  @@map("enrollments")
+}
+
+// ---------------------------------------------------------------------------
+// Scheduling: Availability, Class Sessions, Attendance
+// ---------------------------------------------------------------------------
+
+model TeacherAvailability {
+  id            String    @id @default(uuid())
+  teacherUserId String
+  dayOfWeek     Int?
+  startTime     String
+  endTime       String
+  isRecurring   Boolean   @default(true)
+  specificDate  DateTime?
+
+  teacher User @relation(fields: [teacherUserId], references: [id], onDelete: Cascade)
+
+  @@map("teacher_availabilities")
+}
+
+model ClassSession {
+  id             String      @id @default(uuid())
+  courseId       String
+  teacherUserId  String
+  type           ClassType
+  scheduledStart DateTime
+  scheduledEnd   DateTime
+  status         ClassStatus @default(SCHEDULED)
+  joinUrl        String?
+  roomId         String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  course       Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacher      User               @relation("TeacherSessions", fields: [teacherUserId], references: [id], onDelete: Cascade)
+  participants ClassParticipant[]
+  attendances  Attendance[]
+  assignments  Assignment[]
+  recording    Recording?
+
+  @@map("class_sessions")
+}
+
+model ClassParticipant {
+  id             String @id @default(uuid())
+  classSessionId String
+  studentUserId  String
+
+  classSession ClassSession @relation(fields: [classSessionId], references: [id], onDelete: Cascade)
+  student      User         @relation(fields: [studentUserId], references: [id], onDelete: Cascade)
+
+  @@unique([classSessionId, studentUserId])
+  @@map("class_participants")
+}
+
+model Recording {
+  id              String   @id @default(uuid())
+  classSessionId  String   @unique
+  url             String
+  durationSeconds Int?
+  createdAt       DateTime @default(now())
+
+  classSession ClassSession @relation(fields: [classSessionId], references: [id], onDelete: Cascade)
+
+  @@map("recordings")
+}
+
+model Attendance {
+  id             String           @id @default(uuid())
+  classSessionId String
+  studentUserId  String
+  status         AttendanceStatus
+  markedByUserId String
+  recordedAt     DateTime         @default(now())
+
+  classSession ClassSession @relation(fields: [classSessionId], references: [id], onDelete: Cascade)
+  student      User         @relation("StudentAttendance", fields: [studentUserId], references: [id], onDelete: Cascade)
+  markedBy     User         @relation("MarkerAttendance", fields: [markedByUserId], references: [id], onDelete: Cascade)
+
+  @@unique([classSessionId, studentUserId])
+  @@map("attendances")
+}
+
+// ---------------------------------------------------------------------------
+// Homework: Assignments & Submissions
+// ---------------------------------------------------------------------------
+
+model Assignment {
+  id             String   @id @default(uuid())
+  courseId       String
+  classSessionId String?
+  teacherUserId  String
+  title          String
+  description    String?
+  dueDate        DateTime
+  createdAt      DateTime @default(now())
+
+  course       Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  classSession ClassSession? @relation(fields: [classSessionId], references: [id])
+  teacher      User          @relation("AssignmentTeacher", fields: [teacherUserId], references: [id], onDelete: Cascade)
+  submissions  Submission[]
+
+  @@map("assignments")
+}
+
+model Submission {
+  id            String                @id @default(uuid())
+  assignmentId  String
+  studentUserId String
+  contentType   SubmissionContentType
+  content       String?
+  status        SubmissionStatus      @default(NOT_SUBMITTED)
+  grade         String?
+  feedback      String?
+  submittedAt   DateTime?
+  reviewedAt    DateTime?
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student    User       @relation(fields: [studentUserId], references: [id], onDelete: Cascade)
+
+  @@unique([assignmentId, studentUserId])
+  @@map("submissions")
+}
+
+// ---------------------------------------------------------------------------
+// Progress
+// ---------------------------------------------------------------------------
+
+model ProgressEntry {
+  id                String      @id @default(uuid())
+  studentUserId     String
+  courseId          String
+  subjectArea       SubjectArea
+  description       String
+  level             String?
+  percentComplete   Int?
+  recordedByUserId  String
+  recordedAt        DateTime    @default(now())
+
+  student    User   @relation("StudentProgress", fields: [studentUserId], references: [id], onDelete: Cascade)
+  course     Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  recordedBy User   @relation("ProgressRecorder", fields: [recordedByUserId], references: [id], onDelete: Cascade)
+
+  @@map("progress_entries")
+}
+
+// ---------------------------------------------------------------------------
+// Notifications
+// ---------------------------------------------------------------------------
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType
+  message   String
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+// ---------------------------------------------------------------------------
+// Resource Library
+// ---------------------------------------------------------------------------
+
+model Resource {
+  id               String       @id @default(uuid())
+  courseId         String?
+  type             ResourceType
+  title            String
+  description      String?
+  url              String
+  language         Language     @default(EN)
+  subtitleUrls     Json?
+  uploadedByUserId String
+  createdAt        DateTime     @default(now())
+
+  course     Course? @relation(fields: [courseId], references: [id])
+  uploadedBy User    @relation(fields: [uploadedByUserId], references: [id], onDelete: Cascade)
+
+  @@map("resources")
+}
+
+// ---------------------------------------------------------------------------
+// Forum
+// ---------------------------------------------------------------------------
+
+model ForumPost {
+  id           String   @id @default(uuid())
+  courseId     String?
+  authorUserId String
+  title        String
+  body         String
+  isLocked     Boolean  @default(false)
+  isRemoved    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  course  Course?      @relation(fields: [courseId], references: [id])
+  author  User         @relation(fields: [authorUserId], references: [id], onDelete: Cascade)
+  replies ForumReply[]
+
+  @@map("forum_posts")
+}
+
+model ForumReply {
+  id           String   @id @default(uuid())
+  postId       String
+  authorUserId String
+  body         String
+  isRemoved    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  post   ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author User      @relation(fields: [authorUserId], references: [id], onDelete: Cascade)
+
+  @@map("forum_replies")
+}
+
+// ---------------------------------------------------------------------------
+// Certificates & Teacher Badges
+// ---------------------------------------------------------------------------
+
+model Certificate {
+  id             String       @id @default(uuid())
+  studentUserId  String
+  courseId       String
+  pathwayLevel   PathwayLevel
+  issuedAt       DateTime     @default(now())
+  certificateUrl String?
+
+  student User   @relation(fields: [studentUserId], references: [id], onDelete: Cascade)
+  course  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("certificates")
+}
+
+model TeacherBadge {
+  id              String   @id @default(uuid())
+  teacherUserId   String
+  badgeName       String
+  awardedByUserId String
+  awardedAt       DateTime @default(now())
+
+  teacher   User @relation("TeacherBadges", fields: [teacherUserId], references: [id], onDelete: Cascade)
+  awardedBy User @relation("BadgeAwarder", fields: [awardedByUserId], references: [id], onDelete: Cascade)
+
+  @@map("teacher_badges")
+}

@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // PGlite/Prisma must be excluded from Server Components bundling.
+  serverExternalPackages: ["@electric-sql/pglite", "pglite-prisma-adapter"],
 };
 
 export default nextConfig;
