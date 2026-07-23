@@ -1,4 +1,4 @@
-import {
+﻿import {
   BookOpenText,
   Mic,
   Brain,
@@ -115,15 +115,14 @@ export default async function StudentAssignmentsPage() {
       role="student"
       roleLabel={roleLabel[user.role]}
       userName={user.name}
-      language={user.preferredLanguage as "EN" | "UR" | "AR"}
       title={t("assignments")}
       description={t("assignmentsDesc")}
     >
       <Card className="border-border/80">
         <CardHeader>
-          <CardTitle>Homework</CardTitle>
+          <CardTitle>{t("assignmentsPage.homework")}</CardTitle>
           <CardDescription>
-            {items.length} assignments across your courses
+            {t("assignmentsPage.assignmentsCount", { count: items.length })}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -131,7 +130,7 @@ export default async function StudentAssignmentsPage() {
             <TabsList>
               {tabs.map((tab) => (
                 <TabsTrigger key={tab.value} value={tab.value}>
-                  {tab.label}
+                  {tab.value === "all" ? t("assignmentsPage.tabAll") : tab.value === "pending" ? t("assignmentsPage.tabPending") : tab.value === "submitted" ? t("assignmentsPage.tabSubmitted") : tab.value === "reviewed" ? t("assignmentsPage.tabReviewed") : t("assignmentsPage.tabOverdue")}
                 </TabsTrigger>
               ))}
             </TabsList>
@@ -152,7 +151,7 @@ export default async function StudentAssignmentsPage() {
                     <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-border py-12 text-center">
                       <CheckCircle2 className="size-8 text-muted-foreground" />
                       <p className="text-sm text-muted-foreground">
-                        Nothing here — you&apos;re all caught up!
+                        {t("assignmentsPage.allCaughtUp")}
                       </p>
                     </div>
                   ) : (
@@ -166,10 +165,10 @@ export default async function StudentAssignmentsPage() {
 
                         const dueLabel =
                           status === "reviewed" || status === "submitted"
-                            ? `Submitted ${submission?.submittedAt ? formatDate(submission.submittedAt) : ""}`
+                            ? t("assignmentsPage.submittedOn") + " " + (submission?.submittedAt ? formatDate(submission.submittedAt) : "")
                             : status === "overdue"
-                              ? `Was due ${formatDate(assignment.dueDate)}`
-                              : `Due ${formatDate(assignment.dueDate)}`;
+                              ? t("assignmentsPage.wasDue") + " " + formatDate(assignment.dueDate)
+                              : t("assignmentsPage.due") + " " + formatDate(assignment.dueDate);
 
                         return (
                           <Card key={assignment.id} className="border-border/80">
@@ -190,7 +189,7 @@ export default async function StudentAssignmentsPage() {
                                       className="rounded-full"
                                     >
                                       <meta.icon className="size-3" />{" "}
-                                      {meta.label}
+                                      {status === "reviewed" ? t("assignmentsPage.statusReviewed") : status === "submitted" ? t("assignmentsPage.statusSubmitted") : status === "pending" ? t("assignmentsPage.statusPending") : t("assignmentsPage.statusOverdue")}
                                     </Badge>
                                     {submission?.grade && (
                                       <Badge
@@ -224,11 +223,11 @@ export default async function StudentAssignmentsPage() {
                                 }
                                 className="w-full sm:w-auto"
                               >
-                                {status === "reviewed" && "View Feedback"}
-                                {status === "submitted" && "View Submission"}
+                                {status === "reviewed" && t("assignmentsPage.viewFeedback")}
+                                {status === "submitted" && t("assignmentsPage.viewSubmission")}
                                 {(status === "pending" ||
                                   status === "overdue") &&
-                                  "Submit Work"}
+                                  t("assignmentsPage.submitWork")}
                               </Button>
                             </CardContent>
                           </Card>

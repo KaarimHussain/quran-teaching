@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import {
   BookOpenText,
   Mic,
@@ -72,7 +72,6 @@ export default async function StudentCoursesPage() {
       role="student"
       roleLabel={roleLabel[user.role]}
       userName={user.name}
-      language={user.preferredLanguage as "EN" | "UR" | "AR"}
       title={t("courses")}
       description={t("coursesDesc")}
     >
@@ -81,7 +80,7 @@ export default async function StudentCoursesPage() {
         {/* Enrolled courses */}
         {enrollments.length > 0 && (
           <div className="flex flex-col gap-5">
-            <h2 className="font-heading text-xl text-primary">My Enrolled Courses</h2>
+            <h2 className="font-heading text-xl text-primary">{t("coursesPage.myEnrolledCourses")}</h2>
             {enrollments.map((enrollment) => {
               const Icon = courseIcons[enrollment.course.name] ?? BookOpenText;
               const latestProgress = latestProgressByCourse.get(enrollment.courseId);
@@ -100,7 +99,7 @@ export default async function StudentCoursesPage() {
                             {levelLabel[enrollment.pathwayLevel]}
                           </Badge>
                           <Badge variant={enrollment.status === "ACTIVE" ? "secondary" : "outline"} className="rounded-full">
-                            {enrollment.status === "ACTIVE" ? "Active" : enrollment.status === "COMPLETED" ? "Completed" : "Withdrawn"}
+                            {enrollment.status === "ACTIVE" ? t("coursesPage.active") : enrollment.status === "COMPLETED" ? t("coursesPage.completed") : t("coursesPage.withdrawn")}
                           </Badge>
                         </div>
                         {enrollment.course.description && (
@@ -110,7 +109,7 @@ export default async function StudentCoursesPage() {
                     </div>
                     <Button asChild className="w-full sm:w-auto">
                       <Link href="/student/schedule">
-                        View Schedule <ArrowRight className="size-4" />
+                        {t("coursesPage.viewSchedule")} <ArrowRight className="size-4" />
                       </Link>
                     </Button>
                   </CardHeader>
@@ -119,8 +118,8 @@ export default async function StudentCoursesPage() {
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">
                           {latestProgress
-                            ? latestProgress.description ?? "Progress recorded"
-                            : "No progress recorded yet"}
+                            ? latestProgress.description ?? t("coursesPage.progressRecorded")
+                            : t("coursesPage.noProgressRecorded")}
                         </span>
                         <span className="font-medium text-primary">{percent}%</span>
                       </div>
@@ -137,10 +136,10 @@ export default async function StudentCoursesPage() {
         {availableCourses.length > 0 && (
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-heading text-xl text-primary">Explore More Courses</h2>
+              <h2 className="font-heading text-xl text-primary">{t("coursesPage.exploreMore")}</h2>
               <Button asChild variant="ghost" size="sm">
                 <Link href="/courses">
-                  View Catalog <ArrowRight className="size-3.5" />
+                  {t("coursesPage.viewCatalog")} <ArrowRight className="size-3.5" />
                 </Link>
               </Button>
             </div>
@@ -173,7 +172,7 @@ export default async function StudentCoursesPage() {
         {enrollments.length === 0 && availableCourses.length === 0 && (
           <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border p-12 text-center text-muted-foreground">
             <BookOpenText className="size-8" />
-            <p className="text-sm">No courses available at the moment. Check back soon.</p>
+            <p className="text-sm">{t("coursesPage.noCoursesAvailable")}</p>
           </div>
         )}
       </div>

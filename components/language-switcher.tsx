@@ -25,7 +25,10 @@ export function LanguageSwitcher({ current }: { current: Language }) {
   function handleSelect(lang: Language) {
     const fd = new FormData();
     fd.set("language", lang);
-    startTransition(() => setLanguage(fd));
+    startTransition(async () => {
+      await setLanguage(fd);
+      window.location.reload();
+    });
   }
 
   const currentLabel = languages.find((l) => l.value === current)?.label ?? "EN";

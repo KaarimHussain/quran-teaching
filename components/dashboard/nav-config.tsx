@@ -13,6 +13,8 @@ import {
   Megaphone,
   Heart,
   BarChart3,
+  Bell,
+  FolderOpen,
 } from "lucide-react";
 
 export type NavItem = {
@@ -57,6 +59,9 @@ export const adminNav: NavItem[] = [
   { href: "/admin/courses", labelKey: "courses", icon: BookOpen },
   { href: "/admin/schedule", labelKey: "schedule", icon: CalendarDays },
   { href: "/admin/verifications", labelKey: "verifications", icon: UserCheck },
+  { href: "/admin/certificates", labelKey: "certificates", icon: Award },
+  { href: "/admin/resources", labelKey: "resources", icon: FolderOpen },
+  { href: "/admin/announcements", labelKey: "announcements", icon: Bell },
   { href: "/admin/forum", labelKey: "forum", icon: Megaphone },
   { href: "/admin/reports", labelKey: "reports", icon: BarChart3 },
 ];

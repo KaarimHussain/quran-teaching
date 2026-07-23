@@ -173,7 +173,7 @@ export default async function AdminReportsPage() {
               </span>
               <div className="flex flex-col">
                 <span className="font-heading text-xl text-primary">{totalEnrollments.toLocaleString()}</span>
-                <span className="text-xs text-muted-foreground">Total Enrollments</span>
+                <span className="text-xs text-muted-foreground">{t("reports.totalEnrollments")}</span>
               </div>
             </CardContent>
           </Card>
@@ -184,7 +184,7 @@ export default async function AdminReportsPage() {
               </span>
               <div className="flex flex-col">
                 <span className="font-heading text-xl text-primary">{totalAttendance.toLocaleString()}</span>
-                <span className="text-xs text-muted-foreground">Attendance Records</span>
+                <span className="text-xs text-muted-foreground">{t("reports.attendanceRecords")}</span>
               </div>
             </CardContent>
           </Card>
@@ -195,7 +195,7 @@ export default async function AdminReportsPage() {
               </span>
               <div className="flex flex-col">
                 <span className="font-heading text-xl text-primary">{totalSessions.toLocaleString()}</span>
-                <span className="text-xs text-muted-foreground">Class Sessions</span>
+                <span className="text-xs text-muted-foreground">{t("reports.classSessions")}</span>
               </div>
             </CardContent>
           </Card>
@@ -206,7 +206,7 @@ export default async function AdminReportsPage() {
               </span>
               <div className="flex flex-col">
                 <span className="font-heading text-xl text-primary">{certificateCount.toLocaleString()}</span>
-                <span className="text-xs text-muted-foreground">Certificates Issued</span>
+                <span className="text-xs text-muted-foreground">{t("reports.certificatesIssued")}</span>
               </div>
             </CardContent>
           </Card>
@@ -214,31 +214,31 @@ export default async function AdminReportsPage() {
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <ChartBreakdownCard
-            title="Enrollments by Status"
-            description={`${totalEnrollments.toLocaleString()} total enrollments`}
+            title={t("reports.enrollmentsByStatus")}
+            description={t("reports.totalEnrollmentsCount", { count: totalEnrollments.toLocaleString() })}
             data={enrollmentStatusData}
           />
           <ChartBreakdownCard
-            title="Enrollments by Pathway Level"
-            description="Beginner, Intermediate, Advanced"
+            title={t("reports.enrollmentsByPathway")}
+            description={t("reports.pathwayLevels")}
             data={pathwayData}
           />
           <ChartBreakdownCard
-            title="Attendance Breakdown"
-            description={`${totalAttendance.toLocaleString()} recorded attendances`}
+            title={t("reports.attendanceBreakdown")}
+            description={t("reports.recordedAttendances", { count: totalAttendance.toLocaleString() })}
             data={attendanceData}
           />
           <ChartBreakdownCard
-            title="Class Sessions by Status"
-            description={`${totalSessions.toLocaleString()} total sessions`}
+            title={t("reports.classSessionsByStatus")}
+            description={t("reports.totalSessions", { count: totalSessions.toLocaleString() })}
             data={classStatusData}
           />
         </div>
 
         <Card className="border-border/80">
           <CardHeader>
-            <CardTitle>Top Courses by Enrollment</CardTitle>
-            <CardDescription>Ranked by number of enrolled students</CardDescription>
+            <CardTitle>{t("reports.topCoursesByEnrollment")}</CardTitle>
+            <CardDescription>{t("reports.rankedByEnrolledStudents")}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <EnrollmentChart data={topCourses} />
@@ -257,14 +257,14 @@ export default async function AdminReportsPage() {
                       )}
                     </div>
                     <Badge variant="secondary" className="rounded-full">
-                      {course.enrollments.toLocaleString()} enrolled
+                      {t("reports.enrolled", { count: course.enrollments.toLocaleString() })}
                     </Badge>
                   </div>
                 );
               })}
 
               {topCourses.length === 0 && (
-                <p className="text-sm text-muted-foreground">No courses yet.</p>
+                <p className="text-sm text-muted-foreground">{t("reports.noCourses")}</p>
               )}
             </div>
           </CardContent>

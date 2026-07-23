@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireCurrentUser } from "@/lib/dal";
+import { sendParticipantAddedEmail } from "@/lib/mailer";
 
 async function requireAdmin() {
   const user = await requireCurrentUser();
@@ -100,4 +101,77 @@ export async function cancelClassSession(formData: FormData) {
 
   revalidatePath("/admin/schedule");
   revalidatePath("/admin");
+}
+
+export async function addClassParticipant(formData: FormData) {
+  await requireAdmin();
+
+  const classSessionId = formData.get("classSessionId");
+  const studentUserId = formData.get("studentUserId");
+
+  if (typeof classSessionId !== "string" || typeof studentUserId !== "string") return;
+
+  const [, student, session] = await Promise.all([
+    prisma.classParticipant.upsert({
+      where: { classSessionId_studentUserId: { classSessionId, studentUserId } },
+      update: {},
+      create: { classSessionId, studentUserId },
+    }),
+    prisma.user.findUnique({ where: { id: studentUserId }, select: { email: true, name: true } }),
+    prisma.classSession.findUnique({
+      where: { id: classSessionId },
+      include: { course: { select: { name: true } } },
+    }),
+  ]);
+
+  if (student && session) {
+    void sendParticipantAddedEmail(
+      student.email,
+      student.name,
+      session.course.name,
+      session.scheduledStart,
+      session.joinUrl
+    );
+  }
+
+  revalidatePath("/admin/schedule");
+}
+
+export async function removeClassParticipant(formData: FormData) {
+  await requireAdmin();
+
+  const classSessionId = formData.get("classSessionId");
+  const studentUserId = formData.get("studentUserId");
+
+  if (typeof classSessionId !== "string" || typeof studentUserId !== "string") return;
+
+  await prisma.classParticipant.deleteMany({
+    where: { classSessionId, studentUserId },
+  });
+
+  revalidatePath("/admin/schedule");
+}
+
+export async function upsertAttendance(formData: FormData) {
+  const admin = await requireAdmin();
+
+  const classSessionId = formData.get("classSessionId");
+  const studentUserId = formData.get("studentUserId");
+  const status = formData.get("status");
+
+  if (
+    typeof classSessionId !== "string" ||
+    typeof studentUserId !== "string" ||
+    (status !== "PRESENT" && status !== "ABSENT" && status !== "LATE")
+  ) {
+    return;
+  }
+
+  await prisma.attendance.upsert({
+    where: { classSessionId_studentUserId: { classSessionId, studentUserId } },
+    update: { status, markedByUserId: admin.id, recordedAt: new Date() },
+    create: { classSessionId, studentUserId, status, markedByUserId: admin.id },
+  });
+
+  revalidatePath("/admin/schedule");
 }

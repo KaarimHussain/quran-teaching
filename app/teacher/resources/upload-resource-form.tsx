@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
-import { UploadCloud } from "lucide-react";
+import { useActionState, useState, useRef } from "react";
+import { UploadCloud, Loader2, Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,6 +19,31 @@ type Option = { id: string; name: string };
 
 export function UploadResourceForm({ courses }: { courses: Option[] }) {
   const [state, formAction, pending] = useActionState(uploadResource, undefined);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedUrl, setUploadedUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setFileName(file.name);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (data.url) {
+        setUploadedUrl(data.url);
+      } else {
+        setUploadedUrl("");
+        alert(data.error ?? "Upload failed");
+      }
+    } finally {
+      setUploading(false);
+    }
+  }
 
   return (
     <form action={formAction} className="flex flex-col gap-3">
@@ -59,9 +84,50 @@ export function UploadResourceForm({ courses }: { courses: Option[] }) {
           <Input id="resource-title" name="title" placeholder="e.g. Surah Al-Fatiha Recitation Audio" required />
         </div>
 
+        {/* File upload */}
         <div className="flex flex-col gap-2 sm:col-span-2">
-          <Label htmlFor="resource-url">URL</Label>
-          <Input id="resource-url" name="url" placeholder="https://..." required />
+          <Label>Upload File</Label>
+          <div
+            className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed border-border p-4 text-center transition-colors hover:border-primary hover:bg-primary/5"
+            onClick={() => fileRef.current?.click()}
+          >
+            {uploading ? (
+              <Loader2 className="size-5 animate-spin text-muted-foreground" />
+            ) : (
+              <UploadCloud className="size-5 text-muted-foreground" />
+            )}
+            <span className="text-xs text-muted-foreground">
+              {uploading
+                ? "Uploading…"
+                : fileName
+                ? fileName
+                : "Click to select a file (PDF, MP3, MP4 — max 50 MB)"}
+            </span>
+            {uploadedUrl && (
+              <span className="flex items-center gap-1 text-xs text-green-600">
+                <Link className="size-3" /> Uploaded
+              </span>
+            )}
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".pdf,.mp3,.mp4,.wav,.webm,.ogg,.m4a"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </div>
+        </div>
+
+        {/* Hidden URL field populated by upload or typed manually */}
+        <div className="flex flex-col gap-2 sm:col-span-2">
+          <Label htmlFor="resource-url">Or paste a URL</Label>
+          <Input
+            id="resource-url"
+            name="url"
+            placeholder="https://…"
+            value={uploadedUrl}
+            onChange={(e) => setUploadedUrl(e.target.value)}
+          />
         </div>
 
         <div className="flex flex-col gap-2 sm:col-span-2">
@@ -71,8 +137,8 @@ export function UploadResourceForm({ courses }: { courses: Option[] }) {
       </div>
 
       <div className="flex items-center gap-3">
-        <Button type="submit" disabled={pending} className="rounded-full">
-          <UploadCloud className="size-4" /> {pending ? "Uploading…" : "Upload Resource"}
+        <Button type="submit" disabled={pending || uploading} className="rounded-full">
+          <UploadCloud className="size-4" /> {pending ? "Saving…" : "Upload Resource"}
         </Button>
         {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
       </div>

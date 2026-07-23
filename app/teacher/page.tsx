@@ -131,10 +131,10 @@ export default async function TeacherDashboardPage() {
     progressEntries.find((p) => p.studentUserId === studentId && p.courseId === courseId)?.percentComplete ?? 0;
 
   const stats = [
-    { label: "Active Students", value: activeStudents.length, icon: Users, color: "bg-primary/10 text-primary" },
-    { label: "Classes This Week", value: classesThisWeek, icon: CalendarDays, color: "bg-accent/20 text-accent-foreground" },
-    { label: "Pending Grading", value: pendingGradingCount, icon: ClipboardList, color: "bg-secondary/30 text-secondary-foreground" },
-    { label: "Badges Earned", value: badgesCount, icon: Award, color: "bg-chart-4/10 text-chart-4" },
+    { label: t("dash.activeStudents"), value: activeStudents.length, icon: Users, color: "bg-primary/10 text-primary" },
+    { label: t("dash.classesThisWeek"), value: classesThisWeek, icon: CalendarDays, color: "bg-accent/20 text-accent-foreground" },
+    { label: t("dash.pendingGrading"), value: pendingGradingCount, icon: ClipboardList, color: "bg-secondary/30 text-secondary-foreground" },
+    { label: t("dash.badgesEarned"), value: badgesCount, icon: Award, color: "bg-chart-4/10 text-chart-4" },
   ];
 
   const verification = verificationMeta[currentUser.verificationStatus ?? "PENDING"];
@@ -172,12 +172,12 @@ export default async function TeacherDashboardPage() {
             <Card className="border-border/80">
               <CardHeader className="flex-row items-center justify-between">
                 <div>
-                  <CardTitle>Upcoming Classes</CardTitle>
-                  <CardDescription>Your next scheduled sessions</CardDescription>
+                  <CardTitle>{t("dash.upcomingClasses")}</CardTitle>
+                  <CardDescription>{t("dash.nextScheduledSessions")}</CardDescription>
                 </div>
                 <Button asChild variant="ghost" size="sm" className="rounded-full">
                   <Link href="/teacher/classes">
-                    View All <ArrowRight className="size-3.5" />
+                    {t("dash.viewAll")} <ArrowRight className="size-3.5" />
                   </Link>
                 </Button>
               </CardHeader>
@@ -223,7 +223,7 @@ export default async function TeacherDashboardPage() {
                 {upcomingSessions.length === 0 && (
                   <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border p-8 text-center text-muted-foreground">
                     <CalendarDays className="size-6" />
-                    <span className="text-sm">No upcoming sessions scheduled.</span>
+                    <span className="text-sm">{t("dash.noUpcomingSessions")}</span>
                   </div>
                 )}
               </CardContent>
@@ -233,12 +233,12 @@ export default async function TeacherDashboardPage() {
             <Card className="border-border/80">
               <CardHeader className="flex-row items-center justify-between">
                 <div>
-                  <CardTitle>My Students</CardTitle>
-                  <CardDescription>Recent enrollments across your courses</CardDescription>
+                  <CardTitle>{t("dash.myStudents")}</CardTitle>
+                  <CardDescription>{t("dash.recentEnrollments")}</CardDescription>
                 </div>
                 <Button asChild variant="ghost" size="sm" className="rounded-full">
                   <Link href="/teacher/students">
-                    View All <ArrowRight className="size-3.5" />
+                    {t("dash.viewAll")} <ArrowRight className="size-3.5" />
                   </Link>
                 </Button>
               </CardHeader>
@@ -262,7 +262,7 @@ export default async function TeacherDashboardPage() {
                 })}
 
                 {enrollments.length === 0 && (
-                  <p className="text-sm text-muted-foreground">No students enrolled in your courses yet.</p>
+                  <p className="text-sm text-muted-foreground">{t("dash.noStudentsEnrolled")}</p>
                 )}
               </CardContent>
             </Card>
@@ -273,10 +273,10 @@ export default async function TeacherDashboardPage() {
             {/* Assignments to grade */}
             <Card className="border-border/80">
               <CardHeader className="flex-row items-center justify-between">
-                <CardTitle>Assignments to Grade</CardTitle>
+                <CardTitle>{t("dash.assignmentsToGrade")}</CardTitle>
                 <Button asChild variant="ghost" size="sm" className="rounded-full">
                   <Link href="/teacher/assignments">
-                    All <ArrowRight className="size-3.5" />
+                    {t("dash.all")} <ArrowRight className="size-3.5" />
                   </Link>
                 </Button>
               </CardHeader>
@@ -295,7 +295,7 @@ export default async function TeacherDashboardPage() {
                       </div>
                     </div>
                     <Badge variant="outline" className="shrink-0 rounded-full">
-                      Submitted
+                      {t("dash.submitted")}
                     </Badge>
                   </div>
                 ))}
@@ -303,7 +303,7 @@ export default async function TeacherDashboardPage() {
                 {gradingQueue.length === 0 && (
                   <div className="flex flex-col items-center gap-2 py-4 text-center text-muted-foreground">
                     <CheckCircle2 className="size-6" />
-                    <span className="text-sm">All caught up — nothing to grade.</span>
+                    <span className="text-sm">{t("dash.allCaughtUpGrading")}</span>
                   </div>
                 )}
               </CardContent>
@@ -312,10 +312,10 @@ export default async function TeacherDashboardPage() {
             {/* Availability */}
             <Card className="border-border/80">
               <CardHeader className="flex-row items-center justify-between">
-                <CardTitle>Availability</CardTitle>
+                <CardTitle>{t("dash.availability")}</CardTitle>
                 <Button asChild variant="ghost" size="sm" className="rounded-full">
                   <Link href="/teacher/availability">
-                    Manage <ArrowRight className="size-3.5" />
+                    {t("dash.manage")} <ArrowRight className="size-3.5" />
                   </Link>
                 </Button>
               </CardHeader>
@@ -323,7 +323,7 @@ export default async function TeacherDashboardPage() {
                 {availability.map((slot) => (
                   <div key={slot.id} className="flex items-center justify-between rounded-lg bg-muted px-3 py-2 text-sm">
                     <span className="font-medium">
-                      {slot.dayOfWeek !== null ? dayLabels[slot.dayOfWeek] : "One-off"}
+                      {slot.dayOfWeek !== null ? dayLabels[slot.dayOfWeek] : t("dash.oneOff")}
                     </span>
                     <span className="text-muted-foreground">
                       {slot.startTime} – {slot.endTime}
@@ -332,7 +332,7 @@ export default async function TeacherDashboardPage() {
                 ))}
 
                 {availability.length === 0 && (
-                  <p className="text-sm text-muted-foreground">No availability set yet.</p>
+                  <p className="text-sm text-muted-foreground">{t("dash.noAvailabilitySet")}</p>
                 )}
               </CardContent>
             </Card>
@@ -344,9 +344,9 @@ export default async function TeacherDashboardPage() {
                   <verification.icon className="size-5" />
                 </span>
                 <div className="flex flex-col">
-                  <span className="font-heading text-sm">{verification.label}</span>
+                  <span className="font-heading text-sm">{currentUser.verificationStatus === "VERIFIED" ? t("dash.verifiedTeacher") : currentUser.verificationStatus === "REJECTED" ? t("dash.verificationRejected") : t("dash.verificationPending")}</span>
                   <span className="text-xs opacity-80">
-                    {currentUser.isVolunteer ? "Volunteer Teacher" : "Paid Teacher"}
+                    {currentUser.isVolunteer ? t("dash.volunteerTeacher") : t("dash.paidTeacher")}
                   </span>
                 </div>
               </CardContent>

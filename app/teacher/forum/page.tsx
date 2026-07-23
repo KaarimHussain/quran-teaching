@@ -65,8 +65,8 @@ export default async function TeacherForumPage() {
       <div className="flex flex-col gap-6">
         <Card className="border-border/80">
           <CardHeader>
-            <CardTitle>Start a Discussion</CardTitle>
-            <CardDescription>Share an announcement or ask the community a question.</CardDescription>
+            <CardTitle>{t("forumPage.startDiscussion")}</CardTitle>
+            <CardDescription>{t("forumPage.startDiscussionDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
             <NewPostForm courses={courses} />
@@ -76,9 +76,9 @@ export default async function TeacherForumPage() {
         <Card className="border-border/80">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <MessagesSquare className="size-4" /> Recent Discussions
+              <MessagesSquare className="size-4" /> {t("forumPage.recentDiscussions")}
             </CardTitle>
-            <CardDescription>{posts.length} active threads</CardDescription>
+            <CardDescription>{t("forumPage.activeThreads", { count: posts.length })}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             {posts.map((post) => (
@@ -94,9 +94,9 @@ export default async function TeacherForumPage() {
                     </div>
                     <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                       <Badge variant="outline" className="rounded-full">
-                        {post.course?.name ?? "General Discussion"}
+                        {post.course?.name ?? t("forumPage.generalDiscussion")}
                       </Badge>
-                      <span>by {post.author.name}</span>
+                      <span>{t("forumPage.by")} {post.author.name}</span>
                       <span>· {formatRelativeTime(post.createdAt)}</span>
                     </div>
                     <p className="text-sm text-muted-foreground">{post.body}</p>
@@ -131,7 +131,7 @@ export default async function TeacherForumPage() {
             ))}
 
             {posts.length === 0 && (
-              <p className="text-sm text-muted-foreground">No discussions yet — start the first one above.</p>
+              <p className="text-sm text-muted-foreground">{t("forumPage.noDiscussions")}</p>
             )}
           </CardContent>
         </Card>

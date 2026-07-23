@@ -3,18 +3,21 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
-import { requireCurrentUser } from "@/lib/dal";
+import { getCurrentUser } from "@/lib/dal";
 
 export async function setLanguage(formData: FormData) {
   const lang = formData.get("language");
   if (lang !== "EN" && lang !== "UR" && lang !== "AR") return;
 
-  const user = await requireCurrentUser();
-
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { preferredLanguage: lang },
-  });
+  // Update DB preference only when logged in; cookie is always set so
+  // unauthenticated pages (home, login, register) also respect the choice.
+  const user = await getCurrentUser();
+  if (user) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { preferredLanguage: lang },
+    });
+  }
 
   const cookieStore = await cookies();
   cookieStore.set("locale", lang, {

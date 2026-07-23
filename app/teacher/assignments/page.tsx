@@ -1,4 +1,4 @@
-import { ClipboardList, Calendar, CheckCircle2, FileClock, AlertCircle } from "lucide-react";
+﻿import { ClipboardList, Calendar, CheckCircle2, FileClock, AlertCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -69,13 +69,13 @@ export default async function TeacherAssignmentsPage() {
       <div className="flex flex-col gap-6">
         <Card className="border-border/80">
           <CardHeader>
-            <CardTitle>Create Assignment</CardTitle>
-            <CardDescription>Assign homework to one of your courses</CardDescription>
+            <CardTitle>{t("assignmentsPage.createAssignment")}</CardTitle>
+            <CardDescription>{t("assignmentsPage.createAssignmentDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
             {courses.length === 0 ? (
               <p className="text-sm text-muted-foreground">
-                You don&apos;t have any courses yet — once you're assigned a class session, you can create assignments.
+                {t("assignmentsPage.noCoursesYet")}
               </p>
             ) : (
               <CreateAssignmentForm courses={courses} />
@@ -86,10 +86,10 @@ export default async function TeacherAssignmentsPage() {
         <Card className="border-border/80">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <ClipboardList className="size-4" /> Your Assignments
+              <ClipboardList className="size-4" /> {t("assignmentsPage.yourAssignments")}
             </CardTitle>
             <CardDescription>
-              {assignments.length === 0 ? "No assignments yet." : `${assignments.length} assignment${assignments.length === 1 ? "" : "s"}`}
+              {assignments.length === 0 ? t("assignmentsPage.noAssignmentsYet") : t("assignmentsPage.assignmentCount", { count: assignments.length })}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
@@ -108,18 +108,18 @@ export default async function TeacherAssignmentsPage() {
                         <span className="text-xs text-muted-foreground">{assignment.description}</span>
                       )}
                       <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <Calendar className="size-3.5" /> Due {formatDateTime(assignment.dueDate)}
+                        <Calendar className="size-3.5" /> {t("assignmentsPage.due")} {formatDateTime(assignment.dueDate)}
                       </span>
                     </div>
                     {needsGrading.length > 0 && (
-                      <Badge className="rounded-full">{needsGrading.length} to grade</Badge>
+                      <Badge className="rounded-full">{t("assignmentsPage.toGrade", { count: needsGrading.length })}</Badge>
                     )}
                   </div>
 
                   {total > 0 && (
                     <div className="flex flex-col gap-1">
                       <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>Reviewed</span>
+                        <span>{t("assignmentsPage.reviewed")}</span>
                         <span>{reviewed}/{total}</span>
                       </div>
                       <Progress value={(reviewed / total) * 100} />
@@ -141,10 +141,10 @@ export default async function TeacherAssignmentsPage() {
                               </span>
                               <div className="flex items-center gap-2">
                                 {submission.grade && (
-                                  <Badge variant="outline" className="rounded-full">Grade: {submission.grade}</Badge>
+                                  <Badge variant="outline" className="rounded-full">{t("assignmentsPage.grade")}: {submission.grade}</Badge>
                                 )}
                                 <Badge variant={meta.variant} className="rounded-full">
-                                  <meta.icon className="size-3" /> {meta.label}
+                                  <meta.icon className="size-3" /> {submission.status === "REVIEWED" ? t("assignmentsPage.reviewedStatus") : submission.status === "SUBMITTED" ? t("assignmentsPage.submittedStatus") : t("assignmentsPage.notSubmittedStatus")}
                                 </Badge>
                               </div>
                             </div>
@@ -164,7 +164,7 @@ export default async function TeacherAssignmentsPage() {
             })}
 
             {assignments.length === 0 && (
-              <p className="text-sm text-muted-foreground">Create your first assignment above.</p>
+              <p className="text-sm text-muted-foreground">{t("assignmentsPage.createFirstAssignment")}</p>
             )}
           </CardContent>
         </Card>

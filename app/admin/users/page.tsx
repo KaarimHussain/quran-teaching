@@ -1,4 +1,4 @@
-import { Search, Users as UsersIcon, UserCheck, UserX, GraduationCap, BookOpenCheck, Heart, ShieldCheck, Link2 } from "lucide-react";
+﻿import { Search, Users as UsersIcon, UserCheck, UserX, GraduationCap, BookOpenCheck, Heart, ShieldCheck, Link2 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -77,9 +77,9 @@ export default async function AdminUsersPage({
   const activeRate = totalUsers === 0 ? 0 : Math.round((activeCount / totalUsers) * 100);
 
   const stats = [
-    { label: "Total Users", value: totalUsers, icon: UsersIcon, color: "bg-primary/10 text-primary" },
-    { label: "Active", value: activeCount, icon: UserCheck, color: "bg-chart-4/10 text-chart-4" },
-    { label: "Suspended", value: suspendedCount, icon: UserX, color: "bg-destructive/10 text-destructive" },
+    { label: t("usersPage.totalUsers"), value: totalUsers, icon: UsersIcon, color: "bg-primary/10 text-primary" },
+    { label: t("usersPage.active"), value: activeCount, icon: UserCheck, color: "bg-chart-4/10 text-chart-4" },
+    { label: t("usersPage.suspended"), value: suspendedCount, icon: UserX, color: "bg-destructive/10 text-destructive" },
   ];
 
   return (
@@ -108,7 +108,7 @@ export default async function AdminUsersPage({
           <Card size="sm" className="border-border/80">
             <CardContent className="flex flex-col gap-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Active Rate</span>
+                <span className="text-muted-foreground">{t("usersPage.activeRate")}</span>
                 <span className="font-heading text-primary">{activeRate}%</span>
               </div>
               <Progress value={activeRate} />
@@ -118,9 +118,9 @@ export default async function AdminUsersPage({
 
         <Card className="border-border/80">
           <CardHeader>
-            <CardTitle>All Users</CardTitle>
+            <CardTitle>{t("usersPage.allUsers")}</CardTitle>
             <CardDescription>
-              {query ? `Showing results for "${query}"` : `${users.length} accounts`}
+              {query ? t("usersPage.showingResultsFor", { query }) : t("usersPage.accounts", { count: users.length })}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
@@ -131,12 +131,12 @@ export default async function AdminUsersPage({
                   type="search"
                   name="q"
                   defaultValue={query}
-                  placeholder="Search by name or email…"
+                  placeholder={t("usersPage.searchPlaceholder")}
                   className="pl-9"
                 />
               </div>
               <Button type="submit" variant="outline" className="rounded-full">
-                Search
+                {t("usersPage.search")}
               </Button>
             </form>
 
@@ -160,7 +160,7 @@ export default async function AdminUsersPage({
                         {roleLabel[user.role]}
                       </Badge>
                       <Badge variant={user.isActive ? "default" : "destructive"} className="rounded-full">
-                        {user.isActive ? "Active" : "Suspended"}
+                        {user.isActive ? t("usersPage.active") : t("usersPage.suspended")}
                       </Badge>
                       {user.id !== currentUser.id && (
                         <form action={toggleUserActive}>
@@ -169,9 +169,9 @@ export default async function AdminUsersPage({
                             size="sm"
                             variant="outline"
                             className="rounded-full"
-                            pendingLabel="Saving…"
+                            pendingLabel={t("usersPage.saving")}
                           >
-                            {user.isActive ? "Suspend" : "Activate"}
+                            {user.isActive ? t("usersPage.suspend") : t("usersPage.activate")}
                           </SubmitButton>
                         </form>
                       )}
@@ -183,7 +183,7 @@ export default async function AdminUsersPage({
               {users.length === 0 && (
                 <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border p-8 text-center text-muted-foreground">
                   <UsersIcon className="size-6" />
-                  <span className="text-sm">No users match your search.</span>
+                  <span className="text-sm">{t("usersPage.noUsersMatch")}</span>
                 </div>
               )}
             </div>
@@ -193,21 +193,21 @@ export default async function AdminUsersPage({
         <Card className="border-border/80">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Link2 className="size-4" /> Parent–Student Links
+              <Link2 className="size-4" /> {t("usersPage.parentStudentLinks")}
             </CardTitle>
-            <CardDescription>Link parent accounts to their children's student accounts.</CardDescription>
+            <CardDescription>{t("usersPage.parentStudentLinksDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-6">
             <LinkParentForm parents={parents} students={students} />
 
             {existingLinks.length > 0 && (
               <div className="flex flex-col gap-2">
-                <p className="text-sm font-medium text-muted-foreground">Existing links</p>
+                <p className="text-sm font-medium text-muted-foreground">{t("usersPage.existingLinks")}</p>
                 {existingLinks.map((link) => (
                   <div key={`${link.parentUserId}-${link.studentUserId}`} className="flex items-center justify-between rounded-lg border border-border p-3 text-sm">
                     <span>
                       <span className="font-medium">{link.parent.name}</span>
-                      <span className="mx-2 text-muted-foreground">→</span>
+                      <span className="mx-2 text-muted-foreground">â†’</span>
                       <span className="font-medium">{link.student.name}</span>
                     </span>
                     <form action={unlinkParentFromStudent}>
@@ -217,9 +217,9 @@ export default async function AdminUsersPage({
                         variant="outline"
                         size="sm"
                         className="rounded-full text-destructive hover:text-destructive"
-                        pendingLabel="Removing…"
+                        pendingLabel={t("usersPage.removing")}
                       >
-                        Unlink
+                        {t("usersPage.unlink")}
                       </SubmitButton>
                     </form>
                   </div>

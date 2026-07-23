@@ -1,4 +1,4 @@
-import { CalendarDays, CalendarClock, History, Film, User } from "lucide-react";
+import { CalendarDays, CalendarClock, History, Film, User, Radio, StopCircle, ExternalLink } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import { prisma } from "@/lib/db";
 import { requireCurrentUser } from "@/lib/dal";
 import { roleLabel } from "@/lib/roles";
 import { formatDateTime } from "@/lib/format";
-import { markAttendance } from "./actions";
+import { markAttendance, goLive, endSession } from "./actions";
 
 function initials(name: string) {
   return name
@@ -80,10 +80,10 @@ export default async function TeacherClassesPage() {
         <Card className="border-border/80">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <CalendarClock className="size-4" /> Upcoming Sessions
+              <CalendarClock className="size-4" /> {t("classesPage.upcomingSessions")}
             </CardTitle>
             <CardDescription>
-              {upcoming.length === 0 ? "Nothing scheduled." : `${upcoming.length} session${upcoming.length === 1 ? "" : "s"}`}
+              {upcoming.length === 0 ? t("classesPage.nothingScheduled") : t("classesPage.sessionCount", { count: upcoming.length })}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
@@ -114,6 +114,31 @@ export default async function TeacherClassesPage() {
                   <Badge variant={statusVariant[session.status]} className="rounded-full">
                     {session.status}
                   </Badge>
+                  {session.status === "SCHEDULED" && (
+                    <form action={goLive}>
+                      <input type="hidden" name="sessionId" value={session.id} />
+                      <Button type="submit" size="sm" className="rounded-full bg-red-500 text-white hover:bg-red-600">
+                        <Radio className="size-3.5" /> {t("classesPage.goLive")}
+                      </Button>
+                    </form>
+                  )}
+                  {session.status === "LIVE" && (
+                    <div className="flex items-center gap-2">
+                      {session.joinUrl && (
+                        <Button size="sm" variant="outline" className="rounded-full" asChild>
+                          <a href={session.joinUrl} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="size-3.5" /> {t("classesPage.openRoom")}
+                          </a>
+                        </Button>
+                      )}
+                      <form action={endSession}>
+                        <input type="hidden" name="sessionId" value={session.id} />
+                        <Button type="submit" size="sm" variant="destructive" className="rounded-full">
+                          <StopCircle className="size-3.5" /> {t("classesPage.endSession")}
+                        </Button>
+                      </form>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -121,7 +146,7 @@ export default async function TeacherClassesPage() {
             {upcoming.length === 0 && (
               <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border p-8 text-center text-muted-foreground">
                 <CalendarDays className="size-6" />
-                <span className="text-sm">No upcoming sessions.</span>
+                <span className="text-sm">{t("classesPage.noUpcomingSessions")}</span>
               </div>
             )}
           </CardContent>
@@ -130,10 +155,10 @@ export default async function TeacherClassesPage() {
         <Card className="border-border/80">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <History className="size-4" /> Past Sessions & Attendance
+              <History className="size-4" /> {t("classesPage.pastSessions")}
             </CardTitle>
             <CardDescription>
-              {past.length === 0 ? "No history yet." : `${past.length} session${past.length === 1 ? "" : "s"}`}
+              {past.length === 0 ? t("classesPage.noHistory") : t("classesPage.sessionCount", { count: past.length })}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
@@ -153,7 +178,7 @@ export default async function TeacherClassesPage() {
                     <div className="flex items-center gap-2">
                       {session.recording && (
                         <Badge variant="outline" className="rounded-full">
-                          <Film className="size-3" /> Recording
+                          <Film className="size-3" /> {t("classesPage.recording")}
                         </Badge>
                       )}
                       <Badge variant={statusVariant[session.status]} className="rounded-full">
@@ -165,7 +190,7 @@ export default async function TeacherClassesPage() {
                   {session.status === "COMPLETED" && (
                     <div className="flex flex-col gap-2 border-t border-border pt-3">
                       {session.participants.length === 0 && (
-                        <p className="text-sm text-muted-foreground">No participants on this session.</p>
+                        <p className="text-sm text-muted-foreground">{t("classesPage.noParticipants")}</p>
                       )}
                       {session.participants.map((participant) => {
                         const current = attendanceByStudent.get(participant.student.id);
@@ -189,7 +214,7 @@ export default async function TeacherClassesPage() {
                                     variant={current === status ? attendanceMeta[status].variant : "outline"}
                                     className="rounded-full"
                                   >
-                                    {attendanceMeta[status].label}
+                                    {status === "PRESENT" ? t("classesPage.present") : status === "ABSENT" ? t("classesPage.absent") : t("classesPage.late")}
                                   </Button>
                                 </form>
                               ))}
@@ -206,7 +231,7 @@ export default async function TeacherClassesPage() {
             {past.length === 0 && (
               <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border p-8 text-center text-muted-foreground">
                 <User className="size-6" />
-                <span className="text-sm">No past sessions yet.</span>
+                <span className="text-sm">{t("classesPage.noPastSessions")}</span>
               </div>
             )}
           </CardContent>

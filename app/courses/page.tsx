@@ -8,6 +8,7 @@ import {
   Landmark,
   ArrowRight,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -20,55 +21,25 @@ import {
 } from "@/components/ui/card";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { prisma } from "@/lib/db";
 
-const courses = [
-  {
-    name: "Nazra Quran",
-    icon: BookOpenText,
-    description:
-      "Learn to read the Quran with correct pronunciation — from Arabic letters and connected reading through to fluent recitation.",
-    levels: ["Beginner", "Intermediate"],
-  },
-  {
-    name: "Tajweed",
-    icon: Mic,
-    description:
-      "Master the rules of Quranic recitation — articulation points, elongation, and rhythm — to recite with beauty and precision.",
-    levels: ["Beginner", "Intermediate", "Advanced"],
-  },
-  {
-    name: "Hifz-ul-Quran",
-    icon: Brain,
-    description:
-      "Memorize the Holy Quran with a structured revision plan and one-to-one guidance from dedicated Hifz teachers.",
-    levels: ["Intermediate", "Advanced"],
-  },
-  {
-    name: "Tafseer",
-    icon: ScrollText,
-    description:
-      "Understand the meaning, context, and lessons behind Quranic verses, connecting recitation with reflection.",
-    levels: ["Intermediate", "Advanced"],
-  },
-  {
-    name: "Salah (Prayer Practice)",
-    icon: Sunrise,
-    description:
-      "Learn the correct method, timings, and spiritual essence of the five daily prayers, step by step.",
-    levels: ["Beginner"],
-  },
-  {
-    name: "Islamic Studies",
-    icon: Landmark,
-    description:
-      "Explore the foundations of Islamic belief, history, ethics, and daily practice for learners of all ages.",
-    levels: ["Beginner", "Intermediate", "Advanced"],
-  },
-];
+const courseIcons: Record<string, LucideIcon> = {
+  "Nazra Quran": BookOpenText,
+  Tajweed: Mic,
+  "Hifz-ul-Quran": Brain,
+  Tafseer: ScrollText,
+  "Salah (Prayer Practice)": Sunrise,
+  "Islamic Studies": Landmark,
+};
 
 const languages = ["English", "Urdu", "Arabic"];
 
-export default function CoursesPage() {
+export default async function CoursesPage() {
+  const courses = await prisma.course.findMany({
+    where: { isActive: true },
+    orderBy: { name: "asc" },
+  });
+
   return (
     <div className="flex min-h-full flex-col">
       <SiteHeader />
@@ -97,35 +68,46 @@ export default function CoursesPage() {
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {courses.map((course) => (
-              <Card key={course.name} className="flex flex-col border-border/80">
-                <CardHeader>
-                  <span className="mb-2 flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <course.icon className="size-5" />
-                  </span>
-                  <CardTitle className="text-lg">{course.name}</CardTitle>
-                  <CardDescription className="text-sm leading-relaxed">
-                    {course.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="mt-auto flex flex-wrap gap-1.5">
-                  {course.levels.map((level) => (
-                    <Badge key={level} variant="outline" className="rounded-full">
-                      {level}
-                    </Badge>
-                  ))}
-                </CardContent>
-                <CardFooter>
-                  <Button asChild className="w-full rounded-full">
-                    <Link href="/register">
-                      Enroll Now <ArrowRight className="size-4" />
-                    </Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
+          {courses.length === 0 ? (
+            <p className="text-center text-sm text-muted-foreground">
+              No courses available yet. Check back soon.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {courses.map((course) => {
+                const Icon = courseIcons[course.name] ?? BookOpenText;
+                return (
+                  <Card key={course.id} className="flex flex-col border-border/80">
+                    <CardHeader>
+                      <span className="mb-2 flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                        <Icon className="size-5" />
+                      </span>
+                      <CardTitle className="text-lg">{course.name}</CardTitle>
+                      {course.description && (
+                        <CardDescription className="text-sm leading-relaxed">
+                          {course.description}
+                        </CardDescription>
+                      )}
+                    </CardHeader>
+                    <CardContent className="mt-auto flex flex-wrap gap-1.5">
+                      {(["Beginner", "Intermediate", "Advanced"] as const).map((level) => (
+                        <Badge key={level} variant="outline" className="rounded-full">
+                          {level}
+                        </Badge>
+                      ))}
+                    </CardContent>
+                    <CardFooter>
+                      <Button asChild className="w-full rounded-full">
+                        <Link href="/register">
+                          Enroll Now <ArrowRight className="size-4" />
+                        </Link>
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6 sm:pb-24">

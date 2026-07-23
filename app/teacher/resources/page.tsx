@@ -1,4 +1,4 @@
-import { FileText, Video, Headphones, Library, Trash2 } from "lucide-react";
+﻿import { FileText, Video, Headphones, Library, Trash2 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -66,8 +66,8 @@ export default async function TeacherResourcesPage() {
       <div className="flex flex-col gap-6">
         <Card className="border-border/80">
           <CardHeader>
-            <CardTitle>Upload Resource</CardTitle>
-            <CardDescription>Share a file with students in one of your courses, or with everyone.</CardDescription>
+            <CardTitle>{t("resourcesPage.uploadResource")}</CardTitle>
+            <CardDescription>{t("resourcesPage.uploadResourceDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
             <UploadResourceForm courses={courses} />
@@ -77,10 +77,10 @@ export default async function TeacherResourcesPage() {
         <Card className="border-border/80">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Library className="size-4" /> Your Resource Library
+              <Library className="size-4" /> {t("resourcesPage.yourLibrary")}
             </CardTitle>
             <CardDescription>
-              {resources.length === 0 ? "Nothing uploaded yet." : `${resources.length} resource${resources.length === 1 ? "" : "s"}`}
+              {resources.length === 0 ? t("resourcesPage.nothingUploaded") : t("resourcesPage.resourceCount", { count: resources.length })}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -95,7 +95,7 @@ export default async function TeacherResourcesPage() {
                       </span>
                       <div className="flex flex-col gap-1">
                         <span className="text-sm font-medium leading-tight">{resource.title}</span>
-                        <span className="text-xs text-muted-foreground">{resource.course?.name ?? "General"}</span>
+                        <span className="text-xs text-muted-foreground">{resource.course?.name ?? t("resourcesPage.general")}</span>
                       </div>
                     </div>
                     {resource.description && (
@@ -103,12 +103,12 @@ export default async function TeacherResourcesPage() {
                     )}
                     <div className="flex items-center justify-between">
                       <Badge variant="outline" className="rounded-full">
-                        {typeLabel[resource.type]}
+                        {resource.type === "PDF" ? t("resourcesPage.document") : resource.type === "VIDEO" ? t("resourcesPage.video") : t("resourcesPage.audio")}
                       </Badge>
                       <form action={deleteResource}>
                         <input type="hidden" name="id" value={resource.id} />
                         <Button type="submit" size="sm" variant="ghost" className="text-muted-foreground hover:text-destructive">
-                          <Trash2 className="size-3.5" /> Remove
+                          <Trash2 className="size-3.5" /> {t("resourcesPage.remove")}
                         </Button>
                       </form>
                     </div>
@@ -118,7 +118,7 @@ export default async function TeacherResourcesPage() {
             </div>
 
             {resources.length === 0 && (
-              <p className="text-sm text-muted-foreground">Upload your first resource above.</p>
+              <p className="text-sm text-muted-foreground">{t("resourcesPage.uploadFirstResource")}</p>
             )}
           </CardContent>
         </Card>

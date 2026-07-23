@@ -7,6 +7,7 @@ import { hashPassword, verifyPassword } from "@/lib/password";
 import { createSession, deleteSession } from "@/lib/session";
 import { roleToBasePath } from "@/lib/roles";
 import { LoginFormSchema, RegisterFormSchema } from "@/lib/definitions";
+import { sendWelcomeEmail } from "@/lib/mailer";
 
 async function setLocaleCookie(locale: string) {
   const cookieStore = await cookies();
@@ -86,6 +87,7 @@ export async function register(
     },
   });
 
+  await sendWelcomeEmail(user.email, user.name, user.role);
   await createSession(user.id, user.role);
   await setLocaleCookie(language ?? "EN");
   redirect(roleToBasePath[user.role]);

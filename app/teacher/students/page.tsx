@@ -83,12 +83,12 @@ export default async function TeacherStudentsPage() {
       <Card className="border-border/80">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Users className="size-4" /> Student Roster
+            <Users className="size-4" /> {t("students.studentRoster")}
           </CardTitle>
           <CardDescription>
             {enrollments.length === 0
-              ? "No students enrolled in your courses yet."
-              : `${enrollments.length} enrollment${enrollments.length === 1 ? "" : "s"}`}
+              ? t("students.noStudentsYet")
+              : t("students.enrollmentCount", { count: enrollments.length })}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
@@ -134,7 +134,7 @@ export default async function TeacherStudentsPage() {
 
           {enrollments.length === 0 && (
             <p className="text-sm text-muted-foreground">
-              Once you're assigned class sessions for a course, enrolled students will appear here.
+              {t("students.noStudentsYetDetail")}
             </p>
           )}
         </CardContent>

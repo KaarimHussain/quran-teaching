@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireCurrentUser } from "@/lib/dal";
 import { getTeacherCourseIds } from "@/lib/teacher";
+import { sendHomeworkAssignedEmail, sendHomeworkGradedEmail } from "@/lib/mailer";
 
 export type CreateAssignmentState = { error?: string } | undefined;
 
@@ -44,15 +45,30 @@ export async function createAssignment(
     return { error: "You don't teach this course." };
   }
 
-  await prisma.assignment.create({
-    data: {
-      courseId,
-      teacherUserId: user.id,
-      title: title.trim(),
-      description: typeof description === "string" && description.trim() ? description.trim() : null,
-      dueDate: due,
-    },
-  });
+  const [assignment, course, enrollments] = await Promise.all([
+    prisma.assignment.create({
+      data: {
+        courseId,
+        teacherUserId: user.id,
+        title: title.trim(),
+        description: typeof description === "string" && description.trim() ? description.trim() : null,
+        dueDate: due,
+      },
+    }),
+    prisma.course.findUnique({ where: { id: courseId }, select: { name: true } }),
+    prisma.enrollment.findMany({
+      where: { courseId, status: "ACTIVE" },
+      include: { student: { select: { email: true, name: true } } },
+    }),
+  ]);
+
+  if (course) {
+    void Promise.allSettled(
+      enrollments.map((e) =>
+        sendHomeworkAssignedEmail(e.student.email, e.student.name, assignment.title, course.name, due)
+      )
+    );
+  }
 
   revalidatePath("/teacher/assignments");
   revalidatePath("/teacher");
@@ -76,21 +92,35 @@ export async function gradeSubmission(
 
   const submission = await prisma.submission.findUnique({
     where: { id: submissionId },
-    include: { assignment: { select: { teacherUserId: true } } },
+    include: {
+      assignment: { select: { teacherUserId: true, title: true } },
+      student: { select: { email: true, name: true } },
+    },
   });
   if (!submission || submission.assignment.teacherUserId !== user.id) {
     return { error: "Submission not found or unauthorized." };
   }
 
+  const finalGrade = typeof grade === "string" && grade.trim() ? grade.trim() : null;
+  const finalFeedback = typeof feedback === "string" && feedback.trim() ? feedback.trim() : null;
+
   await prisma.submission.update({
     where: { id: submissionId },
     data: {
       status: "REVIEWED",
-      grade: typeof grade === "string" && grade.trim() ? grade.trim() : null,
-      feedback: typeof feedback === "string" && feedback.trim() ? feedback.trim() : null,
+      grade: finalGrade,
+      feedback: finalFeedback,
       reviewedAt: new Date(),
     },
   });
+
+  void sendHomeworkGradedEmail(
+    submission.student.email,
+    submission.student.name,
+    submission.assignment.title,
+    finalGrade,
+    finalFeedback
+  );
 
   revalidatePath("/teacher/assignments");
   revalidatePath("/teacher");

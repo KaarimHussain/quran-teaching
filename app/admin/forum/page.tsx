@@ -52,10 +52,10 @@ export default async function AdminForumPage() {
   ]);
 
   const stats = [
-    { label: "Total Posts", value: totalCount, icon: MessageSquare, color: "bg-primary/10 text-primary" },
-    { label: "Visible", value: totalCount - removedCount, icon: Eye, color: "bg-chart-4/10 text-chart-4" },
-    { label: "Locked", value: lockedCount, icon: Lock, color: "bg-secondary/30 text-secondary-foreground" },
-    { label: "Removed", value: removedCount, icon: ShieldAlert, color: "bg-destructive/10 text-destructive" },
+    { label: t("forumPage.totalPosts"), value: totalCount, icon: MessageSquare, color: "bg-primary/10 text-primary" },
+    { label: t("forumPage.visible"), value: totalCount - removedCount, icon: Eye, color: "bg-chart-4/10 text-chart-4" },
+    { label: t("forumPage.locked"), value: lockedCount, icon: Lock, color: "bg-secondary/30 text-secondary-foreground" },
+    { label: t("forumPage.removed"), value: removedCount, icon: ShieldAlert, color: "bg-destructive/10 text-destructive" },
   ];
 
   return (
@@ -85,8 +85,8 @@ export default async function AdminForumPage() {
 
         <Card className="border-border/80">
           <CardHeader>
-            <CardTitle>Recent Posts</CardTitle>
-            <CardDescription>{posts.length} most recent posts</CardDescription>
+            <CardTitle>{t("forumPage.recentPosts")}</CardTitle>
+            <CardDescription>{t("forumPage.mostRecentPosts", { count: posts.length })}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             {posts.map((post) => (
@@ -98,7 +98,7 @@ export default async function AdminForumPage() {
                   <div className="flex flex-1 flex-col overflow-hidden">
                     <span className="text-sm font-medium leading-tight">{post.title}</span>
                     <span className="text-xs text-muted-foreground">
-                      by {post.author.name} · {post.course?.name ?? "General"} ·{" "}
+                      {t("forumPage.by")} {post.author.name} · {post.course?.name ?? t("forumPage.general")} ·{" "}
                       {formatRelativeTime(post.createdAt)} ·{" "}
                       <span className="inline-flex items-center gap-1">
                         <MessageSquare className="inline size-3" /> {post._count.replies}
@@ -108,10 +108,10 @@ export default async function AdminForumPage() {
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-2">
                     {post.isLocked && (
-                      <Badge variant="secondary" className="gap-1 rounded-full"><Lock className="size-3" /> Locked</Badge>
+                      <Badge variant="secondary" className="gap-1 rounded-full"><Lock className="size-3" /> {t("forumPage.locked")}</Badge>
                     )}
                     {post.isRemoved && (
-                      <Badge variant="destructive" className="gap-1 rounded-full"><ShieldAlert className="size-3" /> Removed</Badge>
+                      <Badge variant="destructive" className="gap-1 rounded-full"><ShieldAlert className="size-3" /> {t("forumPage.removed")}</Badge>
                     )}
                   </div>
                 </div>
@@ -122,10 +122,10 @@ export default async function AdminForumPage() {
                       size="sm"
                       variant="outline"
                       className="rounded-full"
-                      pendingLabel={post.isLocked ? "Unlocking…" : "Locking…"}
+                      pendingLabel={post.isLocked ? t("forumPage.unlocking") : t("forumPage.locking")}
                     >
                       {post.isLocked ? <LockOpen className="size-3.5" /> : <Lock className="size-3.5" />}
-                      {post.isLocked ? "Unlock" : "Lock"}
+                      {post.isLocked ? t("forumPage.unlock") : t("forumPage.lock")}
                     </SubmitButton>
                   </form>
                   <form action={toggleForumPostRemoved}>
@@ -134,10 +134,10 @@ export default async function AdminForumPage() {
                       size="sm"
                       variant={post.isRemoved ? "outline" : "destructive"}
                       className="rounded-full"
-                      pendingLabel={post.isRemoved ? "Restoring…" : "Removing…"}
+                      pendingLabel={post.isRemoved ? t("forumPage.restoring") : t("forumPage.removing")}
                     >
                       {post.isRemoved ? <RotateCcw className="size-3.5" /> : <Trash2 className="size-3.5" />}
-                      {post.isRemoved ? "Restore" : "Remove"}
+                      {post.isRemoved ? t("forumPage.restore") : t("forumPage.remove")}
                     </SubmitButton>
                   </form>
                 </div>
@@ -147,7 +147,7 @@ export default async function AdminForumPage() {
             {posts.length === 0 && (
               <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border p-8 text-center text-muted-foreground">
                 <Megaphone className="size-6" />
-                <span className="text-sm">No forum posts yet.</span>
+                <span className="text-sm">{t("forumPage.noForumPosts")}</span>
               </div>
             )}
           </CardContent>

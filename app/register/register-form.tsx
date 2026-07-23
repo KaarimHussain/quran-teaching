@@ -1,12 +1,13 @@
 "use client";
 
 import { useActionState } from "react";
-import { ArrowRight, GraduationCap, BookOpenCheck, Heart } from "lucide-react";
+import { ArrowRight, AlertCircle, GraduationCap, BookOpenCheck, Heart, Mail, User } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { PasswordInput } from "@/components/ui/password-input";
 import { register } from "@/app/actions/auth";
 
 const languages = [
@@ -20,16 +21,27 @@ export function RegisterForm() {
   const t = useTranslations("auth.register");
 
   const roles = [
-    { value: "STUDENT", label: t("student"), icon: GraduationCap },
-    { value: "TEACHER", label: t("teacher"), icon: BookOpenCheck },
-    { value: "PARENT", label: t("parent"), icon: Heart },
+    { value: "STUDENT", label: t("student"), icon: GraduationCap, description: "I want to learn" },
+    { value: "TEACHER", label: t("teacher"), icon: BookOpenCheck, description: "I want to teach" },
+    { value: "PARENT", label: t("parent"), icon: Heart, description: "My child is learning" },
   ];
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
-      {/* Role selection */}
+      {/* Global error */}
+      {state?.error && (
+        <div
+          role="alert"
+          className="flex items-start gap-2.5 rounded-xl border border-destructive/30 bg-destructive/8 px-4 py-3 text-sm text-destructive"
+        >
+          <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+          <span>{state.error}</span>
+        </div>
+      )}
+
+      {/* Role */}
       <fieldset className="flex flex-col gap-2">
-        <Label className="text-sm">{t("joiningAs")}</Label>
+        <legend className="text-sm font-medium">{t("joiningAs")}</legend>
         <div className="grid grid-cols-3 gap-2">
           {roles.map((role, index) => (
             <div key={role.value}>
@@ -43,83 +55,140 @@ export function RegisterForm() {
               />
               <label
                 htmlFor={`role-${role.value}`}
-                className="flex cursor-pointer flex-col items-center gap-1.5 rounded-xl border border-border px-2 py-3 text-center transition-colors peer-checked:border-primary peer-checked:bg-primary/5 peer-focus-visible:ring-2 peer-focus-visible:ring-ring/50"
+                className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-border bg-muted/30 px-2 py-3.5 text-center transition-all hover:border-primary/40 hover:bg-primary/5 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-ring/50"
               >
-                <role.icon className="size-5 text-primary" />
-                <span className="text-xs font-medium">{role.label}</span>
+                <span className="flex size-9 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors peer-checked:bg-primary peer-checked:text-primary-foreground">
+                  <role.icon className="size-4" aria-hidden="true" />
+                </span>
+                <span className="text-xs font-semibold leading-tight">{role.label}</span>
+                <span className="text-[10px] text-muted-foreground leading-tight">{role.description}</span>
               </label>
             </div>
           ))}
         </div>
         {state?.fieldErrors?.role && (
-          <p className="text-xs text-destructive">{state.fieldErrors.role[0]}</p>
+          <p className="flex items-center gap-1 text-xs text-destructive">
+            <AlertCircle className="size-3 shrink-0" aria-hidden="true" />
+            {state.fieldErrors.role[0]}
+          </p>
         )}
       </fieldset>
 
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="name">{t("fullName")}</Label>
-        <Input
-          id="name"
-          name="name"
-          type="text"
-          placeholder={t("namePlaceholder")}
-          required
-          aria-invalid={!!state?.fieldErrors?.name}
-        />
+      <div className="h-px bg-border/60" role="separator" />
+
+      {/* Full name */}
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="reg-name" className="text-sm font-medium">
+          {t("fullName")}
+        </Label>
+        <div className="relative">
+          <User
+            className="pointer-events-none absolute start-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <Input
+            id="reg-name"
+            name="name"
+            type="text"
+            autoComplete="name"
+            placeholder={t("namePlaceholder")}
+            required
+            aria-invalid={!!state?.fieldErrors?.name}
+            aria-describedby={state?.fieldErrors?.name ? "reg-name-error" : undefined}
+            className="h-11 rounded-xl ps-10"
+          />
+        </div>
         {state?.fieldErrors?.name && (
-          <p className="text-xs text-destructive">{state.fieldErrors.name[0]}</p>
+          <p id="reg-name-error" className="flex items-center gap-1 text-xs text-destructive">
+            <AlertCircle className="size-3 shrink-0" aria-hidden="true" />
+            {state.fieldErrors.name[0]}
+          </p>
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="email">{t("email")}</Label>
-        <Input
-          id="email"
-          name="email"
-          type="email"
-          placeholder={t("emailPlaceholder")}
-          required
-          aria-invalid={!!state?.fieldErrors?.email}
-        />
+      {/* Email */}
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="reg-email" className="text-sm font-medium">
+          {t("email")}
+        </Label>
+        <div className="relative">
+          <Mail
+            className="pointer-events-none absolute start-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <Input
+            id="reg-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder={t("emailPlaceholder")}
+            required
+            aria-invalid={!!state?.fieldErrors?.email}
+            aria-describedby={state?.fieldErrors?.email ? "reg-email-error" : undefined}
+            className="h-11 rounded-xl ps-10"
+          />
+        </div>
         {state?.fieldErrors?.email && (
-          <p className="text-xs text-destructive">{state.fieldErrors.email[0]}</p>
+          <p id="reg-email-error" className="flex items-center gap-1 text-xs text-destructive">
+            <AlertCircle className="size-3 shrink-0" aria-hidden="true" />
+            {state.fieldErrors.email[0]}
+          </p>
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="password">{t("password")}</Label>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            placeholder={t("passwordPlaceholder")}
-            required
-            aria-invalid={!!state?.fieldErrors?.password}
-          />
-          {state?.fieldErrors?.password && (
-            <p className="text-xs text-destructive">{state.fieldErrors.password[0]}</p>
-          )}
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="confirm-password">{t("confirm")}</Label>
-          <Input
-            id="confirm-password"
-            name="confirmPassword"
-            type="password"
-            placeholder={t("passwordPlaceholder")}
-            required
-            aria-invalid={!!state?.fieldErrors?.confirmPassword}
-          />
-          {state?.fieldErrors?.confirmPassword && (
-            <p className="text-xs text-destructive">{state.fieldErrors.confirmPassword[0]}</p>
-          )}
-        </div>
+      {/* Password */}
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="reg-password" className="text-sm font-medium">
+          {t("password")}
+        </Label>
+        <PasswordInput
+          id="reg-password"
+          name="password"
+          autoComplete="new-password"
+          placeholder={t("passwordPlaceholder")}
+          required
+          aria-invalid={!!state?.fieldErrors?.password}
+          aria-describedby={state?.fieldErrors?.password ? "reg-password-error" : "reg-password-hint"}
+        />
+        {state?.fieldErrors?.password ? (
+          <p id="reg-password-error" className="flex items-center gap-1 text-xs text-destructive">
+            <AlertCircle className="size-3 shrink-0" aria-hidden="true" />
+            {state.fieldErrors.password[0]}
+          </p>
+        ) : (
+          <p id="reg-password-hint" className="text-xs text-muted-foreground">
+            Use at least 8 characters with letters and numbers.
+          </p>
+        )}
       </div>
 
-      {/* Language selection */}
+      {/* Confirm password */}
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="reg-confirm-password" className="text-sm font-medium">
+          {t("confirm")}
+        </Label>
+        <PasswordInput
+          id="reg-confirm-password"
+          name="confirmPassword"
+          autoComplete="new-password"
+          placeholder={t("passwordPlaceholder")}
+          required
+          aria-invalid={!!state?.fieldErrors?.confirmPassword}
+          aria-describedby={state?.fieldErrors?.confirmPassword ? "reg-confirm-error" : undefined}
+        />
+        {state?.fieldErrors?.confirmPassword && (
+          <p id="reg-confirm-error" className="flex items-center gap-1 text-xs text-destructive">
+            <AlertCircle className="size-3 shrink-0" aria-hidden="true" />
+            {state.fieldErrors.confirmPassword[0]}
+          </p>
+        )}
+      </div>
+
+      <div className="h-px bg-border/60" role="separator" />
+
+      {/* Language */}
       <fieldset className="flex flex-col gap-2">
-        <Label className="text-sm">{t("preferredLanguage")}</Label>
+        <legend className="text-sm font-medium">{t("preferredLanguage")}</legend>
         <div className="grid grid-cols-3 gap-2">
           {languages.map((lang, index) => (
             <div key={lang.value}>
@@ -133,7 +202,7 @@ export function RegisterForm() {
               />
               <label
                 htmlFor={`lang-${lang.value}`}
-                className="flex cursor-pointer items-center justify-center rounded-xl border border-border px-2 py-2 text-sm font-medium transition-colors peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:text-primary peer-focus-visible:ring-2 peer-focus-visible:ring-ring/50"
+                className="flex cursor-pointer items-center justify-center rounded-xl border border-border bg-muted/30 px-2 py-2.5 text-sm font-medium transition-all hover:border-primary/40 hover:bg-primary/5 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:text-primary peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-ring/50"
               >
                 {lang.label}
               </label>
@@ -142,20 +211,29 @@ export function RegisterForm() {
         </div>
       </fieldset>
 
-      <div className="flex items-start gap-2">
-        <Checkbox id="terms" name="terms" className="mt-0.5" required />
-        <Label htmlFor="terms" className="text-xs font-normal text-muted-foreground">
+      {/* Terms */}
+      <div className="flex items-start gap-2.5">
+        <Checkbox
+          id="terms"
+          name="terms"
+          className="mt-0.5 shrink-0"
+          required
+          aria-describedby={state?.fieldErrors?.terms ? "terms-error" : undefined}
+        />
+        <Label htmlFor="terms" className="text-xs font-normal leading-relaxed text-muted-foreground">
           {t("terms")}
         </Label>
       </div>
       {state?.fieldErrors?.terms && (
-        <p className="text-xs text-destructive">{state.fieldErrors.terms[0]}</p>
+        <p id="terms-error" className="-mt-2 flex items-center gap-1 text-xs text-destructive">
+          <AlertCircle className="size-3 shrink-0" aria-hidden="true" />
+          {state.fieldErrors.terms[0]}
+        </p>
       )}
 
-      {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
-
-      <Button type="submit" className="mt-1 w-full rounded-full" disabled={pending}>
-        {pending ? t("submitting") : t("submit")} <ArrowRight className="size-4" />
+      <Button type="submit" className="mt-1 h-11 w-full rounded-xl text-sm font-semibold" disabled={pending}>
+        {pending ? t("submitting") : t("submit")}
+        <ArrowRight className="size-4" aria-hidden="true" />
       </Button>
     </form>
   );

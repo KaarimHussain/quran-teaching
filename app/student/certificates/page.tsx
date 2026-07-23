@@ -20,6 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getTranslations } from "next-intl/server";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { prisma } from "@/lib/db";
 import { requireCurrentUser } from "@/lib/dal";
@@ -43,6 +44,7 @@ const levelLabel: Record<string, string> = {
 
 export default async function StudentCertificatesPage() {
   const user = await requireCurrentUser();
+  const t = await getTranslations("pages.student");
 
   const [certificates, enrollments] = await Promise.all([
     prisma.certificate.findMany({
@@ -80,9 +82,8 @@ export default async function StudentCertificatesPage() {
       role="student"
       roleLabel={roleLabel[user.role]}
       userName={user.name}
-      language={user.preferredLanguage as "EN" | "UR" | "AR"}
-      title="Certificates"
-      description="Celebrate your milestones and track what's next."
+      title={t("certificates")}
+      description={t("certificatesDesc")}
     >
       <div className="flex flex-col gap-6">
         {/* Featured certificate */}
@@ -94,39 +95,33 @@ export default async function StudentCertificatesPage() {
               </span>
               <div className="flex flex-col gap-1">
                 <p className="text-xs uppercase tracking-widest text-muted-foreground">
-                  Certificate of Completion
+                  {t("certificatesPage.certOfCompletion")}
                 </p>
                 <h2 className="font-heading text-2xl text-primary sm:text-3xl">
-                  {featuredCert.course.name} —{" "}
+                  {featuredCert.course.name} –{" "}
                   {levelLabel[featuredCert.pathwayLevel] ??
                     featuredCert.pathwayLevel}
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                  Awarded to{" "}
+                  {t("certificatesPage.awardedTo")}{" "}
                   <span className="font-medium text-foreground">
                     {user.name}
                   </span>{" "}
-                  on {formatDate(featuredCert.issuedAt)}
+                  {t("certificatesPage.on")} {formatDate(featuredCert.issuedAt)}
                 </p>
               </div>
               <div className="flex gap-2">
-                {featuredCert.certificateUrl ? (
-                  <Button asChild>
-                    <a
-                      href={featuredCert.certificateUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Download className="size-4" /> Download PDF
-                    </a>
-                  </Button>
-                ) : (
-                  <Button disabled>
-                    <Download className="size-4" /> Download PDF
-                  </Button>
-                )}
+                <Button asChild>
+                  <a
+                    href={`/api/certificate/${featuredCert.id}/pdf`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Download className="size-4" /> {t("certificatesPage.downloadPdf")}
+                  </a>
+                </Button>
                 <Button variant="outline">
-                  <Share2 className="size-4" /> Share
+                  <Share2 className="size-4" /> {t("certificatesPage.share")}
                 </Button>
               </div>
             </CardContent>
@@ -138,7 +133,7 @@ export default async function StudentCertificatesPage() {
                 <Award className="size-8" />
               </span>
               <p className="text-sm text-muted-foreground">
-                No certificates yet — keep learning to earn your first one!
+                {t("certificatesPage.noCertsYet")}
               </p>
             </CardContent>
           </Card>
@@ -148,10 +143,9 @@ export default async function StudentCertificatesPage() {
         {certificates.length > 0 && (
           <Card className="border-border/80">
             <CardHeader>
-              <CardTitle>Earned Certificates</CardTitle>
+              <CardTitle>{t("certificatesPage.earnedCertificates")}</CardTitle>
               <CardDescription>
-                {certificates.length} completed pathway
-                {certificates.length !== 1 ? "s" : ""}
+                {t("certificatesPage.completedPathways", { count: certificates.length })}
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
@@ -169,32 +163,26 @@ export default async function StudentCertificatesPage() {
                       </span>
                       <div className="flex flex-col">
                         <span className="font-medium">
-                          {cert.course.name} —{" "}
+                          {cert.course.name} –{" "}
                           {levelLabel[cert.pathwayLevel] ?? cert.pathwayLevel}
                         </span>
                         <span className="text-xs text-muted-foreground">
-                          Issued {formatDate(cert.issuedAt)}
+                          {t("certificatesPage.issued")} {formatDate(cert.issuedAt)}
                         </span>
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      {cert.certificateUrl ? (
-                        <Button variant="outline" size="sm" asChild>
-                          <a
-                            href={cert.certificateUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <Download className="size-3.5" /> Download
-                          </a>
-                        </Button>
-                      ) : (
-                        <Button variant="outline" size="sm" disabled>
-                          <Download className="size-3.5" /> Download
-                        </Button>
-                      )}
+                      <Button variant="outline" size="sm" asChild>
+                        <a
+                          href={`/api/certificate/${cert.id}/pdf`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Download className="size-3.5" /> {t("certificatesPage.download")}
+                        </a>
+                      </Button>
                       <Button variant="ghost" size="sm">
-                        <Share2 className="size-3.5" /> Share
+                        <Share2 className="size-3.5" /> {t("certificatesPage.share")}
                       </Button>
                     </div>
                   </div>
@@ -208,9 +196,9 @@ export default async function StudentCertificatesPage() {
         {inProgressEnrollments.length > 0 && (
           <Card className="border-border/80">
             <CardHeader>
-              <CardTitle>In Progress</CardTitle>
+              <CardTitle>{t("certificatesPage.inProgress")}</CardTitle>
               <CardDescription>
-                Keep learning to unlock these certificates
+                {t("certificatesPage.keepLearning")}
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
@@ -230,7 +218,7 @@ export default async function StudentCertificatesPage() {
                           <CourseIcon className="size-5" />
                         </span>
                         <span className="font-medium">
-                          {enrollment.course.name} —{" "}
+                          {enrollment.course.name} –{" "}
                           {levelLabel[enrollment.pathwayLevel] ??
                             enrollment.pathwayLevel}
                         </span>

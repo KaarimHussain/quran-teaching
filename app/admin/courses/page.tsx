@@ -1,4 +1,4 @@
-import { BookOpenCheck, BookOpen, Users, Layers } from "lucide-react";
+﻿import { BookOpenCheck, BookOpen, Users, Layers } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,10 +38,10 @@ export default async function AdminCoursesPage() {
   const maxEnrollments = Math.max(...courses.map((course) => course._count.enrollments), 1);
 
   const stats = [
-    { label: "Total Courses", value: courses.length, icon: Layers, color: "bg-primary/10 text-primary" },
-    { label: "Active Courses", value: activeCount, icon: BookOpenCheck, color: "bg-chart-4/10 text-chart-4" },
-    { label: "Inactive", value: courses.length - activeCount, icon: BookOpen, color: "bg-muted text-muted-foreground" },
-    { label: "Total Enrollments", value: totalEnrollments, icon: Users, color: "bg-accent/20 text-accent-foreground" },
+    { label: t("coursesPage.totalCourses"), value: courses.length, icon: Layers, color: "bg-primary/10 text-primary" },
+    { label: t("coursesPage.activeCourses"), value: activeCount, icon: BookOpenCheck, color: "bg-chart-4/10 text-chart-4" },
+    { label: t("coursesPage.inactive"), value: courses.length - activeCount, icon: BookOpen, color: "bg-muted text-muted-foreground" },
+    { label: t("coursesPage.totalEnrollments"), value: totalEnrollments, icon: Users, color: "bg-accent/20 text-accent-foreground" },
   ];
 
   return (
@@ -71,8 +71,8 @@ export default async function AdminCoursesPage() {
 
         <Card className="border-border/80">
           <CardHeader>
-            <CardTitle>Add Course</CardTitle>
-            <CardDescription>Create a new course in the catalog</CardDescription>
+            <CardTitle>{t("coursesPage.addCourse")}</CardTitle>
+            <CardDescription>{t("coursesPage.addCourseDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
             <CreateCourseForm />
@@ -81,8 +81,8 @@ export default async function AdminCoursesPage() {
 
         <Card className="border-border/80">
           <CardHeader>
-            <CardTitle>Course Catalog</CardTitle>
-            <CardDescription>{courses.length} courses</CardDescription>
+            <CardTitle>{t("coursesPage.courseCatalog")}</CardTitle>
+            <CardDescription>{t("coursesPage.courseCount", { count: courses.length })}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             {courses.map((course) => (
@@ -101,17 +101,17 @@ export default async function AdminCoursesPage() {
                 <div className="flex shrink-0 items-center gap-3 sm:w-64">
                   <div className="flex w-full flex-col gap-1">
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{course._count.enrollments.toLocaleString()} enrolled</span>
+                      <span>{t("coursesPage.enrolled", { count: course._count.enrollments.toLocaleString() })}</span>
                       <Badge variant={course.isActive ? "secondary" : "outline"} className="rounded-full">
-                        {course.isActive ? "Active" : "Inactive"}
+                        {course.isActive ? t("coursesPage.active") : t("coursesPage.inactive")}
                       </Badge>
                     </div>
                     <Progress value={(course._count.enrollments / maxEnrollments) * 100} />
                   </div>
                   <form action={toggleCourseActive}>
                     <input type="hidden" name="courseId" value={course.id} />
-                    <SubmitButton size="sm" variant="outline" className="rounded-full" pendingLabel="Saving…">
-                      {course.isActive ? "Deactivate" : "Activate"}
+                    <SubmitButton size="sm" variant="outline" className="rounded-full" pendingLabel={t("coursesPage.saving")}>
+                      {course.isActive ? t("coursesPage.deactivate") : t("coursesPage.activate")}
                     </SubmitButton>
                   </form>
                 </div>
@@ -121,7 +121,7 @@ export default async function AdminCoursesPage() {
             {courses.length === 0 && (
               <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border p-8 text-center text-muted-foreground">
                 <BookOpenCheck className="size-6" />
-                <span className="text-sm">No courses yet — add your first one above.</span>
+                <span className="text-sm">{t("coursesPage.noCourses")}</span>
               </div>
             )}
           </CardContent>

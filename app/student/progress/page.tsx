@@ -103,7 +103,6 @@ export default async function StudentProgressPage() {
       role="student"
       roleLabel={roleLabel[user.role]}
       userName={user.name}
-      language={user.preferredLanguage as "EN" | "UR" | "AR"}
       title={t("progress")}
       description={t("progressDesc")}
     >
@@ -120,7 +119,7 @@ export default async function StudentProgressPage() {
                   {enrollments.length}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  Active Courses
+                  {t("progressPage.activeCourses")}
                 </span>
               </div>
             </CardContent>
@@ -136,7 +135,7 @@ export default async function StudentProgressPage() {
                   {overallPercent}%
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  Overall Progress
+                  {t("progressPage.overallProgress")}
                 </span>
               </div>
             </CardContent>
@@ -152,7 +151,7 @@ export default async function StudentProgressPage() {
                   {subjectProgress.length}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  Subjects Tracked
+                  {t("progressPage.subjectsTracked")}
                 </span>
               </div>
             </CardContent>
@@ -168,7 +167,7 @@ export default async function StudentProgressPage() {
                   {progressEntries.length}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  Progress Updates
+                  {t("progressPage.progressUpdates")}
                 </span>
               </div>
             </CardContent>
@@ -181,15 +180,15 @@ export default async function StudentProgressPage() {
             {/* Subject progress */}
             <Card className="border-border/80">
               <CardHeader>
-                <CardTitle>Progress by Subject</CardTitle>
+                <CardTitle>{t("progressPage.progressBySubject")}</CardTitle>
                 <CardDescription>
-                  How far along you are in each subject
+                  {t("progressPage.howFarAlong")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-5">
                 {subjectProgress.length === 0 ? (
                   <p className="text-sm text-muted-foreground">
-                    No progress entries recorded yet.
+                    {t("progressPage.noProgressEntries")}
                   </p>
                 ) : (
                   subjectProgress.map((entry) => {
@@ -229,13 +228,13 @@ export default async function StudentProgressPage() {
             {/* Enrolled courses */}
             <Card className="border-border/80">
               <CardHeader>
-                <CardTitle>Enrolled Courses</CardTitle>
-                <CardDescription>Your active learning pathways</CardDescription>
+                <CardTitle>{t("progressPage.enrolledCourses")}</CardTitle>
+                <CardDescription>{t("progressPage.activeLearningPathways")}</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
                 {enrollments.length === 0 ? (
                   <p className="text-sm text-muted-foreground">
-                    You are not enrolled in any courses yet.
+                    {t("progressPage.notEnrolledYet")}
                   </p>
                 ) : (
                   enrollments.map((enrollment) => {
@@ -254,7 +253,7 @@ export default async function StudentProgressPage() {
                             {enrollment.course.name}
                           </span>
                           <span className="text-xs text-muted-foreground">
-                            Enrolled {formatDate(enrollment.enrolledAt)}
+                            {t("progressPage.enrolled")} {formatDate(enrollment.enrolledAt)}
                           </span>
                         </div>
                         <Badge variant="outline" className="rounded-full">
@@ -274,13 +273,13 @@ export default async function StudentProgressPage() {
             {/* Recent progress updates */}
             <Card className="border-border/80">
               <CardHeader>
-                <CardTitle>Recent Updates</CardTitle>
-                <CardDescription>Latest feedback from teachers</CardDescription>
+                <CardTitle>{t("progressPage.recentUpdates")}</CardTitle>
+                <CardDescription>{t("progressPage.latestFeedback")}</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
                 {progressEntries.slice(0, 6).length === 0 ? (
                   <p className="text-sm text-muted-foreground">
-                    No updates yet.
+                    {t("progressPage.noUpdates")}
                   </p>
                 ) : (
                   progressEntries.slice(0, 6).map((entry) => {
@@ -330,10 +329,10 @@ export default async function StudentProgressPage() {
                 </span>
                 <div className="flex flex-col">
                   <span className="font-heading text-sm">
-                    {overallPercent}% Complete
+                    {t("progressPage.percentComplete", { percent: overallPercent })}
                   </span>
                   <span className="text-xs text-primary-foreground/70">
-                    Keep going — every session brings you closer!
+                    {t("progressPage.keepGoing")}
                   </span>
                 </div>
               </CardContent>

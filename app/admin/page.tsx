@@ -84,10 +84,10 @@ export default async function AdminDashboardPage() {
   ]);
 
   const stats = [
-    { label: "Total Users", value: totalUsers.toLocaleString(), icon: Users, color: "bg-primary/10 text-primary" },
-    { label: "Total Enrollments", value: totalEnrollments.toLocaleString(), icon: BarChart3, color: "bg-accent/20 text-accent-foreground" },
-    { label: "Pending Verifications", value: pendingVerificationCount.toLocaleString(), icon: UserCheck, color: "bg-secondary/30 text-secondary-foreground" },
-    { label: "Active Courses", value: activeCourseCount.toLocaleString(), icon: BookOpenCheck, color: "bg-chart-4/10 text-chart-4" },
+    { label: t("dash.totalUsers"), value: totalUsers.toLocaleString(), icon: Users, color: "bg-primary/10 text-primary" },
+    { label: t("dash.totalEnrollments"), value: totalEnrollments.toLocaleString(), icon: BarChart3, color: "bg-accent/20 text-accent-foreground" },
+    { label: t("dash.pendingVerifications"), value: pendingVerificationCount.toLocaleString(), icon: UserCheck, color: "bg-secondary/30 text-secondary-foreground" },
+    { label: t("dash.activeCourses"), value: activeCourseCount.toLocaleString(), icon: BookOpenCheck, color: "bg-chart-4/10 text-chart-4" },
   ];
 
   const countByRole = new Map(usersByRoleGroups.map((group) => [group.role, group._count._all]));
@@ -102,7 +102,7 @@ export default async function AdminDashboardPage() {
     id: course.id,
     name: course.name,
     enrollments: course._count.enrollments,
-    status: course.isActive ? "Active" : "Inactive",
+    status: course.isActive ? t("dash.active") : t("dash.inactive"),
     fill: chartColors[index % chartColors.length],
   }));
 
@@ -138,8 +138,8 @@ export default async function AdminDashboardPage() {
             {/* Enrollments overview */}
             <Card className="border-border/80">
               <CardHeader>
-                <CardTitle>Enrollments by Course</CardTitle>
-                <CardDescription>Active learners per course</CardDescription>
+                <CardTitle>{t("dash.enrollmentsByCourse")}</CardTitle>
+                <CardDescription>{t("dash.activeLearnersPerCourse")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <EnrollmentChart data={courses} />
@@ -150,12 +150,12 @@ export default async function AdminDashboardPage() {
             <Card className="border-border/80">
               <CardHeader className="flex-row items-center justify-between">
                 <div>
-                  <CardTitle>Users by Role</CardTitle>
-                  <CardDescription>Platform-wide breakdown</CardDescription>
+                  <CardTitle>{t("dash.usersByRole")}</CardTitle>
+                  <CardDescription>{t("dash.platformWideBreakdown")}</CardDescription>
                 </div>
                 <Button asChild variant="ghost" size="sm" className="rounded-full">
                   <Link href="/admin/users">
-                    Manage Users <ArrowRight className="size-3.5" />
+                    {t("dash.manageUsers")} <ArrowRight className="size-3.5" />
                   </Link>
                 </Button>
               </CardHeader>
@@ -179,12 +179,12 @@ export default async function AdminDashboardPage() {
             <Card className="border-border/80">
               <CardHeader className="flex-row items-center justify-between">
                 <div>
-                  <CardTitle>Course Management</CardTitle>
-                  <CardDescription>Enrollment counts and status</CardDescription>
+                  <CardTitle>{t("dash.courseManagement")}</CardTitle>
+                  <CardDescription>{t("dash.enrollmentCountsAndStatus")}</CardDescription>
                 </div>
                 <Button asChild variant="ghost" size="sm" className="rounded-full">
                   <Link href="/admin/courses">
-                    Manage Courses <ArrowRight className="size-3.5" />
+                    {t("dash.manageCourses")} <ArrowRight className="size-3.5" />
                   </Link>
                 </Button>
               </CardHeader>
@@ -197,7 +197,7 @@ export default async function AdminDashboardPage() {
                     <span className="text-sm font-medium">{course.name}</span>
                     <div className="flex items-center gap-3">
                       <span className="text-xs text-muted-foreground">
-                        {course.enrollments.toLocaleString()} enrolled
+                        {t("dash.enrolled", { count: course.enrollments.toLocaleString() })}
                       </span>
                       <Badge variant="secondary" className="rounded-full">
                         {course.status}
@@ -214,10 +214,10 @@ export default async function AdminDashboardPage() {
             {/* Pending teacher verifications */}
             <Card className="border-border/80">
               <CardHeader className="flex-row items-center justify-between">
-                <CardTitle>Teacher Verifications</CardTitle>
+                <CardTitle>{t("dash.teacherVerifications")}</CardTitle>
                 <Button asChild variant="ghost" size="sm" className="rounded-full">
                   <Link href="/admin/verifications">
-                    All <ArrowRight className="size-3.5" />
+                    {t("dash.all")} <ArrowRight className="size-3.5" />
                   </Link>
                 </Button>
               </CardHeader>
@@ -227,30 +227,30 @@ export default async function AdminDashboardPage() {
                     <div className="flex flex-col">
                       <span className="text-sm font-medium leading-tight">{item.name}</span>
                       <span className="text-xs text-muted-foreground">
-                        {item.isVolunteer ? "Volunteer Teacher" : "Paid Teacher"}
+                        {item.isVolunteer ? t("dash.volunteerTeacher") : t("dash.paidTeacher")}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        Submitted {formatRelativeTime(item.createdAt)}
+                        {t("dash.submitted")} {formatRelativeTime(item.createdAt)}
                       </span>
                     </div>
                     <div className="flex gap-2">
                       <form action={approveTeacher} className="flex-1">
                         <input type="hidden" name="userId" value={item.id} />
-                        <SubmitButton size="sm" className="w-full rounded-full" pendingLabel="Approving…">
-                          <Check className="size-3.5" /> Approve
+                        <SubmitButton size="sm" className="w-full rounded-full" pendingLabel={t("dash.approving")}>
+                          <Check className="size-3.5" /> {t("dash.approve")}
                         </SubmitButton>
                       </form>
                       <form action={rejectTeacher} className="flex-1">
                         <input type="hidden" name="userId" value={item.id} />
-                        <SubmitButton size="sm" variant="outline" className="w-full rounded-full" pendingLabel="Rejecting…">
-                          <X className="size-3.5" /> Reject
+                        <SubmitButton size="sm" variant="outline" className="w-full rounded-full" pendingLabel={t("dash.rejecting")}>
+                          <X className="size-3.5" /> {t("dash.reject")}
                         </SubmitButton>
                       </form>
                     </div>
                   </div>
                 ))}
                 {pendingVerifications.length === 0 && (
-                  <p className="text-sm text-muted-foreground">No pending applications.</p>
+                  <p className="text-sm text-muted-foreground">{t("dash.noPendingApplications")}</p>
                 )}
               </CardContent>
             </Card>
@@ -258,10 +258,10 @@ export default async function AdminDashboardPage() {
             {/* Forum moderation queue */}
             <Card className="border-border/80">
               <CardHeader className="flex-row items-center justify-between">
-                <CardTitle>Forum Moderation</CardTitle>
+                <CardTitle>{t("dash.forumModeration")}</CardTitle>
                 <Button asChild variant="ghost" size="sm" className="rounded-full">
                   <Link href="/admin/forum">
-                    Open Queue <ArrowRight className="size-3.5" />
+                    {t("dash.openQueue")} <ArrowRight className="size-3.5" />
                   </Link>
                 </Button>
               </CardHeader>
@@ -274,14 +274,14 @@ export default async function AdminDashboardPage() {
                     <div className="flex flex-col">
                       <span className="text-sm font-medium leading-tight">{item.title}</span>
                       <span className="text-xs text-muted-foreground">
-                        by {item.author.name} · {item.course?.name ?? "General"} ·{" "}
+                        {t("dash.by")} {item.author.name} · {item.course?.name ?? t("dash.general")} ·{" "}
                         {formatRelativeTime(item.createdAt)}
                       </span>
                     </div>
                   </div>
                 ))}
                 {forumQueue.length === 0 && (
-                  <p className="text-sm text-muted-foreground">No recent posts.</p>
+                  <p className="text-sm text-muted-foreground">{t("dash.noRecentPosts")}</p>
                 )}
               </CardContent>
             </Card>

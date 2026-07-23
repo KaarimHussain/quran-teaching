@@ -1,4 +1,5 @@
 import { FileText, Video, Headphones, Download, Eye } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,6 +46,7 @@ export default async function StudentResourcesPage({
   searchParams: Promise<{ lang?: string }>;
 }) {
   const user = await requireCurrentUser();
+  const t = await getTranslations("pages.student");
   const { lang } = await searchParams;
 
   const userLang = user.preferredLanguage ?? "EN";
@@ -64,14 +66,13 @@ export default async function StudentResourcesPage({
       role="student"
       roleLabel={roleLabel[user.role]}
       userName={user.name}
-      language={user.preferredLanguage as "EN" | "UR" | "AR"}
-      title="Resources"
-      description="Worksheets, recordings, and guides to support your learning."
+      title={t("resources")}
+      description={t("resourcesDesc")}
     >
       <Card className="border-border/80">
         <CardHeader>
-          <CardTitle>Resource Library</CardTitle>
-          <CardDescription>{resources.length} resources available</CardDescription>
+          <CardTitle>{t("resourcesPage.library")}</CardTitle>
+          <CardDescription>{t("resourcesPage.resourcesAvailable", { count: resources.length })}</CardDescription>
 
           {/* Language filter */}
           <div className="mt-2 flex flex-wrap gap-2">
@@ -110,7 +111,7 @@ export default async function StudentResourcesPage({
                 <TabsContent key={course} value={course} className="mt-4">
                   {filtered.length === 0 ? (
                     <p className="py-8 text-center text-sm text-muted-foreground">
-                      No resources in this category.
+                      {t("resourcesPage.noResources")}
                     </p>
                   ) : (
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -128,13 +129,13 @@ export default async function StudentResourcesPage({
                               <div className="flex flex-col gap-1">
                                 <span className="text-sm font-medium leading-tight">{resource.title}</span>
                                 <span className="text-xs text-muted-foreground">
-                                  {resource.course?.name ?? "General"}
+                                  {resource.course?.name ?? t("resourcesPage.general")}
                                 </span>
                               </div>
                             </div>
                             <div className="flex items-center justify-between">
                               <Badge variant="outline" className="rounded-full">
-                                {typeLabel[resource.type]}
+                                {resource.type === "PDF" ? t("resourcesPage.document") : resource.type === "VIDEO" ? t("resourcesPage.video") : t("resourcesPage.audio")}
                               </Badge>
                               <Badge variant="outline" className="rounded-full text-[10px]">
                                 {langLabel[resource.language]}
@@ -143,12 +144,12 @@ export default async function StudentResourcesPage({
                             <div className="flex gap-2">
                               <Button asChild variant="outline" size="sm" className="flex-1">
                                 <a href={resource.url} target="_blank" rel="noopener noreferrer">
-                                  <Eye className="size-3.5" /> View
+                                  <Eye className="size-3.5" /> {t("resourcesPage.view")}
                                 </a>
                               </Button>
                               <Button asChild size="sm" className="flex-1">
                                 <a href={resource.url} download>
-                                  <Download className="size-3.5" /> Download
+                                  <Download className="size-3.5" /> {t("resourcesPage.download")}
                                 </a>
                               </Button>
                             </div>

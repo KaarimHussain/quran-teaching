@@ -1,4 +1,5 @@
-import { TrendingUp } from "lucide-react";
+﻿import { TrendingUp } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -30,6 +31,7 @@ const levelLabel: Record<string, string> = {
 
 export default async function ParentProgressPage() {
   const user = await requireCurrentUser();
+  const t = await getTranslations("pages.parent");
 
   const links = await prisma.parentStudentLink.findMany({
     where: { parentUserId: user.id },
@@ -54,14 +56,13 @@ export default async function ParentProgressPage() {
       role="parent"
       roleLabel={roleLabel[user.role]}
       userName={user.name}
-      language={user.preferredLanguage as "EN" | "UR" | "AR"}
-      title="Progress"
-      description="Detailed learning progress across all courses."
+      title={t("progress")}
+      description={t("progressDesc")}
     >
       {links.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border p-12 text-center text-muted-foreground">
           <TrendingUp className="size-8" />
-          <p className="text-sm">No children linked to your account.</p>
+          <p className="text-sm">{t("progressPage.noChildrenLinked")}</p>
         </div>
       ) : (
         <Tabs defaultValue={links[0].studentUserId}>
@@ -76,7 +77,7 @@ export default async function ParentProgressPage() {
           {links.map(({ student }) => (
             <TabsContent key={student.id} value={student.id} className="mt-4 flex flex-col gap-4">
               {student.enrollments.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No active enrollments.</p>
+                <p className="text-sm text-muted-foreground">{t("progressPage.noActiveEnrollments")}</p>
               ) : (
                 student.enrollments.map((enrollment) => {
                   const courseProgress = student.progressEntries.filter(
@@ -91,11 +92,11 @@ export default async function ParentProgressPage() {
                             {levelLabel[enrollment.pathwayLevel]}
                           </Badge>
                         </div>
-                        <CardDescription>{courseProgress.length} progress entries</CardDescription>
+                        <CardDescription>{t("progressPage.progressEntries", { count: courseProgress.length })}</CardDescription>
                       </CardHeader>
                       <CardContent className="flex flex-col gap-4">
                         {courseProgress.length === 0 ? (
-                          <p className="text-sm text-muted-foreground">No progress recorded yet.</p>
+                          <p className="text-sm text-muted-foreground">{t("progressPage.noProgressRecorded")}</p>
                         ) : (
                           courseProgress.map((entry) => (
                             <div key={entry.id} className="flex flex-col gap-2 rounded-lg border border-border p-3">

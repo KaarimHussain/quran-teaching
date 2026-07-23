@@ -5,6 +5,7 @@ import {
   Megaphone,
   Globe,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -32,6 +33,7 @@ function initials(name: string) {
 
 export default async function StudentForumPage() {
   const user = await requireCurrentUser();
+  const t = await getTranslations("pages.student");
 
   const [posts, courses] = await Promise.all([
     prisma.forumPost.findMany({
@@ -62,9 +64,8 @@ export default async function StudentForumPage() {
       role="student"
       roleLabel={roleLabel[user.role]}
       userName={user.name}
-      language={user.preferredLanguage as "EN" | "UR" | "AR"}
-      title="Community Forum"
-      description="Ask questions, share progress, and learn together."
+      title={t("forum")}
+      description={t("forumDesc")}
     >
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Main column */}
@@ -72,25 +73,25 @@ export default async function StudentForumPage() {
           <Card className="border-border/80">
             <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-muted-foreground">
-                {posts.length} active discussions
+                {t("forumPage.activeDiscussions", { count: posts.length })}
               </p>
               <Button className="w-full sm:w-auto">
-                <Plus className="size-4" /> New Discussion
+                <Plus className="size-4" /> {t("forumPage.newDiscussion")}
               </Button>
             </CardContent>
           </Card>
 
           <Card className="border-border/80">
             <CardHeader>
-              <CardTitle>Recent Discussions</CardTitle>
-              <CardDescription>{posts.length} active threads</CardDescription>
+              <CardTitle>{t("forumPage.recentDiscussions")}</CardTitle>
+              <CardDescription>{t("forumPage.activeThreads", { count: posts.length })}</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
               {sortedPosts.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-border py-12 text-center">
                   <MessageSquare className="size-8 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
-                    No discussions yet. Start the first one!
+                    {t("forumPage.noDiscussions")}
                   </p>
                 </div>
               ) : (
@@ -113,9 +114,9 @@ export default async function StudentForumPage() {
                       </div>
                       <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                         <Badge variant="outline" className="rounded-full">
-                          {post.course?.name ?? "General"}
+                          {post.course?.name ?? t("forumPage.general")}
                         </Badge>
-                        <span>by {post.author.name}</span>
+                        <span>{t("forumPage.by")} {post.author.name}</span>
                         <span>· {formatRelativeTime(post.createdAt)}</span>
                       </div>
                     </div>
@@ -134,14 +135,14 @@ export default async function StudentForumPage() {
         <div className="flex flex-col gap-6">
           <Card className="border-border/80">
             <CardHeader>
-              <CardTitle>Categories</CardTitle>
-              <CardDescription>Browse by course</CardDescription>
+              <CardTitle>{t("forumPage.categories")}</CardTitle>
+              <CardDescription>{t("forumPage.browseByCourse")}</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-1">
               <div className="flex items-center justify-between rounded-lg px-2.5 py-2 text-sm transition-colors hover:bg-muted">
                 <span className="flex items-center gap-2">
                   <Globe className="size-4 text-primary" />
-                  General
+                  {t("forumPage.general")}
                 </span>
                 <Badge variant="secondary" className="rounded-full">
                   {globalCount}
@@ -168,10 +169,9 @@ export default async function StudentForumPage() {
 
           <Card className="border-border/80 bg-primary text-primary-foreground">
             <CardContent className="flex flex-col gap-2">
-              <span className="font-heading text-sm">Forum Guidelines</span>
+              <span className="font-heading text-sm">{t("forumPage.guidelines")}</span>
               <p className="text-xs text-primary-foreground/70">
-                Be respectful, stay on topic, and keep discussions beneficial
-                for the whole community. Posts are moderated by our team.
+                {t("forumPage.guidelinesText")}
               </p>
             </CardContent>
           </Card>

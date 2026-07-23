@@ -42,8 +42,8 @@ export default async function TeacherAvailabilityPage() {
       <div className="flex flex-col gap-6">
         <Card className="border-border/80">
           <CardHeader>
-            <CardTitle>Add Availability</CardTitle>
-            <CardDescription>Recurring weekly window — overlapping windows on the same day aren't allowed.</CardDescription>
+            <CardTitle>{t("avail.addAvailability")}</CardTitle>
+            <CardDescription>{t("avail.addAvailabilityDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
             <AvailabilityForm />
@@ -53,12 +53,12 @@ export default async function TeacherAvailabilityPage() {
         <Card className="border-border/80">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <CalendarClock className="size-4" /> Weekly Schedule
+              <CalendarClock className="size-4" /> {t("avail.weeklySchedule")}
             </CardTitle>
             <CardDescription>
               {availability.length === 0
-                ? "No availability windows set yet."
-                : `${availability.length} window${availability.length === 1 ? "" : "s"} across the week`}
+                ? t("avail.noWindows")
+                : t("avail.windowCount", { count: availability.length })}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -67,7 +67,7 @@ export default async function TeacherAvailabilityPage() {
                 <div key={day.label} className="flex flex-col gap-2 rounded-lg border border-border p-3">
                   <span className="text-sm font-medium">{day.label}</span>
                   {day.slots.length === 0 ? (
-                    <span className="text-xs text-muted-foreground">Unavailable</span>
+                    <span className="text-xs text-muted-foreground">{t("avail.unavailable")}</span>
                   ) : (
                     <div className="flex flex-col gap-2">
                       {day.slots.map((slot) => (

@@ -1,4 +1,5 @@
-import Link from "next/link";
+﻿import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { BookOpen, Users, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,7 @@ const levelLabel: Record<string, string> = {
 
 export default async function ParentChildrenPage() {
   const user = await requireCurrentUser();
+  const t = await getTranslations("pages.parent");
 
   const links = await prisma.parentStudentLink.findMany({
     where: { parentUserId: user.id },
@@ -51,14 +53,13 @@ export default async function ParentChildrenPage() {
       role="parent"
       roleLabel={roleLabel[user.role]}
       userName={user.name}
-      language={user.preferredLanguage as "EN" | "UR" | "AR"}
-      title="My Children"
-      description="Overview of each child linked to your account."
+      title={t("children")}
+      description={t("childrenDesc")}
     >
       {links.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border p-12 text-center text-muted-foreground">
           <Users className="size-8" />
-          <p className="text-sm">No children linked yet. Contact the administrator.</p>
+          <p className="text-sm">{t("childrenPage.noChildrenLinked")}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -78,7 +79,7 @@ export default async function ParentChildrenPage() {
                 <CardContent className="flex flex-1 flex-col gap-4">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <BookOpen className="size-4" />
-                    <span>{student.enrollments.length} active course{student.enrollments.length !== 1 ? "s" : ""}</span>
+                    <span>{t("childrenPage.activeCourses", { count: student.enrollments.length })}</span>
                   </div>
                   {student.enrollments.map((enrollment) => {
                     const pct = latestProgressByCourse.get(enrollment.courseId)?.percentComplete ?? 0;
@@ -99,7 +100,7 @@ export default async function ParentChildrenPage() {
                   })}
                   <Button asChild variant="ghost" size="sm" className="mt-auto rounded-full">
                     <Link href="/parent/progress">
-                      View Progress <ArrowRight className="size-3.5" />
+                      {t("childrenPage.viewProgress")} <ArrowRight className="size-3.5" />
                     </Link>
                   </Button>
                 </CardContent>

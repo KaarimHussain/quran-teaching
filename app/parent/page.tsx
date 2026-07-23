@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import {
   CalendarCheck,
   ClipboardList,
@@ -46,6 +47,7 @@ const levelLabel: Record<string, string> = {
 
 export default async function ParentDashboardPage() {
   const user = await requireCurrentUser();
+  const t = await getTranslations("pages.parent");
 
   const linkedStudents = await prisma.parentStudentLink.findMany({
     where: { parentUserId: user.id },
@@ -86,14 +88,13 @@ export default async function ParentDashboardPage() {
         role="parent"
         roleLabel={roleLabel[user.role]}
         userName={user.name}
-        language={user.preferredLanguage as "EN" | "UR" | "AR"}
-        title="Parent Dashboard"
-        description="An overview of your children's learning journey."
+        title={t("dashboard")}
+        description={t("dashboardDesc")}
       >
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border p-12 text-center text-muted-foreground">
           <Users className="size-8" />
-          <p className="text-sm">No children linked to your account yet.</p>
-          <p className="text-xs">Please contact the administrator to link your child&apos;s account.</p>
+          <p className="text-sm">{t("dash.noChildrenLinked")}</p>
+          <p className="text-xs">{t("dash.contactAdmin")}</p>
         </div>
       </DashboardShell>
     );
@@ -104,9 +105,8 @@ export default async function ParentDashboardPage() {
       role="parent"
       roleLabel={roleLabel[user.role]}
       userName={user.name}
-      language={user.preferredLanguage as "EN" | "UR" | "AR"}
-      title="Parent Dashboard"
-      description="An overview of your children's learning journey."
+      title={t("dashboard")}
+      description={t("dashboardDesc")}
     >
       <div className="flex flex-col gap-6">
         <Tabs defaultValue={linkedStudents[0].studentUserId}>
@@ -135,7 +135,7 @@ export default async function ParentDashboardPage() {
                         </span>
                         <div className="flex flex-col">
                           <span className="font-heading text-xl text-primary">{student.enrollments.length}</span>
-                          <span className="text-xs text-muted-foreground">Active Courses</span>
+                          <span className="text-xs text-muted-foreground">{t("dash.activeCourses")}</span>
                         </div>
                       </CardContent>
                     </Card>
@@ -146,7 +146,7 @@ export default async function ParentDashboardPage() {
                         </span>
                         <div className="flex flex-col">
                           <span className="font-heading text-xl text-primary">{student.submissions.length}</span>
-                          <span className="text-xs text-muted-foreground">Assignments</span>
+                          <span className="text-xs text-muted-foreground">{t("dash.assignments")}</span>
                         </div>
                       </CardContent>
                     </Card>
@@ -159,7 +159,7 @@ export default async function ParentDashboardPage() {
                           <span className="font-heading text-xl text-primary">
                             {student.submissions.filter((s) => s.status === "REVIEWED").length}
                           </span>
-                          <span className="text-xs text-muted-foreground">Reviewed</span>
+                          <span className="text-xs text-muted-foreground">{t("dash.reviewed")}</span>
                         </div>
                       </CardContent>
                     </Card>
@@ -169,8 +169,8 @@ export default async function ParentDashboardPage() {
                     <div className="flex flex-col gap-6 lg:col-span-2">
                       <Card className="border-border/80">
                         <CardHeader>
-                          <CardTitle>Next Class</CardTitle>
-                          <CardDescription>{student.name}&apos;s upcoming session</CardDescription>
+                          <CardTitle>{t("dash.nextClass")}</CardTitle>
+                          <CardDescription>{t("dash.studentUpcomingSession", { name: student.name })}</CardDescription>
                         </CardHeader>
                         <CardContent>
                           {nextClass ? (
@@ -187,11 +187,11 @@ export default async function ParentDashboardPage() {
                                 </div>
                               </div>
                               <Button asChild variant="secondary" className="w-fit rounded-full">
-                                <Link href="/parent/attendance">View Attendance</Link>
+                                <Link href="/parent/attendance">{t("dash.viewAttendance")}</Link>
                               </Button>
                             </div>
                           ) : (
-                            <p className="text-sm text-muted-foreground">No upcoming classes scheduled.</p>
+                            <p className="text-sm text-muted-foreground">{t("dash.noUpcomingClasses")}</p>
                           )}
                         </CardContent>
                       </Card>
@@ -199,18 +199,18 @@ export default async function ParentDashboardPage() {
                       <Card className="border-border/80">
                         <CardHeader className="flex-row items-center justify-between">
                           <div>
-                            <CardTitle>Course Progress</CardTitle>
-                            <CardDescription>Enrolled courses and completion</CardDescription>
+                            <CardTitle>{t("dash.courseProgress")}</CardTitle>
+                            <CardDescription>{t("dash.enrolledCoursesAndCompletion")}</CardDescription>
                           </div>
                           <Button asChild variant="ghost" size="sm" className="rounded-full">
                             <Link href="/parent/progress">
-                              Details <ArrowRight className="size-3.5" />
+                              {t("dash.details")} <ArrowRight className="size-3.5" />
                             </Link>
                           </Button>
                         </CardHeader>
                         <CardContent className="flex flex-col gap-4">
                           {student.enrollments.length === 0 ? (
-                            <p className="text-sm text-muted-foreground">No active enrollments.</p>
+                            <p className="text-sm text-muted-foreground">{t("dash.noActiveEnrollments")}</p>
                           ) : (
                             student.enrollments.map((enrollment) => {
                               const latest = latestProgressByCourse.get(enrollment.courseId);
@@ -235,16 +235,16 @@ export default async function ParentDashboardPage() {
                     <div className="flex flex-col gap-6">
                       <Card className="border-border/80">
                         <CardHeader className="flex-row items-center justify-between">
-                          <CardTitle>Homework</CardTitle>
+                          <CardTitle>{t("dash.homework")}</CardTitle>
                           <Button asChild variant="ghost" size="sm" className="rounded-full">
                             <Link href="/parent/homework">
-                              All <ArrowRight className="size-3.5" />
+                              {t("dash.all")} <ArrowRight className="size-3.5" />
                             </Link>
                           </Button>
                         </CardHeader>
                         <CardContent className="flex flex-col gap-3">
                           {student.submissions.length === 0 ? (
-                            <p className="text-sm text-muted-foreground">No assignments yet.</p>
+                            <p className="text-sm text-muted-foreground">{t("dash.noAssignments")}</p>
                           ) : (
                             student.submissions.map((sub) => (
                               <div key={sub.id} className="flex items-center justify-between gap-3">
@@ -255,7 +255,7 @@ export default async function ParentDashboardPage() {
                                   variant={submissionStatusVariant[sub.status]}
                                   className="shrink-0 rounded-full"
                                 >
-                                  {submissionStatusLabel[sub.status]}
+                                  {sub.status === "NOT_SUBMITTED" ? t("dash.notSubmitted") : sub.status === "SUBMITTED" ? t("dash.submittedStatus") : t("dash.reviewedStatus")}
                                 </Badge>
                               </div>
                             ))
@@ -265,17 +265,17 @@ export default async function ParentDashboardPage() {
 
                       <Card className="border-border/80">
                         <CardHeader className="flex-row items-center justify-between">
-                          <CardTitle>Messages</CardTitle>
+                          <CardTitle>{t("dash.messages")}</CardTitle>
                           <Button asChild variant="ghost" size="sm" className="rounded-full">
                             <Link href="/parent/messages">
-                              Open <ArrowRight className="size-3.5" />
+                              {t("dash.open")} <ArrowRight className="size-3.5" />
                             </Link>
                           </Button>
                         </CardHeader>
                         <CardContent>
                           <Button asChild variant="secondary" className="w-full rounded-full">
                             <Link href="/parent/messages">
-                              <MessagesSquare className="size-4" /> Message Teacher
+                              <MessagesSquare className="size-4" /> {t("dash.messageTeacher")}
                             </Link>
                           </Button>
                         </CardContent>
