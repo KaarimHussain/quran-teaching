@@ -6,11 +6,7 @@ import {
   ScrollText,
   Sunrise,
   Landmark,
-  PlayCircle,
-  CheckCircle2,
-  Lock,
   ArrowRight,
-  User,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,288 +18,164 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { prisma } from "@/lib/db";
+import { requireCurrentUser } from "@/lib/dal";
+import { roleLabel } from "@/lib/roles";
+import { EnrollDialog } from "./enroll-dialog";
+import { getTranslations } from "next-intl/server";
 
-const enrolledCourses = [
-  {
-    name: "Nazra Quran",
-    icon: BookOpenText,
-    level: "Intermediate",
-    teacher: "Sister Amina Siddiqui",
-    progress: 70,
-    nextLesson: "Module 3 · Basic Recitation, Lesson 2",
-    modules: [
-      {
-        title: "Module 1 · Arabic Alphabet",
-        status: "completed",
-        lessons: [
-          { title: "Letter Recognition", status: "completed" },
-          { title: "Letter Forms & Joining", status: "completed" },
-        ],
-      },
-      {
-        title: "Module 2 · Connecting Letters",
-        status: "completed",
-        lessons: [
-          { title: "Two-Letter Words", status: "completed" },
-          { title: "Three-Letter Words", status: "completed" },
-        ],
-      },
-      {
-        title: "Module 3 · Basic Recitation",
-        status: "in-progress",
-        lessons: [
-          { title: "Short Vowel Sounds", status: "completed" },
-          { title: "Surah Al-Fatiha Recitation", status: "in-progress" },
-          { title: "Surah Al-Ikhlas Recitation", status: "locked" },
-        ],
-      },
-      {
-        title: "Module 4 · Fluent Reading",
-        status: "locked",
-        lessons: [
-          { title: "Connected Reading Practice", status: "locked" },
-          { title: "Final Assessment", status: "locked" },
-        ],
-      },
-    ],
-  },
-  {
-    name: "Tajweed",
-    icon: Mic,
-    level: "Beginner",
-    teacher: "Ustadh Ahmad Raza",
-    progress: 45,
-    nextLesson: "Module 2 · Noon & Meem Rules, Lesson 1",
-    modules: [
-      {
-        title: "Module 1 · Introduction to Tajweed",
-        status: "completed",
-        lessons: [
-          { title: "Why Tajweed Matters", status: "completed" },
-          { title: "Articulation Points (Makharij)", status: "completed" },
-        ],
-      },
-      {
-        title: "Module 2 · Noon & Meem Rules",
-        status: "in-progress",
-        lessons: [
-          { title: "Ghunnah Practice", status: "completed" },
-          { title: "Ikhfa, Idgham & Iqlab", status: "in-progress" },
-        ],
-      },
-      {
-        title: "Module 3 · Madd Rules",
-        status: "locked",
-        lessons: [
-          { title: "Natural & Connected Madd", status: "locked" },
-          { title: "Obligatory & Permissible Madd", status: "locked" },
-        ],
-      },
-    ],
-  },
-  {
-    name: "Hifz-ul-Quran",
-    icon: Brain,
-    level: "Beginner",
-    teacher: "Ustadh Tariq Mehmood",
-    progress: 20,
-    nextLesson: "Surah Al-Baqarah, Ayah 6-10",
-    modules: [
-      {
-        title: "Surah Al-Fatiha",
-        status: "completed",
-        lessons: [
-          { title: "Memorization", status: "completed" },
-          { title: "Revision & Tajweed Check", status: "completed" },
-        ],
-      },
-      {
-        title: "Surah Al-Baqarah, Ayah 1-10",
-        status: "in-progress",
-        lessons: [
-          { title: "Ayah 1-5 Memorization", status: "completed" },
-          { title: "Ayah 6-10 Memorization", status: "in-progress" },
-        ],
-      },
-      {
-        title: "Surah Al-Baqarah, Ayah 11-20",
-        status: "locked",
-        lessons: [
-          { title: "Ayah 11-15 Memorization", status: "locked" },
-          { title: "Ayah 16-20 Memorization", status: "locked" },
-        ],
-      },
-    ],
-  },
-];
-
-const exploreCourses = [
-  {
-    name: "Tafseer",
-    icon: ScrollText,
-    description: "Understand the meaning and context behind Quranic verses.",
-    levels: ["Intermediate", "Advanced"],
-  },
-  {
-    name: "Salah (Prayer Practice)",
-    icon: Sunrise,
-    description: "Learn the correct method and timings of the five daily prayers.",
-    levels: ["Beginner"],
-  },
-  {
-    name: "Islamic Studies",
-    icon: Landmark,
-    description: "Explore the foundations of Islamic belief, history, and ethics.",
-    levels: ["Beginner", "Intermediate", "Advanced"],
-  },
-];
-
-function lessonIcon(status: string) {
-  if (status === "completed") return <CheckCircle2 className="size-4 text-primary" />;
-  if (status === "in-progress") return <PlayCircle className="size-4 text-secondary-foreground" />;
-  return <Lock className="size-4 text-muted-foreground" />;
-}
-
-const moduleStatusLabel: Record<string, string> = {
-  completed: "Completed",
-  "in-progress": "In Progress",
-  locked: "Locked",
+const courseIcons: Record<string, typeof BookOpenText> = {
+  "Nazra Quran": BookOpenText,
+  "Tajweed": Mic,
+  "Hifz-ul-Quran": Brain,
+  "Tafseer": ScrollText,
+  "Salah (Prayer Practice)": Sunrise,
+  "Islamic Studies": Landmark,
 };
 
-const moduleStatusVariant: Record<string, "secondary" | "outline"> = {
-  completed: "secondary",
-  "in-progress": "outline",
-  locked: "outline",
+const levelLabel: Record<string, string> = {
+  BEGINNER: "Beginner",
+  INTERMEDIATE: "Intermediate",
+  ADVANCED: "Advanced",
 };
 
-export default function StudentCoursesPage() {
+export default async function StudentCoursesPage() {
+  const user = await requireCurrentUser();
+  const t = await getTranslations("pages.student");
+
+  const [enrollments, availableCourses, progressEntries] = await Promise.all([
+    prisma.enrollment.findMany({
+      where: { studentUserId: user.id },
+      include: { course: true },
+      orderBy: { enrolledAt: "asc" },
+    }),
+    prisma.course.findMany({
+      where: {
+        isActive: true,
+        enrollments: { none: { studentUserId: user.id } },
+      },
+      orderBy: { name: "asc" },
+    }),
+    prisma.progressEntry.findMany({
+      where: { studentUserId: user.id },
+      orderBy: { recordedAt: "desc" },
+    }),
+  ]);
+
+  const latestProgressByCourse = new Map(
+    progressEntries.map((p) => [p.courseId, p])
+  );
+
   return (
     <DashboardShell
       role="student"
-      roleLabel="Student"
-      userName="Yusuf Khan"
-      title="My Courses"
-      description="Continue your learning journey, one lesson at a time."
+      roleLabel={roleLabel[user.role]}
+      userName={user.name}
+      language={user.preferredLanguage as "EN" | "UR" | "AR"}
+      title={t("courses")}
+      description={t("coursesDesc")}
     >
       <div className="flex flex-col gap-8">
 
-        {/* Explore more courses */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-heading text-xl text-primary">Explore More Courses</h2>
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/courses">
-                View Catalog <ArrowRight className="size-3.5" />
-              </Link>
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {exploreCourses.map((course) => (
-              <Card key={course.name} className="flex flex-col border-border/80">
-                <CardHeader>
-                  <span className="mb-2 flex size-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <course.icon className="size-5" />
-                  </span>
-                  <CardTitle className="text-base">{course.name}</CardTitle>
-                  <CardDescription className="text-sm leading-relaxed">
-                    {course.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="mt-auto flex flex-col gap-3">
-                  <div className="flex flex-wrap gap-1.5">
-                    {course.levels.map((level) => (
-                      <Badge key={level} variant="outline" className="rounded-full">
-                        {level}
-                      </Badge>
-                    ))}
-                  </div>
-                  <Button asChild variant="secondary" className="w-full">
-                    <Link href="/courses">Enroll Now</Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
         {/* Enrolled courses */}
-        <div className="flex flex-col gap-5">
-          {enrolledCourses.map((course) => (
-            <Card key={course.name} className="border-border/80">
-              <CardHeader className="flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-start gap-3">
-                  <span className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <course.icon className="size-6" />
-                  </span>
-                  <div className="flex flex-col gap-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <CardTitle className="text-lg">{course.name}</CardTitle>
-                      <Badge variant="outline" className="rounded-full">
-                        {course.level}
-                      </Badge>
-                    </div>
-                    <CardDescription className="flex items-center gap-1.5 text-xs">
-                      <User className="size-3.5" /> {course.teacher}
-                    </CardDescription>
-                  </div>
-                </div>
-                <Button className="w-full sm:w-auto">
-                  Continue Learning <ArrowRight className="size-4" />
-                </Button>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      Next up: <span className="font-medium text-foreground">{course.nextLesson}</span>
-                    </span>
-                    <span className="font-medium text-primary">{course.progress}%</span>
-                  </div>
-                  <Progress value={course.progress} />
-                </div>
-
-                <Accordion type="single" collapsible className="rounded-lg border border-border px-4">
-                  {course.modules.map((module) => (
-                    <AccordionItem key={module.title} value={module.title}>
-                      <AccordionTrigger>
-                        <div className="flex flex-1 flex-wrap items-center justify-between gap-2 pr-2">
-                          <span>{module.title}</span>
-                          <Badge variant={moduleStatusVariant[module.status]} className="rounded-full">
-                            {moduleStatusLabel[module.status]}
+        {enrollments.length > 0 && (
+          <div className="flex flex-col gap-5">
+            <h2 className="font-heading text-xl text-primary">My Enrolled Courses</h2>
+            {enrollments.map((enrollment) => {
+              const Icon = courseIcons[enrollment.course.name] ?? BookOpenText;
+              const latestProgress = latestProgressByCourse.get(enrollment.courseId);
+              const percent = latestProgress?.percentComplete ?? 0;
+              return (
+                <Card key={enrollment.id} className="border-border/80">
+                  <CardHeader className="flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-start gap-3">
+                      <span className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <Icon className="size-6" />
+                      </span>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <CardTitle className="text-lg">{enrollment.course.name}</CardTitle>
+                          <Badge variant="outline" className="rounded-full">
+                            {levelLabel[enrollment.pathwayLevel]}
+                          </Badge>
+                          <Badge variant={enrollment.status === "ACTIVE" ? "secondary" : "outline"} className="rounded-full">
+                            {enrollment.status === "ACTIVE" ? "Active" : enrollment.status === "COMPLETED" ? "Completed" : "Withdrawn"}
                           </Badge>
                         </div>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <ul className="flex flex-col gap-2">
-                          {module.lessons.map((lesson) => (
-                            <li
-                              key={lesson.title}
-                              className="flex items-center gap-2 text-sm text-muted-foreground"
-                            >
-                              {lessonIcon(lesson.status)}
-                              <span className={lesson.status === "completed" ? "text-foreground" : ""}>
-                                {lesson.title}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                        {enrollment.course.description && (
+                          <CardDescription className="text-xs">{enrollment.course.description}</CardDescription>
+                        )}
+                      </div>
+                    </div>
+                    <Button asChild className="w-full sm:w-auto">
+                      <Link href="/student/schedule">
+                        View Schedule <ArrowRight className="size-4" />
+                      </Link>
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">
+                          {latestProgress
+                            ? latestProgress.description ?? "Progress recorded"
+                            : "No progress recorded yet"}
+                        </span>
+                        <span className="font-medium text-primary">{percent}%</span>
+                      </div>
+                      <Progress value={percent} />
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        )}
 
+        {/* Explore more courses */}
+        {availableCourses.length > 0 && (
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <h2 className="font-heading text-xl text-primary">Explore More Courses</h2>
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/courses">
+                  View Catalog <ArrowRight className="size-3.5" />
+                </Link>
+              </Button>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {availableCourses.map((course) => {
+                const Icon = courseIcons[course.name] ?? BookOpenText;
+                return (
+                  <Card key={course.id} className="flex flex-col border-border/80">
+                    <CardHeader>
+                      <span className="mb-2 flex size-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <Icon className="size-5" />
+                      </span>
+                      <CardTitle className="text-base">{course.name}</CardTitle>
+                      {course.description && (
+                        <CardDescription className="text-sm leading-relaxed">
+                          {course.description}
+                        </CardDescription>
+                      )}
+                    </CardHeader>
+                    <CardContent className="mt-auto">
+                      <EnrollDialog courseId={course.id} courseName={course.name} />
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
+        {enrollments.length === 0 && availableCourses.length === 0 && (
+          <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border p-12 text-center text-muted-foreground">
+            <BookOpenText className="size-8" />
+            <p className="text-sm">No courses available at the moment. Check back soon.</p>
+          </div>
+        )}
       </div>
     </DashboardShell>
   );

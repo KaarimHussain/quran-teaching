@@ -1,0 +1,165 @@
+{
+  "nav": {
+    "student": {
+      "dashboard": "Dashboard",
+      "courses": "My Courses",
+      "schedule": "Schedule",
+      "assignments": "Assignments",
+      "progress": "Progress",
+      "resources": "Resources",
+      "certificates": "Certificates",
+      "forum": "Forum"
+    },
+    "teacher": {
+      "dashboard": "Dashboard",
+      "availability": "Availability",
+      "classes": "Classes",
+      "students": "Students",
+      "assignments": "Assignments",
+      "resources": "Resources",
+      "forum": "Forum"
+    },
+    "parent": {
+      "dashboard": "Dashboard",
+      "children": "My Children",
+      "attendance": "Attendance",
+      "progress": "Progress",
+      "homework": "Homework",
+      "messages": "Messages"
+    },
+    "admin": {
+      "dashboard": "Dashboard",
+      "users": "Users",
+      "courses": "Courses",
+      "schedule": "Schedule",
+      "verifications": "Teacher Verification",
+      "forum": "Forum Moderation",
+      "reports": "Reports"
+    }
+  },
+  "shell": {
+    "appName": "Quran Learning",
+    "logout": "Log out",
+    "notifications": "Notifications",
+    "openMenu": "Open menu",
+    "toggleTheme": "Toggle theme"
+  },
+  "pages": {
+    "admin": {
+      "dashboard": "Admin Dashboard",
+      "dashboardDesc": "Platform overview and pending actions.",
+      "courses": "Courses",
+      "coursesDesc": "Manage the course catalog and enrollment status.",
+      "forum": "Forum Moderation",
+      "forumDesc": "Review recent posts and moderate the community forum.",
+      "reports": "Reports",
+      "reportsDesc": "Platform-wide analytics across enrollments, attendance, and classes.",
+      "schedule": "Class Schedule",
+      "scheduleDesc": "View and manage class sessions across the platform.",
+      "users": "Users",
+      "usersDesc": "Manage platform accounts across all roles.",
+      "verifications": "Teacher Verification",
+      "verificationsDesc": "Review and approve volunteer and paid teacher applications."
+    },
+    "teacher": {
+      "dashboard": "Teacher Dashboard",
+      "dashboardDesc": "Here's what's on your plate today.",
+      "availability": "Availability",
+      "availabilityDesc": "Set the times you're available to teach. Classes can only be scheduled within these windows.",
+      "classes": "My Classes",
+      "classesDesc": "Your scheduled sessions and attendance records.",
+      "students": "My Students",
+      "studentsDesc": "Students enrolled across your courses and their progress.",
+      "assignments": "Assignments",
+      "assignmentsDesc": "Create homework and review your students' submissions.",
+      "resources": "Resources",
+      "resourcesDesc": "Upload worksheets, recordings, and guides for your students.",
+      "forum": "Community Forum",
+      "forumDesc": "Connect with students, parents, and fellow teachers."
+    },
+    "student": {
+      "dashboard": "Student Dashboard",
+      "dashboardDesc": "Welcome back, {name} — keep up the great work!",
+      "courses": "My Courses",
+      "coursesDesc": "Continue your learning journey, one lesson at a time.",
+      "schedule": "Schedule",
+      "scheduleDesc": "Your upcoming classes and session history.",
+      "assignments": "Assignments",
+      "assignmentsDesc": "Track your homework, submissions, and feedback.",
+      "progress": "My Progress",
+      "progressDesc": "A look at your learning journey and achievements.",
+      "resources": "Resources",
+      "resourcesDesc": "Worksheets, recordings, and guides to support your learning.",
+      "certificates": "Certificates",
+      "certificatesDesc": "Celebrate your milestones and track what's next.",
+      "forum": "Community Forum",
+      "forumDesc": "Ask questions, share progress, and learn together."
+    },
+    "parent": {
+      "dashboard": "Parent Dashboard",
+      "dashboardDesc": "An overview of your children's learning journey.",
+      "children": "My Children",
+      "childrenDesc": "Overview of each child linked to your account.",
+      "attendance": "Attendance",
+      "attendanceDesc": "Track your children's class attendance history.",
+      "progress": "Progress",
+      "progressDesc": "Detailed learning progress across all courses.",
+      "homework": "Homework",
+      "homeworkDesc": "Track assignment status for your children.",
+      "messages": "Messages",
+      "messagesDesc": "Communication with your children's teachers."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue your learning journey",
+      "email": "Email",
+      "password": "Password",
+      "emailPlaceholder": "you@example.com",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Sign In",
+      "submitting": "Signing in…",
+      "noAccount": "Don't have an account?",
+      "register": "Create one"
+    },
+    "register": {
+      "title": "Join the community",
+      "subtitle": "Start your Quranic learning journey today",
+      "joiningAs": "I am joining as a…",
+      "student": "Student",
+      "teacher": "Teacher",
+      "parent": "Parent",
+      "fullName": "Full Name",
+      "namePlaceholder": "Your full name",
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "confirm": "Confirm",
+      "preferredLanguage": "Preferred Language",
+      "terms": "I agree to learn and teach with sincerity, respect, and patience, following the Quran Learning community guidelines.",
+      "submit": "Create Account",
+      "submitting": "Creating account…",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in"
+    }
+  },
+  "common": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "enroll": "Enroll Now",
+    "enrolling": "Enrolling…",
+    "confirmEnroll": "Confirm Enrollment",
+    "cancel": "Cancel",
+    "search": "Search",
+    "save": "Save",
+    "view": "View",
+    "download": "Download",
+    "submit": "Submit",
+    "noData": "No data available"
+  }
+}

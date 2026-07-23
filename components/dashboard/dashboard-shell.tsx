@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { BookOpenText, Bell, LogOut, Menu, Settings } from "lucide-react";
+import { BookOpenText, Bell, LogOut, Menu } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,11 +15,16 @@ import {
 import { DashboardNav } from "./dashboard-nav";
 import type { DashboardRole } from "./nav-config";
 import { logout } from "@/app/actions/auth";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageSwitcher } from "@/components/language-switcher";
+
+type Language = "EN" | "UR" | "AR";
 
 type DashboardShellProps = {
   role: DashboardRole;
   roleLabel: string;
   userName: string;
+  language?: Language;
   title: string;
   description?: string;
   children: React.ReactNode;
@@ -33,25 +39,27 @@ function getInitials(name: string) {
     .toUpperCase();
 }
 
-export function DashboardShell({
+export async function DashboardShell({
   role,
   roleLabel,
   userName,
+  language = "EN",
   title,
   description,
   children,
 }: DashboardShellProps) {
   const initials = getInitials(userName);
+  const t = await getTranslations("shell");
 
   return (
-    <div className="flex min-h-full">
+    <div className="flex h-screen overflow-hidden">
       {/* Desktop sidebar */}
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-card lg:flex">
+      <aside className="hidden h-screen w-64 shrink-0 flex-col border-e border-border bg-card lg:flex">
         <Link href="/" className="flex h-16 items-center gap-2 px-5">
           <span className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <BookOpenText className="size-5" />
           </span>
-          <span className="font-heading text-lg text-primary">Quran Learning</span>
+          <span className="font-heading text-lg text-primary">{t("appName")}</span>
         </Link>
         <Separator />
         <div className="flex-1 overflow-y-auto p-3">
@@ -68,20 +76,20 @@ export function DashboardShell({
               {roleLabel}
             </Badge>
           </div>
-          <form action={logout} className="ml-auto">
-            <Button type="submit" variant="ghost" size="icon" className="rounded-full" aria-label="Log out">
+          <form action={logout} className="ms-auto">
+            <Button type="submit" variant="ghost" size="icon" className="rounded-full" aria-label={t("logout")}>
               <LogOut className="size-4" />
             </Button>
           </form>
         </div>
       </aside>
 
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col overflow-y-auto">
         {/* Topbar */}
-        <header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur-md sm:px-6">
+        <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur-md sm:px-6">
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full lg:hidden" aria-label="Open menu">
+              <Button variant="ghost" size="icon" className="rounded-full lg:hidden" aria-label={t("openMenu")}>
                 <Menu className="size-5" />
               </Button>
             </SheetTrigger>
@@ -91,7 +99,7 @@ export function DashboardShell({
                   <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
                     <BookOpenText className="size-4" />
                   </span>
-                  Quran Learning
+                  {t("appName")}
                 </SheetTitle>
               </SheetHeader>
               <div className="px-3">
@@ -107,14 +115,13 @@ export function DashboardShell({
             )}
           </div>
 
-          <div className="ml-auto flex items-center gap-1.5">
-            <Button variant="ghost" size="icon" className="rounded-full" aria-label="Notifications">
+          <div className="ms-auto flex items-center gap-1">
+            <LanguageSwitcher current={language} />
+            <ThemeToggle />
+            <Button variant="ghost" size="icon" className="rounded-full" aria-label={t("notifications")}>
               <Bell className="size-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="rounded-full" aria-label="Settings">
-              <Settings className="size-4" />
-            </Button>
-            <Avatar size="sm" className="ml-1 lg:hidden">
+            <Avatar size="sm" className="ms-1 lg:hidden">
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
           </div>

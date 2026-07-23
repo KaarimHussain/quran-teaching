@@ -17,48 +17,48 @@ import {
 
 export type NavItem = {
   href: string;
-  label: string;
+  labelKey: string;
   icon: LucideIcon;
 };
 
 export const studentNav: NavItem[] = [
-  { href: "/student", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/student/courses", label: "My Courses", icon: BookOpen },
-  { href: "/student/schedule", label: "Schedule", icon: CalendarDays },
-  { href: "/student/assignments", label: "Assignments", icon: ClipboardList },
-  { href: "/student/progress", label: "Progress", icon: LineChart },
-  { href: "/student/resources", label: "Resources", icon: Library },
-  { href: "/student/certificates", label: "Certificates", icon: Award },
-  { href: "/student/forum", label: "Forum", icon: MessagesSquare },
+  { href: "/student", labelKey: "dashboard", icon: LayoutDashboard },
+  { href: "/student/courses", labelKey: "courses", icon: BookOpen },
+  { href: "/student/schedule", labelKey: "schedule", icon: CalendarDays },
+  { href: "/student/assignments", labelKey: "assignments", icon: ClipboardList },
+  { href: "/student/progress", labelKey: "progress", icon: LineChart },
+  { href: "/student/resources", labelKey: "resources", icon: Library },
+  { href: "/student/certificates", labelKey: "certificates", icon: Award },
+  { href: "/student/forum", labelKey: "forum", icon: MessagesSquare },
 ];
 
 export const teacherNav: NavItem[] = [
-  { href: "/teacher", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/teacher/availability", label: "Availability", icon: CalendarDays },
-  { href: "/teacher/classes", label: "Classes", icon: BookOpen },
-  { href: "/teacher/students", label: "Students", icon: Users },
-  { href: "/teacher/assignments", label: "Assignments", icon: ClipboardList },
-  { href: "/teacher/resources", label: "Resources", icon: Library },
-  { href: "/teacher/forum", label: "Forum", icon: MessagesSquare },
+  { href: "/teacher", labelKey: "dashboard", icon: LayoutDashboard },
+  { href: "/teacher/availability", labelKey: "availability", icon: CalendarDays },
+  { href: "/teacher/classes", labelKey: "classes", icon: BookOpen },
+  { href: "/teacher/students", labelKey: "students", icon: Users },
+  { href: "/teacher/assignments", labelKey: "assignments", icon: ClipboardList },
+  { href: "/teacher/resources", labelKey: "resources", icon: Library },
+  { href: "/teacher/forum", labelKey: "forum", icon: MessagesSquare },
 ];
 
 export const parentNav: NavItem[] = [
-  { href: "/parent", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/parent/children", label: "My Children", icon: Heart },
-  { href: "/parent/attendance", label: "Attendance", icon: CalendarDays },
-  { href: "/parent/progress", label: "Progress", icon: LineChart },
-  { href: "/parent/homework", label: "Homework", icon: ClipboardList },
-  { href: "/parent/messages", label: "Messages", icon: MessagesSquare },
+  { href: "/parent", labelKey: "dashboard", icon: LayoutDashboard },
+  { href: "/parent/children", labelKey: "children", icon: Heart },
+  { href: "/parent/attendance", labelKey: "attendance", icon: CalendarDays },
+  { href: "/parent/progress", labelKey: "progress", icon: LineChart },
+  { href: "/parent/homework", labelKey: "homework", icon: ClipboardList },
+  { href: "/parent/messages", labelKey: "messages", icon: MessagesSquare },
 ];
 
 export const adminNav: NavItem[] = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/users", label: "Users", icon: Users },
-  { href: "/admin/courses", label: "Courses", icon: BookOpen },
-  { href: "/admin/schedule", label: "Schedule", icon: CalendarDays },
-  { href: "/admin/verifications", label: "Teacher Verification", icon: UserCheck },
-  { href: "/admin/forum", label: "Forum Moderation", icon: Megaphone },
-  { href: "/admin/reports", label: "Reports", icon: BarChart3 },
+  { href: "/admin", labelKey: "dashboard", icon: LayoutDashboard },
+  { href: "/admin/users", labelKey: "users", icon: Users },
+  { href: "/admin/courses", labelKey: "courses", icon: BookOpen },
+  { href: "/admin/schedule", labelKey: "schedule", icon: CalendarDays },
+  { href: "/admin/verifications", labelKey: "verifications", icon: UserCheck },
+  { href: "/admin/forum", labelKey: "forum", icon: Megaphone },
+  { href: "/admin/reports", labelKey: "reports", icon: BarChart3 },
 ];
 
 export type DashboardRole = "student" | "teacher" | "parent" | "admin";

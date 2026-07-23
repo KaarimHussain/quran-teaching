@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { navByRole, type DashboardRole } from "./nav-config";
 
 export function DashboardNav({ role }: { role: DashboardRole }) {
   const pathname = usePathname();
   const items = navByRole[role];
+  const t = useTranslations(`nav.${role}`);
 
   return (
     <nav className="flex flex-col gap-1">
@@ -24,8 +26,8 @@ export function DashboardNav({ role }: { role: DashboardRole }) {
                 : "text-foreground/70 hover:bg-muted hover:text-foreground"
             )}
           >
-            <item.icon className="size-4" />
-            {item.label}
+            <item.icon className="size-4 shrink-0" />
+            {t(item.labelKey)}
           </Link>
         );
       })}

@@ -12,6 +12,7 @@ import {
   Check,
   X,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +29,7 @@ import { requireCurrentUser } from "@/lib/dal";
 import { roleLabel } from "@/lib/roles";
 import { formatRelativeTime } from "@/lib/format";
 import { approveTeacher, rejectTeacher } from "./verifications/actions";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 const usersByRoleConfig = [
   { role: "STUDENT" as const, label: "Students", icon: GraduationCap, color: "bg-primary/10 text-primary" },
@@ -40,6 +42,7 @@ const chartColors = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(
 
 export default async function AdminDashboardPage() {
   const currentUser = await requireCurrentUser();
+  const t = await getTranslations("pages.admin");
 
   const [
     totalUsers,
@@ -108,8 +111,8 @@ export default async function AdminDashboardPage() {
       role="admin"
       roleLabel={roleLabel[currentUser.role]}
       userName={currentUser.name}
-      title="Admin Dashboard"
-      description="Platform overview and pending actions."
+      title={t("dashboard")}
+      description={t("dashboardDesc")}
     >
       <div className="flex flex-col gap-6">
         {/* Stats */}
@@ -233,15 +236,15 @@ export default async function AdminDashboardPage() {
                     <div className="flex gap-2">
                       <form action={approveTeacher} className="flex-1">
                         <input type="hidden" name="userId" value={item.id} />
-                        <Button size="sm" type="submit" className="w-full rounded-full">
+                        <SubmitButton size="sm" className="w-full rounded-full" pendingLabel="Approving…">
                           <Check className="size-3.5" /> Approve
-                        </Button>
+                        </SubmitButton>
                       </form>
                       <form action={rejectTeacher} className="flex-1">
                         <input type="hidden" name="userId" value={item.id} />
-                        <Button size="sm" type="submit" variant="outline" className="w-full rounded-full">
+                        <SubmitButton size="sm" variant="outline" className="w-full rounded-full" pendingLabel="Rejecting…">
                           <X className="size-3.5" /> Reject
-                        </Button>
+                        </SubmitButton>
                       </form>
                     </div>
                   </div>

@@ -1,11 +1,21 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { prisma } from "@/lib/db";
 import { hashPassword, verifyPassword } from "@/lib/password";
 import { createSession, deleteSession } from "@/lib/session";
 import { roleToBasePath } from "@/lib/roles";
 import { LoginFormSchema, RegisterFormSchema } from "@/lib/definitions";
+
+async function setLocaleCookie(locale: string) {
+  const cookieStore = await cookies();
+  cookieStore.set("locale", locale, {
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365,
+    sameSite: "lax",
+  });
+}
 
 export type AuthFormState =
   | {
@@ -36,6 +46,7 @@ export async function login(
   }
 
   await createSession(user.id, user.role);
+  await setLocaleCookie(user.preferredLanguage ?? "EN");
   redirect(roleToBasePath[user.role]);
 }
 
@@ -76,6 +87,7 @@ export async function register(
   });
 
   await createSession(user.id, user.role);
+  await setLocaleCookie(language ?? "EN");
   redirect(roleToBasePath[user.role]);
 }
 

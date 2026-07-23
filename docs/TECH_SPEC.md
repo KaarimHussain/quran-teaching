@@ -38,8 +38,8 @@ theme in `app/globals.css` — see `BRAND_GUIDELINES.md`).
 
 **Target deployment: Hostinger Shared/Business Hosting "Node.js App" (cPanel + Phusion
 Passenger).** This is a single-Node-process environment with no Docker, no root access,
-no self-hosted background services, and a MySQL/MariaDB database (no PostgreSQL). The
-stack below is adjusted accordingly — see "Hosting Constraints" further down.
+no self-hosted background services, and a MySQL/MariaDB database provisioned via hPanel.
+The stack below is adjusted accordingly — see "Hosting Constraints" further down.
 
 | Layer | Choice | Notes |
 | --- | --- | --- |
@@ -47,8 +47,8 @@ stack below is adjusted accordingly — see "Hosting Constraints" further down.
 | UI | Tailwind v4 + shadcn components | Already initialized (`components/ui`, `components.json`); dark mode via existing `.dark` theme tokens |
 | Internationalization | `next-intl` (or similar App Router i18n library) | English, Urdu, Arabic; Urdu/Arabic require RTL (`dir="rtl"`) layout support |
 | Auth | Auth.js (NextAuth) with credentials/email | Roles (`SUPER_ADMIN`, `TEACHER`, `STUDENT`, `PARENT`) stored on `User`, enforced via middleware/route guards |
-| Database | **PGlite** (embedded WASM Postgres, file-backed) | Runs in-process with the Node app, so it works on Hostinger's single-process Node hosting without a separately provisioned database service. Data persists to a directory on disk (`DATABASE_DIR`) |
-| ORM | Prisma (`provider = "postgresql"`, `pglite-prisma-adapter`) | Type-safe schema matching `DATA_MODEL.md`; `PrismaClient` is constructed with the `PrismaPGlite` driver adapter (`lib/db.ts`). Schema migrations are generated offline via `prisma migrate diff` and applied to PGlite with `npm run db:migrate` (see `prisma/migrate.ts`) |
+| Database | **MySQL / MariaDB** (Hostinger hPanel database) | Provisioned via Hostinger's hPanel "Databases" section. Connection configured via `DATABASE_URL` environment variable |
+| ORM | Prisma (`provider = "mysql"`) | Type-safe schema matching `DATA_MODEL.md`; standard `PrismaClient` with no custom adapter (`lib/db.ts`). Migrations managed with `prisma migrate deploy` (`npm run db:migrate`) |
 | Live video classes | **Embedded Jitsi-as-a-Service (`meet.jit.si` / 8x8 JaaS)** or a managed provider (LiveKit Cloud free tier, Daily.co, 100ms) | Self-hosting Jitsi/LiveKit requires a VPS, which isn't available here — use the public/managed Jitsi instance embedded via iframe, or a managed video API's free tier. Recording handled by the provider, not the app server **[DECISION NEEDED]** |
 | File storage | External S3-compatible storage (Cloudflare R2 free tier, Backblaze B2, Supabase Storage) | Resource library files, class recordings, certificate PDFs, subtitle files — do **not** rely on Hostinger's disk quota for user-uploaded media |
 | Real-time updates | Polling (e.g., periodic fetch via React Query/SWR) or a managed realtime service (Pusher/Ably free tier) | Long-lived WebSocket connections are unreliable on shared Node.js hosting — avoid a self-hosted socket.io server |
@@ -107,11 +107,10 @@ hPanel's "Setup Node.js App". This shapes several decisions above:
 - **Entry point**: Next.js must be built (`next build`) and started via a small
   `server.js` (custom server) that Passenger invokes — not the Vercel serverless model.
   No edge runtime / serverless functions.
-- **Database**: PGlite (embedded WASM Postgres) runs inside the same Node process —
-  no separately provisioned MySQL/MariaDB instance is needed. Its data directory
-  (`DATABASE_DIR`, see `.env`) must be a writable path that persists across deploys
-  (e.g. a sibling directory outside the deployed app bundle, not inside `node_modules`
-  or the build output).
+- **Database**: MySQL/MariaDB provisioned through Hostinger hPanel "Databases". Set
+  `DATABASE_URL=mysql://user:password@host:3306/dbname` in the hPanel environment
+  variable UI. Run `npm run db:migrate` (which calls `prisma migrate deploy`) after
+  each deploy to apply any pending schema migrations.
 - **No Docker / no root**: anything requiring a separate service (Jitsi, LiveKit,
   Redis, socket.io server) must be an external managed dependency, not self-hosted.
 - **Disk usage**: app code + `node_modules` only. User-generated media (recordings,
@@ -188,4 +187,5 @@ hPanel's "Setup Node.js App". This shapes several decisions above:
 5. One-to-one class booking: student-initiated vs. admin/teacher-assigned (see
    `DATA_MODEL.md` open questions).
 6. Confirm exact Hostinger Node.js runtime version and server OS (for Prisma
-   `binaryTargets`) before scaffolding the database layer.
+   `binaryTargets`) before deploying — run `prisma generate` as part of the
+   build step so the correct native query engine binary is bundled.

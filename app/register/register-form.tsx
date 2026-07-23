@@ -2,17 +2,12 @@
 
 import { useActionState } from "react";
 import { ArrowRight, GraduationCap, BookOpenCheck, Heart } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { register } from "@/app/actions/auth";
-
-const roles = [
-  { value: "STUDENT", label: "Student", icon: GraduationCap },
-  { value: "TEACHER", label: "Teacher", icon: BookOpenCheck },
-  { value: "PARENT", label: "Parent", icon: Heart },
-];
 
 const languages = [
   { value: "EN", label: "English" },
@@ -22,12 +17,19 @@ const languages = [
 
 export function RegisterForm() {
   const [state, formAction, pending] = useActionState(register, undefined);
+  const t = useTranslations("auth.register");
+
+  const roles = [
+    { value: "STUDENT", label: t("student"), icon: GraduationCap },
+    { value: "TEACHER", label: t("teacher"), icon: BookOpenCheck },
+    { value: "PARENT", label: t("parent"), icon: Heart },
+  ];
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
       {/* Role selection */}
       <fieldset className="flex flex-col gap-2">
-        <Label className="text-sm">I am joining as a&hellip;</Label>
+        <Label className="text-sm">{t("joiningAs")}</Label>
         <div className="grid grid-cols-3 gap-2">
           {roles.map((role, index) => (
             <div key={role.value}>
@@ -55,12 +57,12 @@ export function RegisterForm() {
       </fieldset>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="name">Full Name</Label>
+        <Label htmlFor="name">{t("fullName")}</Label>
         <Input
           id="name"
           name="name"
           type="text"
-          placeholder="Your full name"
+          placeholder={t("namePlaceholder")}
           required
           aria-invalid={!!state?.fieldErrors?.name}
         />
@@ -70,12 +72,12 @@ export function RegisterForm() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("email")}</Label>
         <Input
           id="email"
           name="email"
           type="email"
-          placeholder="you@example.com"
+          placeholder={t("emailPlaceholder")}
           required
           aria-invalid={!!state?.fieldErrors?.email}
         />
@@ -86,12 +88,12 @@ export function RegisterForm() {
 
       <div className="grid grid-cols-2 gap-3">
         <div className="flex flex-col gap-2">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">{t("password")}</Label>
           <Input
             id="password"
             name="password"
             type="password"
-            placeholder="••••••••"
+            placeholder={t("passwordPlaceholder")}
             required
             aria-invalid={!!state?.fieldErrors?.password}
           />
@@ -100,12 +102,12 @@ export function RegisterForm() {
           )}
         </div>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="confirm-password">Confirm</Label>
+          <Label htmlFor="confirm-password">{t("confirm")}</Label>
           <Input
             id="confirm-password"
             name="confirmPassword"
             type="password"
-            placeholder="••••••••"
+            placeholder={t("passwordPlaceholder")}
             required
             aria-invalid={!!state?.fieldErrors?.confirmPassword}
           />
@@ -117,7 +119,7 @@ export function RegisterForm() {
 
       {/* Language selection */}
       <fieldset className="flex flex-col gap-2">
-        <Label className="text-sm">Preferred Language</Label>
+        <Label className="text-sm">{t("preferredLanguage")}</Label>
         <div className="grid grid-cols-3 gap-2">
           {languages.map((lang, index) => (
             <div key={lang.value}>
@@ -143,8 +145,7 @@ export function RegisterForm() {
       <div className="flex items-start gap-2">
         <Checkbox id="terms" name="terms" className="mt-0.5" required />
         <Label htmlFor="terms" className="text-xs font-normal text-muted-foreground">
-          I agree to learn and teach with sincerity, respect, and patience, following
-          the Quran Learning community guidelines.
+          {t("terms")}
         </Label>
       </div>
       {state?.fieldErrors?.terms && (
@@ -154,7 +155,7 @@ export function RegisterForm() {
       {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
 
       <Button type="submit" className="mt-1 w-full rounded-full" disabled={pending}>
-        {pending ? "Creating account…" : "Create Account"} <ArrowRight className="size-4" />
+        {pending ? t("submitting") : t("submit")} <ArrowRight className="size-4" />
       </Button>
     </form>
   );

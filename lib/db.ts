@@ -1,15 +1,17 @@
 import "dotenv/config";
-import { PrismaPGlite } from "pglite-prisma-adapter";
 import { PrismaClient } from "@/lib/generated/prisma/client";
-import { getPGlite } from "@/lib/pglite";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
 };
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({ adapter: new PrismaPGlite(getPGlite()) });
+function createPrisma() {
+  const adapter = new PrismaMariaDb(process.env.DATABASE_URL!);
+  return new PrismaClient({ adapter });
+}
+
+export const prisma = globalForPrisma.prisma ?? createPrisma();
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;

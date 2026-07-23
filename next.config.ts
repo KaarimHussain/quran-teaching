@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
-const nextConfig: NextConfig = {
-  // PGlite/Prisma must be excluded from Server Components bundling.
-  serverExternalPackages: ["@electric-sql/pglite", "pglite-prisma-adapter"],
-};
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
-export default nextConfig;
+const nextConfig: NextConfig = {};
+
+export default withNextIntl(nextConfig);

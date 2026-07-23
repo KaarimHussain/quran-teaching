@@ -7,6 +7,7 @@ import {
   Mic,
   Brain,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -106,14 +107,16 @@ const typeVariant: Record<string, "secondary" | "outline"> = {
   Group: "outline",
 };
 
-export default function StudentSchedulePage() {
+export default async function StudentSchedulePage() {
+  const t = await getTranslations("pages.student");
+
   return (
     <DashboardShell
       role="student"
       roleLabel="Student"
       userName="Yusuf Khan"
-      title="Schedule"
-      description="Your weekly class timetable and upcoming sessions."
+      title={t("schedule")}
+      description={t("scheduleDesc")}
     >
       <div className="flex flex-col gap-6">
         {/* Weekly view */}

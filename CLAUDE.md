@@ -6,17 +6,17 @@ This project is the **Free Quranic Learning Portal** — a platform providing fr
 Quranic education (English, Urdu, Arabic) to children, adults, and new Muslims, with
 Super Admin, Teacher, Student, and Parent roles. Before implementing features, consult:
 
-- `REQUIREMENTS.md` — original source requirements
-- `PRD.md` — product vision, personas, goals, scope
-- `FEATURES.md` — detailed feature specs & acceptance criteria
-- `DATA_MODEL.md` — entities, fields, relationships
-- `USER_FLOWS.md` — key user journeys
-- `TECH_SPEC.md` — architecture, stack, API surface, open decisions
-- `ROADMAP.md` — phased delivery plan
+- `docs/REQUIREMENTS.md` — original source requirements
+- `docs/PRD.md` — product vision, personas, goals, scope
+- `docs/FEATURES.md` — detailed feature specs & acceptance criteria
+- `docs/DATA_MODEL.md` — entities, fields, relationships
+- `docs/USER_FLOWS.md` — key user journeys
+- `docs/TECH_SPEC.md` — architecture, stack, API surface, open decisions
+- `docs/ROADMAP.md` — phased delivery plan
 
 # Brand & Design System
 
-This project has a defined visual identity — see `BRAND_GUIDELINES.md` for the full color
+This project has a defined visual identity — see `docs/BRAND_GUIDELINES.md` for the full color
 palette, typography, and component conventions. A live reference is available at the
 `/brand-guideline` route (`app/brand-guideline/page.tsx`).
 

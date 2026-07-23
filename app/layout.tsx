@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Cinzel_Decorative, Montserrat } from "next/font/google";
+import { cookies } from "next/headers";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -19,17 +22,40 @@ export const metadata: Metadata = {
   description: "A peaceful place to pray, learn, and belong",
 };
 
-export default function RootLayout({
+const rtlLocales = new Set(["UR", "AR"]);
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const theme = cookieStore.get("theme")?.value;
+  const locale = cookieStore.get("locale")?.value ?? "EN";
+
+  const isDark = theme === "dark";
+  const isRtl = rtlLocales.has(locale);
+
+  const messages = await getMessages();
+
   return (
     <html
-      lang="en"
-      className={cn("h-full", "antialiased", montserrat.variable, cinzelDecorative.variable, "font-sans")}
+      lang={locale.toLowerCase()}
+      dir={isRtl ? "rtl" : "ltr"}
+      className={cn(
+        "h-full",
+        "antialiased",
+        montserrat.variable,
+        cinzelDecorative.variable,
+        "font-sans",
+        isDark && "dark"
+      )}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <NextIntlClientProvider messages={messages}>
+          {children}
+        </NextIntlClientProvider>
+      </body>
     </html>
   );
 }

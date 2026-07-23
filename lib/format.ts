@@ -20,3 +20,16 @@ export function formatRelativeTime(date: Date): string {
 
   return rtf.format(Math.round(diff / 1000), "second");
 }
+
+const dateTimeFormatter = new Intl.DateTimeFormat("en", {
+  dateStyle: "medium",
+  timeStyle: "short",
+});
+
+export function formatDateTime(date: Date): string {
+  return dateTimeFormatter.format(date);
+}
+
+export function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat("en", { dateStyle: "medium" }).format(date);
+}

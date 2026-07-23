@@ -1,0 +1,165 @@
+{
+  "nav": {
+    "student": {
+      "dashboard": "لوحة التحكم",
+      "courses": "دوراتي",
+      "schedule": "الجدول الزمني",
+      "assignments": "الواجبات",
+      "progress": "التقدم",
+      "resources": "الموارد",
+      "certificates": "الشهادات",
+      "forum": "المنتدى"
+    },
+    "teacher": {
+      "dashboard": "لوحة التحكم",
+      "availability": "التوفر",
+      "classes": "الفصول",
+      "students": "الطلاب",
+      "assignments": "الواجبات",
+      "resources": "الموارد",
+      "forum": "المنتدى"
+    },
+    "parent": {
+      "dashboard": "لوحة التحكم",
+      "children": "أطفالي",
+      "attendance": "الحضور",
+      "progress": "التقدم",
+      "homework": "الواجبات المنزلية",
+      "messages": "الرسائل"
+    },
+    "admin": {
+      "dashboard": "لوحة التحكم",
+      "users": "المستخدمون",
+      "courses": "الدورات",
+      "schedule": "الجدول الزمني",
+      "verifications": "التحقق من المعلمين",
+      "forum": "إدارة المنتدى",
+      "reports": "التقارير"
+    }
+  },
+  "shell": {
+    "appName": "تعلم القرآن",
+    "logout": "تسجيل الخروج",
+    "notifications": "الإشعارات",
+    "openMenu": "فتح القائمة",
+    "toggleTheme": "تبديل السمة"
+  },
+  "pages": {
+    "admin": {
+      "dashboard": "لوحة تحكم المشرف",
+      "dashboardDesc": "نظرة عامة على المنصة والإجراءات المعلّقة.",
+      "courses": "الدورات",
+      "coursesDesc": "إدارة كتالوج الدورات وحالة التسجيل.",
+      "forum": "إدارة المنتدى",
+      "forumDesc": "مراجعة المنشورات الأخيرة والإشراف على منتدى المجتمع.",
+      "reports": "التقارير",
+      "reportsDesc": "تحليلات شاملة عبر التسجيلات والحضور والفصول.",
+      "schedule": "جدول الفصول",
+      "scheduleDesc": "عرض جلسات الفصول وإدارتها عبر المنصة.",
+      "users": "المستخدمون",
+      "usersDesc": "إدارة حسابات المنصة عبر جميع الأدوار.",
+      "verifications": "التحقق من المعلمين",
+      "verificationsDesc": "مراجعة طلبات المعلمين المتطوعين والمدفوعين والموافقة عليها."
+    },
+    "teacher": {
+      "dashboard": "لوحة تحكم المعلم",
+      "dashboardDesc": "إليك ما ينتظرك اليوم.",
+      "availability": "التوفر",
+      "availabilityDesc": "حدّد الأوقات التي تتاح فيها للتدريس. لا يمكن جدولة الفصول إلا ضمن هذه النوافذ الزمنية.",
+      "classes": "فصولي",
+      "classesDesc": "جلساتك المجدولة وسجلات الحضور.",
+      "students": "طلابي",
+      "studentsDesc": "الطلاب المسجلون في دوراتك وتقدمهم.",
+      "assignments": "الواجبات",
+      "assignmentsDesc": "أنشئ الواجبات المنزلية وراجع تقديمات طلابك.",
+      "resources": "الموارد",
+      "resourcesDesc": "ارفع أوراق العمل والتسجيلات والأدلة لطلابك.",
+      "forum": "منتدى المجتمع",
+      "forumDesc": "تواصل مع الطلاب وأولياء الأمور وزملائك المعلمين."
+    },
+    "student": {
+      "dashboard": "لوحة تحكم الطالب",
+      "dashboardDesc": "أهلاً بك، {name} — واصل المثابرة!",
+      "courses": "دوراتي",
+      "coursesDesc": "واصل رحلتك التعليمية، درس واحد في كل مرة.",
+      "schedule": "الجدول الزمني",
+      "scheduleDesc": "فصولك القادمة وسجل الجلسات.",
+      "assignments": "الواجبات",
+      "assignmentsDesc": "تتبّع واجباتك المنزلية وتقديماتك وملاحظاتك.",
+      "progress": "تقدمي",
+      "progressDesc": "نظرة على رحلتك التعليمية وإنجازاتك.",
+      "resources": "الموارد",
+      "resourcesDesc": "أوراق عمل وتسجيلات وأدلة لدعم تعلمك.",
+      "certificates": "الشهادات",
+      "certificatesDesc": "احتفل بإنجازاتك وتعرّف على ما ينتظرك.",
+      "forum": "منتدى المجتمع",
+      "forumDesc": "اطرح الأسئلة وشارك تقدمك وتعلّم معاً."
+    },
+    "parent": {
+      "dashboard": "لوحة تحكم ولي الأمر",
+      "dashboardDesc": "نظرة عامة على رحلة أطفالك التعليمية.",
+      "children": "أطفالي",
+      "childrenDesc": "نظرة عامة على كل طفل مرتبط بحسابك.",
+      "attendance": "الحضور",
+      "attendanceDesc": "تتبّع سجل حضور أطفالك في الفصول.",
+      "progress": "التقدم",
+      "progressDesc": "التقدم التعليمي التفصيلي عبر جميع الدورات.",
+      "homework": "الواجبات المنزلية",
+      "homeworkDesc": "تتبّع حالة الواجبات لأطفالك.",
+      "messages": "الرسائل",
+      "messagesDesc": "التواصل مع معلمي أطفالك."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "مرحباً بعودتك",
+      "subtitle": "سجّل دخولك لمتابعة رحلتك التعليمية",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "emailPlaceholder": "بريدك الإلكتروني",
+      "passwordPlaceholder": "••••••••",
+      "submit": "تسجيل الدخول",
+      "submitting": "جارٍ تسجيل الدخول…",
+      "noAccount": "ليس لديك حساب؟",
+      "register": "أنشئ حساباً"
+    },
+    "register": {
+      "title": "انضم إلى المجتمع",
+      "subtitle": "ابدأ رحلتك في تعلم القرآن الكريم اليوم",
+      "joiningAs": "أنضم بوصفي…",
+      "student": "طالب",
+      "teacher": "معلم",
+      "parent": "ولي أمر",
+      "fullName": "الاسم الكامل",
+      "namePlaceholder": "اسمك الكامل",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "بريدك الإلكتروني",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "••••••••",
+      "confirm": "تأكيد",
+      "preferredLanguage": "اللغة المفضلة",
+      "terms": "أوافق على التعلم والتعليم بإخلاص واحترام وصبر، وفقاً لإرشادات مجتمع تعلم القرآن.",
+      "submit": "إنشاء حساب",
+      "submitting": "جارٍ إنشاء الحساب…",
+      "haveAccount": "لديك حساب بالفعل؟",
+      "signIn": "تسجيل الدخول"
+    }
+  },
+  "common": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "beginner": "مبتدئ",
+    "intermediate": "متوسط",
+    "advanced": "متقدم",
+    "enroll": "التسجيل الآن",
+    "enrolling": "جارٍ التسجيل…",
+    "confirmEnroll": "تأكيد التسجيل",
+    "cancel": "إلغاء",
+    "search": "بحث",
+    "save": "حفظ",
+    "view": "عرض",
+    "download": "تنزيل",
+    "submit": "إرسال",
+    "noData": "لا توجد بيانات"
+  }
+}

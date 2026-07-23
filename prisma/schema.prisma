@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
 }
 
 // ---------------------------------------------------------------------------
@@ -103,10 +103,10 @@ enum ResourceType {
 // ---------------------------------------------------------------------------
 
 model User {
-  id                String   @id @default(uuid())
+  id                String   @id @default(uuid()) @db.VarChar(36)
   name              String
   email             String   @unique
-  passwordHash      String
+  passwordHash      String   @db.Text
   role              Role
   preferredLanguage Language @default(EN)
   isActive          Boolean  @default(true)
@@ -164,9 +164,9 @@ model User {
 }
 
 model ParentStudentLink {
-  id            String   @id @default(uuid())
-  parentUserId  String
-  studentUserId String
+  id            String   @id @default(uuid()) @db.VarChar(36)
+  parentUserId  String   @db.VarChar(36)
+  studentUserId String   @db.VarChar(36)
   createdAt     DateTime @default(now())
 
   parent  User @relation("ParentLinks", fields: [parentUserId], references: [id], onDelete: Cascade)
@@ -181,9 +181,9 @@ model ParentStudentLink {
 // ---------------------------------------------------------------------------
 
 model Course {
-  id          String   @id @default(uuid())
+  id          String   @id @default(uuid()) @db.VarChar(36)
   name        String   @unique
-  description String?
+  description String?  @db.Text
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -200,9 +200,9 @@ model Course {
 }
 
 model Enrollment {
-  id            String           @id @default(uuid())
-  studentUserId String
-  courseId      String
+  id            String           @id @default(uuid()) @db.VarChar(36)
+  studentUserId String           @db.VarChar(36)
+  courseId      String           @db.VarChar(36)
   pathwayLevel  PathwayLevel     @default(BEGINNER)
   enrolledAt    DateTime         @default(now())
   status        EnrollmentStatus @default(ACTIVE)
@@ -219,8 +219,8 @@ model Enrollment {
 // ---------------------------------------------------------------------------
 
 model TeacherAvailability {
-  id            String    @id @default(uuid())
-  teacherUserId String
+  id            String    @id @default(uuid()) @db.VarChar(36)
+  teacherUserId String    @db.VarChar(36)
   dayOfWeek     Int?
   startTime     String
   endTime       String
@@ -233,14 +233,14 @@ model TeacherAvailability {
 }
 
 model ClassSession {
-  id             String      @id @default(uuid())
-  courseId       String
-  teacherUserId  String
+  id             String      @id @default(uuid()) @db.VarChar(36)
+  courseId       String      @db.VarChar(36)
+  teacherUserId  String      @db.VarChar(36)
   type           ClassType
   scheduledStart DateTime
   scheduledEnd   DateTime
   status         ClassStatus @default(SCHEDULED)
-  joinUrl        String?
+  joinUrl        String?     @db.Text
   roomId         String?
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
@@ -256,9 +256,9 @@ model ClassSession {
 }
 
 model ClassParticipant {
-  id             String @id @default(uuid())
-  classSessionId String
-  studentUserId  String
+  id             String @id @default(uuid()) @db.VarChar(36)
+  classSessionId String @db.VarChar(36)
+  studentUserId  String @db.VarChar(36)
 
   classSession ClassSession @relation(fields: [classSessionId], references: [id], onDelete: Cascade)
   student      User         @relation(fields: [studentUserId], references: [id], onDelete: Cascade)
@@ -268,9 +268,9 @@ model ClassParticipant {
 }
 
 model Recording {
-  id              String   @id @default(uuid())
-  classSessionId  String   @unique
-  url             String
+  id              String   @id @default(uuid()) @db.VarChar(36)
+  classSessionId  String   @unique @db.VarChar(36)
+  url             String   @db.Text
   durationSeconds Int?
   createdAt       DateTime @default(now())
 
@@ -280,11 +280,11 @@ model Recording {
 }
 
 model Attendance {
-  id             String           @id @default(uuid())
-  classSessionId String
-  studentUserId  String
+  id             String           @id @default(uuid()) @db.VarChar(36)
+  classSessionId String           @db.VarChar(36)
+  studentUserId  String           @db.VarChar(36)
   status         AttendanceStatus
-  markedByUserId String
+  markedByUserId String           @db.VarChar(36)
   recordedAt     DateTime         @default(now())
 
   classSession ClassSession @relation(fields: [classSessionId], references: [id], onDelete: Cascade)
@@ -300,12 +300,12 @@ model Attendance {
 // ---------------------------------------------------------------------------
 
 model Assignment {
-  id             String   @id @default(uuid())
-  courseId       String
-  classSessionId String?
-  teacherUserId  String
+  id             String   @id @default(uuid()) @db.VarChar(36)
+  courseId       String   @db.VarChar(36)
+  classSessionId String?  @db.VarChar(36)
+  teacherUserId  String   @db.VarChar(36)
   title          String
-  description    String?
+  description    String?  @db.Text
   dueDate        DateTime
   createdAt      DateTime @default(now())
 
@@ -318,14 +318,14 @@ model Assignment {
 }
 
 model Submission {
-  id            String                @id @default(uuid())
-  assignmentId  String
-  studentUserId String
+  id            String                @id @default(uuid()) @db.VarChar(36)
+  assignmentId  String                @db.VarChar(36)
+  studentUserId String                @db.VarChar(36)
   contentType   SubmissionContentType
-  content       String?
+  content       String?               @db.Text
   status        SubmissionStatus      @default(NOT_SUBMITTED)
   grade         String?
-  feedback      String?
+  feedback      String?               @db.Text
   submittedAt   DateTime?
   reviewedAt    DateTime?
 
@@ -341,15 +341,15 @@ model Submission {
 // ---------------------------------------------------------------------------
 
 model ProgressEntry {
-  id                String      @id @default(uuid())
-  studentUserId     String
-  courseId          String
-  subjectArea       SubjectArea
-  description       String
-  level             String?
-  percentComplete   Int?
-  recordedByUserId  String
-  recordedAt        DateTime    @default(now())
+  id               String      @id @default(uuid()) @db.VarChar(36)
+  studentUserId    String      @db.VarChar(36)
+  courseId         String      @db.VarChar(36)
+  subjectArea      SubjectArea
+  description      String      @db.Text
+  level            String?
+  percentComplete  Int?
+  recordedByUserId String      @db.VarChar(36)
+  recordedAt       DateTime    @default(now())
 
   student    User   @relation("StudentProgress", fields: [studentUserId], references: [id], onDelete: Cascade)
   course     Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -363,10 +363,10 @@ model ProgressEntry {
 // ---------------------------------------------------------------------------
 
 model Notification {
-  id        String           @id @default(uuid())
-  userId    String
+  id        String           @id @default(uuid()) @db.VarChar(36)
+  userId    String           @db.VarChar(36)
   type      NotificationType
-  message   String
+  message   String           @db.Text
   isRead    Boolean          @default(false)
   createdAt DateTime         @default(now())
 
@@ -380,15 +380,15 @@ model Notification {
 // ---------------------------------------------------------------------------
 
 model Resource {
-  id               String       @id @default(uuid())
-  courseId         String?
+  id               String       @id @default(uuid()) @db.VarChar(36)
+  courseId         String?      @db.VarChar(36)
   type             ResourceType
   title            String
-  description      String?
-  url              String
+  description      String?      @db.Text
+  url              String       @db.Text
   language         Language     @default(EN)
-  subtitleUrls     Json?
-  uploadedByUserId String
+  subtitleUrls     Json?        @db.Json
+  uploadedByUserId String       @db.VarChar(36)
   createdAt        DateTime     @default(now())
 
   course     Course? @relation(fields: [courseId], references: [id])
@@ -402,11 +402,11 @@ model Resource {
 // ---------------------------------------------------------------------------
 
 model ForumPost {
-  id           String   @id @default(uuid())
-  courseId     String?
-  authorUserId String
+  id           String   @id @default(uuid()) @db.VarChar(36)
+  courseId     String?  @db.VarChar(36)
+  authorUserId String   @db.VarChar(36)
   title        String
-  body         String
+  body         String   @db.Text
   isLocked     Boolean  @default(false)
   isRemoved    Boolean  @default(false)
   createdAt    DateTime @default(now())
@@ -419,10 +419,10 @@ model ForumPost {
 }
 
 model ForumReply {
-  id           String   @id @default(uuid())
-  postId       String
-  authorUserId String
-  body         String
+  id           String   @id @default(uuid()) @db.VarChar(36)
+  postId       String   @db.VarChar(36)
+  authorUserId String   @db.VarChar(36)
+  body         String   @db.Text
   isRemoved    Boolean  @default(false)
   createdAt    DateTime @default(now())
 
@@ -437,12 +437,12 @@ model ForumReply {
 // ---------------------------------------------------------------------------
 
 model Certificate {
-  id             String       @id @default(uuid())
-  studentUserId  String
-  courseId       String
+  id             String       @id @default(uuid()) @db.VarChar(36)
+  studentUserId  String       @db.VarChar(36)
+  courseId       String       @db.VarChar(36)
   pathwayLevel   PathwayLevel
   issuedAt       DateTime     @default(now())
-  certificateUrl String?
+  certificateUrl String?      @db.Text
 
   student User   @relation(fields: [studentUserId], references: [id], onDelete: Cascade)
   course  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -451,10 +451,10 @@ model Certificate {
 }
 
 model TeacherBadge {
-  id              String   @id @default(uuid())
-  teacherUserId   String
+  id              String   @id @default(uuid()) @db.VarChar(36)
+  teacherUserId   String   @db.VarChar(36)
   badgeName       String
-  awardedByUserId String
+  awardedByUserId String   @db.VarChar(36)
   awardedAt       DateTime @default(now())
 
   teacher   User @relation("TeacherBadges", fields: [teacherUserId], references: [id], onDelete: Cascade)

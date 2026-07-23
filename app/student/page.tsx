@@ -21,6 +21,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { requireCurrentUser } from "@/lib/dal";
+import { getTranslations } from "next-intl/server";
 
 const stats = [
   { label: "Enrolled Courses", value: "3", icon: BookOpen, color: "bg-primary/10 text-primary" },
@@ -81,14 +83,18 @@ const statusVariant: Record<string, "default" | "secondary" | "outline"> = {
   "Not Submitted": "outline",
 };
 
-export default function StudentDashboardPage() {
+export default async function StudentDashboardPage() {
+  const currentUser = await requireCurrentUser();
+  const t = await getTranslations("pages.student");
+  const firstName = currentUser.name.split(" ")[0];
+
   return (
     <DashboardShell
       role="student"
       roleLabel="Student"
-      userName="Yusuf Khan"
-      title="Student Dashboard"
-      description="Welcome back, Yusuf — keep up the great work!"
+      userName={currentUser.name}
+      title={t("dashboard")}
+      description={t("dashboardDesc", { name: firstName })}
     >
       <div className="flex flex-col gap-6">
         {/* Stats */}

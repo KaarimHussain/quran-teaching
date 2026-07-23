@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BookOpenText } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,7 +12,9 @@ import {
 } from "@/components/ui/card";
 import { RegisterForm } from "./register-form";
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const t = await getTranslations("auth.register");
+
   return (
     <div className="flex min-h-full flex-1">
       {/* Form */}
@@ -26,10 +29,8 @@ export default function RegisterPage() {
 
           <Card className="border-border/80">
             <CardHeader>
-              <CardTitle className="font-heading text-2xl text-primary">Create Your Account</CardTitle>
-              <CardDescription>
-                Join a free, global community of Quran learners and teachers.
-              </CardDescription>
+              <CardTitle className="font-heading text-2xl text-primary">{t("title")}</CardTitle>
+              <CardDescription>{t("subtitle")}</CardDescription>
             </CardHeader>
             <CardContent>
               <RegisterForm />
@@ -37,11 +38,11 @@ export default function RegisterPage() {
             <CardFooter className="flex-col gap-4">
               <div className="flex w-full items-center gap-3">
                 <span className="h-px flex-1 bg-border" />
-                <span className="text-xs text-muted-foreground">Already a member?</span>
+                <span className="text-xs text-muted-foreground">{t("haveAccount")}</span>
                 <span className="h-px flex-1 bg-border" />
               </div>
               <Button asChild variant="outline" className="w-full rounded-full">
-                <Link href="/login">Log In Instead</Link>
+                <Link href="/login">{t("signIn")}</Link>
               </Button>
             </CardFooter>
           </Card>

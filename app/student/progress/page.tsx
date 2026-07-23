@@ -1,14 +1,12 @@
 import {
-  Flame,
-  Clock,
-  CheckCircle2,
   TrendingUp,
-  Award,
   BookOpenText,
   Mic,
   Brain,
-  Star,
-  Lock,
+  ScrollText,
+  Sunrise,
+  Landmark,
+  CheckCircle2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -19,102 +17,162 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { WeeklyActivityChart } from "@/components/charts/weekly-activity-chart";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { getTranslations } from "next-intl/server";
+import { prisma } from "@/lib/db";
+import { requireCurrentUser } from "@/lib/dal";
+import { roleLabel } from "@/lib/roles";
+import { formatDate } from "@/lib/format";
 
-const stats = [
-  { label: "Learning Streak", value: "12 days", icon: Flame, color: "bg-primary/10 text-primary" },
-  { label: "Hours This Month", value: "18.5 hrs", icon: Clock, color: "bg-accent/20 text-accent-foreground" },
-  { label: "Lessons Completed", value: "47", icon: CheckCircle2, color: "bg-secondary/30 text-secondary-foreground" },
-  { label: "Overall Progress", value: "45%", icon: TrendingUp, color: "bg-chart-4/10 text-chart-4" },
-];
+const subjectIcons: Record<string, typeof BookOpenText> = {
+  NAZRA: BookOpenText,
+  TAJWEED: Mic,
+  HIFZ: Brain,
+  TAFSEER: ScrollText,
+};
 
-const subjectProgress = [
-  { subject: "Nazra Quran", icon: BookOpenText, percent: 70, color: "text-primary" },
-  { subject: "Tajweed", icon: Mic, percent: 45, color: "text-accent-foreground" },
-  { subject: "Hifz-ul-Quran", icon: Brain, percent: 20, color: "text-chart-4" },
-];
+const subjectLabels: Record<string, string> = {
+  NAZRA: "Nazra Quran",
+  TAJWEED: "Tajweed",
+  HIFZ: "Hifz-ul-Quran",
+  TAFSEER: "Tafseer",
+};
 
-const weeklyActivity = [
-  { day: "Mon", minutes: 30 },
-  { day: "Tue", minutes: 0 },
-  { day: "Wed", minutes: 45 },
-  { day: "Thu", minutes: 60 },
-  { day: "Fri", minutes: 15 },
-  { day: "Sat", minutes: 50 },
-  { day: "Sun", minutes: 35 },
-];
+const subjectColors: Record<string, string> = {
+  NAZRA: "text-primary",
+  TAJWEED: "text-accent-foreground",
+  HIFZ: "text-chart-4",
+  TAFSEER: "text-secondary-foreground",
+};
 
-const achievements = [
-  {
-    title: "First Steps",
-    description: "Completed your first lesson",
-    icon: Star,
-    earned: true,
-    color: "bg-primary/10 text-primary",
-  },
-  {
-    title: "7-Day Streak",
-    description: "Logged in and learned for 7 days in a row",
-    icon: Flame,
-    earned: true,
-    color: "bg-accent/20 text-accent-foreground",
-  },
-  {
-    title: "Nazra Halfway",
-    description: "Reached 50% completion in Nazra Quran",
-    icon: BookOpenText,
-    earned: true,
-    color: "bg-secondary/30 text-secondary-foreground",
-  },
-  {
-    title: "Tajweed Apprentice",
-    description: "Completed Module 1 of Tajweed",
-    icon: Mic,
-    earned: true,
-    color: "bg-chart-4/10 text-chart-4",
-  },
-  {
-    title: "First Surah Memorized",
-    description: "Fully memorized Surah Al-Fatiha",
-    icon: Brain,
-    earned: true,
-    color: "bg-primary/10 text-primary",
-  },
-  {
-    title: "30-Day Streak",
-    description: "Logged in and learned for 30 days in a row",
-    icon: Award,
-    earned: false,
-    color: "",
-  },
-];
+const courseIcons: Record<string, typeof BookOpenText> = {
+  "Nazra Quran": BookOpenText,
+  Tajweed: Mic,
+  "Hifz-ul-Quran": Brain,
+  Tafseer: ScrollText,
+  "Salah (Prayer Practice)": Sunrise,
+  "Islamic Studies": Landmark,
+};
 
-export default function StudentProgressPage() {
+const levelLabel: Record<string, string> = {
+  BEGINNER: "Beginner",
+  INTERMEDIATE: "Intermediate",
+  ADVANCED: "Advanced",
+};
+
+export default async function StudentProgressPage() {
+  const [user, t] = await Promise.all([
+    requireCurrentUser(),
+    getTranslations("pages.student"),
+  ]);
+
+  const [progressEntries, enrollments] = await Promise.all([
+    prisma.progressEntry.findMany({
+      where: { studentUserId: user.id },
+      include: { course: true },
+      orderBy: { recordedAt: "desc" },
+    }),
+    prisma.enrollment.findMany({
+      where: { studentUserId: user.id, status: "ACTIVE" },
+      include: { course: true },
+      orderBy: { enrolledAt: "asc" },
+    }),
+  ]);
+
+  // Latest progress entry per subjectArea
+  const latestBySubject = new Map<string, (typeof progressEntries)[0]>();
+  for (const entry of progressEntries) {
+    if (!latestBySubject.has(entry.subjectArea)) {
+      latestBySubject.set(entry.subjectArea, entry);
+    }
+  }
+  const subjectProgress = Array.from(latestBySubject.values());
+
+  const overallPercent =
+    subjectProgress.length > 0
+      ? Math.round(
+          subjectProgress.reduce(
+            (sum, e) => sum + (e.percentComplete ?? 0),
+            0
+          ) / subjectProgress.length
+        )
+      : 0;
+
   return (
     <DashboardShell
       role="student"
-      roleLabel="Student"
-      userName="Yusuf Khan"
-      title="My Progress"
-      description="A look at your learning journey and achievements."
+      roleLabel={roleLabel[user.role]}
+      userName={user.name}
+      language={user.preferredLanguage as "EN" | "UR" | "AR"}
+      title={t("progress")}
+      description={t("progressDesc")}
     >
       <div className="flex flex-col gap-6">
         {/* Stats */}
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <Card key={stat.label} size="sm" className="border-border/80">
-              <CardContent className="flex items-center gap-3">
-                <span className={`flex size-10 items-center justify-center rounded-lg ${stat.color}`}>
-                  <stat.icon className="size-5" />
+          <Card size="sm" className="border-border/80">
+            <CardContent className="flex items-center gap-3">
+              <span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <CheckCircle2 className="size-5" />
+              </span>
+              <div className="flex flex-col">
+                <span className="font-heading text-xl text-primary">
+                  {enrollments.length}
                 </span>
-                <div className="flex flex-col">
-                  <span className="font-heading text-xl text-primary">{stat.value}</span>
-                  <span className="text-xs text-muted-foreground">{stat.label}</span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                <span className="text-xs text-muted-foreground">
+                  Active Courses
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card size="sm" className="border-border/80">
+            <CardContent className="flex items-center gap-3">
+              <span className="flex size-10 items-center justify-center rounded-lg bg-accent/20 text-accent-foreground">
+                <TrendingUp className="size-5" />
+              </span>
+              <div className="flex flex-col">
+                <span className="font-heading text-xl text-primary">
+                  {overallPercent}%
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Overall Progress
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card size="sm" className="border-border/80">
+            <CardContent className="flex items-center gap-3">
+              <span className="flex size-10 items-center justify-center rounded-lg bg-secondary/30 text-secondary-foreground">
+                <BookOpenText className="size-5" />
+              </span>
+              <div className="flex flex-col">
+                <span className="font-heading text-xl text-primary">
+                  {subjectProgress.length}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Subjects Tracked
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card size="sm" className="border-border/80">
+            <CardContent className="flex items-center gap-3">
+              <span className="flex size-10 items-center justify-center rounded-lg bg-chart-4/10 text-chart-4">
+                <Brain className="size-5" />
+              </span>
+              <div className="flex flex-col">
+                <span className="font-heading text-xl text-primary">
+                  {progressEntries.length}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Progress Updates
+                </span>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -124,66 +182,143 @@ export default function StudentProgressPage() {
             <Card className="border-border/80">
               <CardHeader>
                 <CardTitle>Progress by Subject</CardTitle>
-                <CardDescription>How far along you are in each course</CardDescription>
+                <CardDescription>
+                  How far along you are in each subject
+                </CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-5">
-                {subjectProgress.map((item) => (
-                  <div key={item.subject} className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="flex items-center gap-2 font-medium">
-                        <item.icon className={`size-4 ${item.color}`} /> {item.subject}
-                      </span>
-                      <span className="text-muted-foreground">{item.percent}%</span>
-                    </div>
-                    <Progress value={item.percent} />
-                  </div>
-                ))}
+                {subjectProgress.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    No progress entries recorded yet.
+                  </p>
+                ) : (
+                  subjectProgress.map((entry) => {
+                    const SubjectIcon =
+                      subjectIcons[entry.subjectArea] ?? BookOpenText;
+                    const color =
+                      subjectColors[entry.subjectArea] ?? "text-primary";
+                    const label =
+                      subjectLabels[entry.subjectArea] ?? entry.subjectArea;
+                    return (
+                      <div
+                        key={entry.subjectArea}
+                        className="flex flex-col gap-2"
+                      >
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="flex items-center gap-2 font-medium">
+                            <SubjectIcon className={`size-4 ${color}`} />{" "}
+                            {label}
+                          </span>
+                          <span className="text-muted-foreground">
+                            {entry.percentComplete ?? 0}%
+                          </span>
+                        </div>
+                        <Progress value={entry.percentComplete ?? 0} />
+                        {entry.description && (
+                          <p className="text-xs text-muted-foreground">
+                            {entry.description}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
               </CardContent>
             </Card>
 
-            {/* Weekly activity */}
+            {/* Enrolled courses */}
             <Card className="border-border/80">
               <CardHeader>
-                <CardTitle>Weekly Activity</CardTitle>
-                <CardDescription>Minutes spent learning each day</CardDescription>
+                <CardTitle>Enrolled Courses</CardTitle>
+                <CardDescription>Your active learning pathways</CardDescription>
               </CardHeader>
-              <CardContent>
-                <WeeklyActivityChart data={weeklyActivity} />
+              <CardContent className="flex flex-col gap-3">
+                {enrollments.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    You are not enrolled in any courses yet.
+                  </p>
+                ) : (
+                  enrollments.map((enrollment) => {
+                    const CourseIcon =
+                      courseIcons[enrollment.course.name] ?? BookOpenText;
+                    return (
+                      <div
+                        key={enrollment.id}
+                        className="flex items-center gap-3 rounded-lg border border-border p-3"
+                      >
+                        <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                          <CourseIcon className="size-5" />
+                        </span>
+                        <div className="flex flex-1 flex-col gap-0.5">
+                          <span className="text-sm font-medium">
+                            {enrollment.course.name}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            Enrolled {formatDate(enrollment.enrolledAt)}
+                          </span>
+                        </div>
+                        <Badge variant="outline" className="rounded-full">
+                          {levelLabel[enrollment.pathwayLevel] ??
+                            enrollment.pathwayLevel}
+                        </Badge>
+                      </div>
+                    );
+                  })
+                )}
               </CardContent>
             </Card>
           </div>
 
           {/* Right column */}
           <div className="flex flex-col gap-6">
-            {/* Achievements */}
+            {/* Recent progress updates */}
             <Card className="border-border/80">
               <CardHeader>
-                <CardTitle>Achievements</CardTitle>
-                <CardDescription>Badges earned along the way</CardDescription>
+                <CardTitle>Recent Updates</CardTitle>
+                <CardDescription>Latest feedback from teachers</CardDescription>
               </CardHeader>
-              <CardContent className="grid grid-cols-2 gap-3">
-                {achievements.map((badge) => (
-                  <div
-                    key={badge.title}
-                    className={`flex flex-col items-center gap-2 rounded-lg border p-3 text-center ${
-                      badge.earned ? "border-border" : "border-dashed border-border opacity-50"
-                    }`}
-                  >
-                    <span
-                      className={`flex size-10 items-center justify-center rounded-full ${
-                        badge.earned ? badge.color : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {badge.earned ? <badge.icon className="size-5" /> : <Lock className="size-4" />}
-                    </span>
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-xs font-medium leading-tight">{badge.title}</span>
-                      <span className="text-[11px] text-muted-foreground leading-tight">
-                        {badge.description}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+              <CardContent className="flex flex-col gap-3">
+                {progressEntries.slice(0, 6).length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    No updates yet.
+                  </p>
+                ) : (
+                  progressEntries.slice(0, 6).map((entry) => {
+                    const SubjectIcon =
+                      subjectIcons[entry.subjectArea] ?? BookOpenText;
+                    const color =
+                      subjectColors[entry.subjectArea] ?? "text-primary";
+                    return (
+                      <div
+                        key={entry.id}
+                        className="flex items-start gap-3 rounded-lg border border-border p-3"
+                      >
+                        <span
+                          className={`mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted`}
+                        >
+                          <SubjectIcon className={`size-4 ${color}`} />
+                        </span>
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-xs font-medium">
+                            {subjectLabels[entry.subjectArea] ??
+                              entry.subjectArea}
+                            {entry.percentComplete != null && (
+                              <span className="ml-1 text-muted-foreground">
+                                · {entry.percentComplete}%
+                              </span>
+                            )}
+                          </span>
+                          <p className="text-xs text-muted-foreground line-clamp-2">
+                            {entry.description}
+                          </p>
+                          <span className="text-[11px] text-muted-foreground">
+                            {formatDate(entry.recordedAt)}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
               </CardContent>
             </Card>
 
@@ -191,17 +326,16 @@ export default function StudentProgressPage() {
             <Card className="border-border/80 bg-primary text-primary-foreground">
               <CardContent className="flex items-center gap-3">
                 <span className="flex size-10 items-center justify-center rounded-lg bg-primary-foreground/10">
-                  <Flame className="size-5" />
+                  <TrendingUp className="size-5" />
                 </span>
                 <div className="flex flex-col">
-                  <span className="font-heading text-sm">12-Day Streak!</span>
+                  <span className="font-heading text-sm">
+                    {overallPercent}% Complete
+                  </span>
                   <span className="text-xs text-primary-foreground/70">
-                    Keep going — you&apos;re building a great habit.
+                    Keep going — every session brings you closer!
                   </span>
                 </div>
-                <Badge variant="secondary" className="ml-auto rounded-full">
-                  +5 XP
-                </Badge>
               </CardContent>
             </Card>
           </div>
