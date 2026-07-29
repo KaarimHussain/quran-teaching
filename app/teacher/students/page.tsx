@@ -83,12 +83,12 @@ export default async function TeacherStudentsPage() {
       <Card className="border-border/80">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Users className="size-4" /> {t("students.studentRoster")}
+            <Users className="size-4" /> {t("studentsPage.studentRoster")}
           </CardTitle>
           <CardDescription>
             {enrollments.length === 0
-              ? t("students.noStudentsYet")
-              : t("students.enrollmentCount", { count: enrollments.length })}
+              ? t("studentsPage.noStudentsYet")
+              : t("studentsPage.enrollmentCount", { count: enrollments.length })}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
@@ -134,7 +134,7 @@ export default async function TeacherStudentsPage() {
 
           {enrollments.length === 0 && (
             <p className="text-sm text-muted-foreground">
-              {t("students.noStudentsYetDetail")}
+              {t("studentsPage.noStudentsYetDetail")}
             </p>
           )}
         </CardContent>

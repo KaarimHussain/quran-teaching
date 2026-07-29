@@ -26,6 +26,8 @@ export async function createAssignment(
   const title = formData.get("title");
   const description = formData.get("description");
   const dueDate = formData.get("dueDate");
+  const isWorksheetRaw = formData.get("isWorksheet");
+  const targetStudentUserId = formData.get("targetStudentUserId");
 
   if (typeof courseId !== "string" || typeof title !== "string" || title.trim().length < 3) {
     return { error: "Title must be at least 3 characters." };
@@ -38,6 +40,17 @@ export async function createAssignment(
   const due = new Date(dueDate);
   if (Number.isNaN(due.getTime())) {
     return { error: "Invalid due date." };
+  }
+
+  const isWorksheet = isWorksheetRaw === "true";
+
+  const resolvedTargetStudentId =
+    isWorksheet && typeof targetStudentUserId === "string" && targetStudentUserId.trim()
+      ? targetStudentUserId.trim()
+      : null;
+
+  if (isWorksheet && !resolvedTargetStudentId) {
+    return { error: "Please select a target student for this worksheet." };
   }
 
   const teacherCourseIds = await getTeacherCourseIds(user.id);
@@ -53,18 +66,24 @@ export async function createAssignment(
         title: title.trim(),
         description: typeof description === "string" && description.trim() ? description.trim() : null,
         dueDate: due,
+        isWorksheet,
+        targetStudentUserId: resolvedTargetStudentId,
       },
     }),
     prisma.course.findUnique({ where: { id: courseId }, select: { name: true } }),
     prisma.enrollment.findMany({
       where: { courseId, status: "ACTIVE" },
-      include: { student: { select: { email: true, name: true } } },
+      include: { student: { select: { id: true, email: true, name: true } } },
     }),
   ]);
 
   if (course) {
+    const recipients = resolvedTargetStudentId
+      ? enrollments.filter((e) => e.student.id === resolvedTargetStudentId)
+      : enrollments;
+
     void Promise.allSettled(
-      enrollments.map((e) =>
+      recipients.map((e) =>
         sendHomeworkAssignedEmail(e.student.email, e.student.name, assignment.title, course.name, due)
       )
     );

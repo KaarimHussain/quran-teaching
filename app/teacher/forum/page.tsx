@@ -1,4 +1,5 @@
-import { MessagesSquare, Lock, MessageSquare } from "lucide-react";
+import Link from "next/link";
+import { MessagesSquare, Lock, MessageSquare, ArrowRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -16,7 +17,6 @@ import { roleLabel } from "@/lib/roles";
 import { formatRelativeTime } from "@/lib/format";
 import { getTeacherCourseIds } from "@/lib/teacher";
 import { NewPostForm } from "./new-post-form";
-import { ReplyForm } from "./reply-form";
 
 function initials(name: string) {
   return name
@@ -45,11 +45,7 @@ export default async function TeacherForumPage() {
       include: {
         author: { select: { name: true } },
         course: { select: { name: true } },
-        replies: {
-          where: { isRemoved: false },
-          orderBy: { createdAt: "asc" },
-          include: { author: { select: { name: true } } },
-        },
+        _count: { select: { replies: true } },
       },
     }),
   ]);
@@ -82,52 +78,37 @@ export default async function TeacherForumPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             {posts.map((post) => (
-              <div key={post.id} className="flex flex-col gap-3 rounded-lg border border-border p-3">
-                <div className="flex items-start gap-3">
-                  <Avatar>
-                    <AvatarFallback>{initials(post.author.name)}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-1 flex-col gap-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      {post.isLocked && <Lock className="size-3.5 text-muted-foreground" />}
-                      <span className="text-sm font-medium leading-tight">{post.title}</span>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                      <Badge variant="outline" className="rounded-full">
-                        {post.course?.name ?? t("forumPage.generalDiscussion")}
-                      </Badge>
-                      <span>{t("forumPage.by")} {post.author.name}</span>
-                      <span>· {formatRelativeTime(post.createdAt)}</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{post.body}</p>
+              <Link
+                key={post.id}
+                href={`/teacher/forum/${post.id}`}
+                className="flex items-start gap-3 rounded-lg border border-border p-3 transition-colors hover:bg-muted/50 hover:border-primary/30"
+              >
+                <Avatar>
+                  <AvatarFallback>{initials(post.author.name)}</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-1 flex-col gap-1.5 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {post.isLocked && <Lock className="size-3.5 text-muted-foreground" />}
+                    <span className="text-sm font-medium leading-tight hover:text-primary transition-colors">
+                      {post.title}
+                    </span>
                   </div>
-                  <div className="flex shrink-0 items-center gap-1 text-sm text-muted-foreground">
-                    <MessageSquare className="size-4" /> {post.replies.length}
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                    <Badge variant="outline" className="rounded-full">
+                      {post.course?.name ?? t("forumPage.generalDiscussion")}
+                    </Badge>
+                    <span>{t("forumPage.by")} {post.author.name}</span>
+                    <span>· {formatRelativeTime(post.createdAt)}</span>
                   </div>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{post.body}</p>
                 </div>
-
-                {post.replies.length > 0 && (
-                  <div className="flex flex-col gap-2 border-t border-border pl-11 pt-2">
-                    {post.replies.map((reply) => (
-                      <div key={reply.id} className="flex items-start gap-2">
-                        <Avatar size="sm">
-                          <AvatarFallback>{initials(reply.author.name)}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col">
-                          <span className="text-xs font-medium">{reply.author.name}</span>
-                          <span className="text-sm text-muted-foreground">{reply.body}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {!post.isLocked && (
-                  <div className="pl-11">
-                    <ReplyForm postId={post.id} />
-                  </div>
-                )}
-              </div>
+                <div className="flex shrink-0 items-center gap-3 text-sm text-muted-foreground">
+                  <span className="flex items-center gap-1">
+                    <MessageSquare className="size-4" /> {post._count.replies}
+                  </span>
+                  <ArrowRight className="size-4" />
+                </div>
+              </Link>
             ))}
 
             {posts.length === 0 && (

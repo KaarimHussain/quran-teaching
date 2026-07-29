@@ -15,6 +15,8 @@ export async function enrollInCourse(
 
   const courseId = formData.get("courseId");
   const pathwayLevel = formData.get("pathwayLevel");
+  const isTrialRaw = formData.get("isTrial");
+  const preferredTeacherId = formData.get("preferredTeacherId");
 
   if (typeof courseId !== "string" || !courseId) return { error: "Invalid course." };
   if (pathwayLevel !== "BEGINNER" && pathwayLevel !== "INTERMEDIATE" && pathwayLevel !== "ADVANCED") {
@@ -29,8 +31,31 @@ export async function enrollInCourse(
   });
   if (existing) return { error: "You are already enrolled in this course." };
 
+  const isTrial = isTrialRaw === "true";
+  const trialEndsAt = isTrial ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : null;
+
+  const resolvedPreferredTeacherId =
+    typeof preferredTeacherId === "string" && preferredTeacherId.trim()
+      ? preferredTeacherId.trim()
+      : null;
+
+  if (resolvedPreferredTeacherId) {
+    const teacher = await prisma.user.findUnique({
+      where: { id: resolvedPreferredTeacherId, role: "TEACHER", verificationStatus: "VERIFIED" },
+      select: { id: true },
+    });
+    if (!teacher) return { error: "Selected teacher is not available." };
+  }
+
   await prisma.enrollment.create({
-    data: { studentUserId: user.id, courseId, pathwayLevel },
+    data: {
+      studentUserId: user.id,
+      courseId,
+      pathwayLevel,
+      isTrial,
+      trialEndsAt,
+      preferredTeacherId: resolvedPreferredTeacherId,
+    },
   });
 
   revalidatePath("/student/courses");

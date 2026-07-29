@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
-import { Cinzel_Decorative, Montserrat } from "next/font/google";
+import { Amiri, Cinzel_Decorative, Montserrat } from "next/font/google";
 import { cookies } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { TawkToChat } from "@/components/tawkto-chat";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-sans",
+});
+
+const amiri = Amiri({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "700"],
+  variable: "--font-arabic",
 });
 
 const cinzelDecorative = Cinzel_Decorative({
@@ -47,6 +54,7 @@ export default async function RootLayout({
         "antialiased",
         montserrat.variable,
         cinzelDecorative.variable,
+        amiri.variable,
         "font-sans",
         isDark && "dark"
       )}
@@ -55,6 +63,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
+        <TawkToChat />
       </body>
     </html>
   );

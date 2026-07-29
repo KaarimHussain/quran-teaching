@@ -8,7 +8,9 @@
       "progress": "Progress",
       "resources": "Resources",
       "certificates": "Certificates",
-      "forum": "Forum"
+      "forum": "Forum",
+      "makeup": "Makeup Classes",
+      "quran": "Quran Reader"
     },
     "teacher": {
       "dashboard": "Dashboard",
@@ -37,6 +39,7 @@
       "resources": "Resource Library",
       "announcements": "Announcements",
       "forum": "Forum Moderation",
+      "makeup": "Makeup Requests",
       "reports": "Reports"
     }
   },
@@ -362,7 +365,7 @@
         "grade": "Grade",
         "createFirstAssignment": "Create your first assignment above."
       },
-      "students": {
+      "studentsPage": {
         "studentRoster": "Student Roster",
         "noStudentsYet": "No students enrolled in your courses yet.",
         "enrollmentCount": "{count} enrollments",

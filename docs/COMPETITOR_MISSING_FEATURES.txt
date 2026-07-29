@@ -1,0 +1,83 @@
+COMPETITOR MISSING FEATURES
+Features found on competitor platforms NOT available in the Free Quranic Learning Portal
+Generated: 2026-07-29
+==========================================================================================
+
+COURSES & CONTENT
+-----------------
+1.  Noorani Qaida as a dedicated beginner course
+2.  Hadith Learning course
+3.  Basic Fiqh course
+4.  Seerah (Prophet's biography) course
+5.  Kids Islamic Stories course
+6.  Arabic Language as a standalone course (separate from Quran recitation)
+7.  Quranic Arabic grammar as structured multi-unit courses
+8.  Tarteel (rhythmic recitation) as a distinct course type
+9.  Quran comprehension / meaning courses (progressive levels focused on Arabic vocabulary & understanding, not just recitation)
+10. Free self-paced asynchronous courses (no teacher or scheduling required)
+11. Granular Hifz sub-courses (Juz 30, Short Surahs, Ijazah track)
+
+CERTIFICATIONS & ASSESSMENTS
+-----------------------------
+12. Ijazah certification (formal Islamic chain-of-authority credential)
+13. Formal level-up assessments at enrollment and after each level
+14. Examination transcripts (formal academic records per student)
+
+CLASS STRUCTURE & SCHEDULING
+-----------------------------
+15. Semi-private class tier (2 to 5 students sharing one classroom — between 1-to-1 and group)
+16. Makeup class scheduling for missed sessions
+17. 24/7 lesson booking (not just teacher availability windows — always open to book)
+18. Session duration control (e.g., fixed 30-minute slots)
+19. Gender-separated class tracks (sisters-only / brothers-only classes)
+20. Free trial period before enrollment commitment
+
+TEACHER FEATURES
+----------------
+21. Student can choose or change their teacher at any time
+22. Detailed public teacher profiles with documented teaching hours (e.g., 1,000–4,500+ hrs)
+23. Ongoing teacher performance assessments (beyond one-time volunteer verification)
+24. Teacher multilingual verification (formally verified for Arabic + English + Urdu fluency)
+25. Teacher training program (educators trained on the platform itself)
+26. Structured proprietary teaching methodology baked into the platform (e.g., Sound Before Rules)
+
+STUDENT & PARENT FEATURES
+--------------------------
+27. Parents can sit in and observe live classes in real time (not just view reports)
+28. Daily automated progress reports sent via email
+29. Hifz spaced-repetition review cycles (dedicated retention scheduling for memorization)
+30. Custom worksheets generated per student
+31. Special needs accommodation support
+32. Color-coded Tajweed rule visual guidance during lessons
+33. Word-by-word Quranic translation embedded in the lesson view
+34. Per-word audio pronunciation (interactive Quran reader tool)
+
+PLATFORM & TECHNOLOGY
+----------------------
+35. Native mobile app for iOS and Android
+36. Zoom and Microsoft Teams integration for live classes
+37. WhatsApp integration for reminders and communication
+38. In-app fee payment (payments built into the platform)
+39. 24/7 live customer support chat
+
+PRICING & BUSINESS MODEL
+-------------------------
+40. Sibling discount pricing (e.g., 20% off for second child)
+41. Family package discounts
+42. Subscription model with no long-term contracts / no registration fees
+
+INSTITUTIONAL & COMMUNITY
+--------------------------
+43. Public webinars and live workshops open to non-enrolled visitors
+44. Blog / article content section
+45. Newsletter system
+
+==========================================================================================
+Sources:
+- QuranTeaching.com        https://www.quranteaching.com/
+- EQuranSchool.com         https://www.equranschool.com/
+- Al-Azhar Quran Teaching  https://www.alazharquranteaching.com/
+- Buruj Academy            https://burujacademy.com/
+- QTV Tutor                https://www.qtvtutor.com/
+- Al-Azhar Classes         https://alazharclasses.com/
+- Understand Quran Academy https://understandquran.com/

@@ -3,13 +3,6 @@
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { linkParentToStudent } from "./link-parent-actions";
 
 type User = { id: string; name: string; email: string };
@@ -22,38 +15,28 @@ type Props = {
 export function LinkParentForm({ parents, students }: Props) {
   const [state, formAction, pending] = useActionState(linkParentToStudent, undefined);
 
+  const selectCls = "h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50";
+
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <Label htmlFor="parentId">Parent Account</Label>
-          <Select name="parentId" required>
-            <SelectTrigger id="parentId">
-              <SelectValue placeholder="Select parent…" />
-            </SelectTrigger>
-            <SelectContent>
-              {parents.map((p) => (
-                <SelectItem key={p.id} value={p.id}>
-                  {p.name} <span className="text-muted-foreground">({p.email})</span>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <select id="parentId" name="parentId" required className={selectCls}>
+            <option value="">Select parent…</option>
+            {parents.map((p) => (
+              <option key={p.id} value={p.id}>{p.name} ({p.email})</option>
+            ))}
+          </select>
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="studentId">Student Account</Label>
-          <Select name="studentId" required>
-            <SelectTrigger id="studentId">
-              <SelectValue placeholder="Select student…" />
-            </SelectTrigger>
-            <SelectContent>
-              {students.map((s) => (
-                <SelectItem key={s.id} value={s.id}>
-                  {s.name} <span className="text-muted-foreground">({s.email})</span>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <select id="studentId" name="studentId" required className={selectCls}>
+            <option value="">Select student…</option>
+            {students.map((s) => (
+              <option key={s.id} value={s.id}>{s.name} ({s.email})</option>
+            ))}
+          </select>
         </div>
       </div>
 

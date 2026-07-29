@@ -15,6 +15,8 @@ import {
   BarChart3,
   Bell,
   FolderOpen,
+  CalendarX2,
+  BookMarked,
 } from "lucide-react";
 
 export type NavItem = {
@@ -32,6 +34,8 @@ export const studentNav: NavItem[] = [
   { href: "/student/resources", labelKey: "resources", icon: Library },
   { href: "/student/certificates", labelKey: "certificates", icon: Award },
   { href: "/student/forum", labelKey: "forum", icon: MessagesSquare },
+  { href: "/student/makeup", labelKey: "makeup", icon: CalendarX2 },
+  { href: "/quran", labelKey: "quran", icon: BookMarked },
 ];
 
 export const teacherNav: NavItem[] = [
@@ -63,6 +67,7 @@ export const adminNav: NavItem[] = [
   { href: "/admin/resources", labelKey: "resources", icon: FolderOpen },
   { href: "/admin/announcements", labelKey: "announcements", icon: Bell },
   { href: "/admin/forum", labelKey: "forum", icon: Megaphone },
+  { href: "/admin/makeup", labelKey: "makeup", icon: CalendarX2 },
   { href: "/admin/reports", labelKey: "reports", icon: BarChart3 },
 ];
 

@@ -17,6 +17,13 @@ import { AvailabilityForm } from "./availability-form";
 
 const dayLabels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+function to12h(time: string): string {
+  const [h, m] = time.split(":").map(Number);
+  const period = h >= 12 ? "PM" : "AM";
+  const hour = h % 12 === 0 ? 12 : h % 12;
+  return `${hour}:${String(m).padStart(2, "0")} ${period}`;
+}
+
 export default async function TeacherAvailabilityPage() {
   const currentUser = await requireCurrentUser();
   const t = await getTranslations("pages.teacher");
@@ -76,7 +83,7 @@ export default async function TeacherAvailabilityPage() {
                           className="flex items-center justify-between gap-2 rounded-md bg-primary/10 px-2 py-1.5 text-primary"
                         >
                           <span className="flex items-center gap-1 text-xs font-medium">
-                            <Clock className="size-3" /> {slot.startTime} – {slot.endTime}
+                            <Clock className="size-3" /> {to12h(slot.startTime)} – {to12h(slot.endTime)}
                           </span>
                           <form action={removeAvailability}>
                             <input type="hidden" name="id" value={slot.id} />

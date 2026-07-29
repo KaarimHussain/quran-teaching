@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Plus,
   Pin,
@@ -96,9 +97,10 @@ export default async function StudentForumPage() {
                 </div>
               ) : (
                 sortedPosts.map((post) => (
-                  <div
+                  <Link
                     key={post.id}
-                    className="flex items-start gap-3 rounded-lg border border-border p-3 transition-colors hover:bg-muted/50"
+                    href={`/student/forum/${post.id}`}
+                    className="flex items-start gap-3 rounded-lg border border-border p-3 transition-colors hover:bg-muted/50 hover:border-primary/30"
                   >
                     <Avatar>
                       <AvatarFallback>{initials(post.author.name)}</AvatarFallback>
@@ -108,7 +110,7 @@ export default async function StudentForumPage() {
                         {post.isLocked && (
                           <Pin className="size-3.5 text-primary" />
                         )}
-                        <span className="text-sm font-medium leading-tight">
+                        <span className="text-sm font-medium leading-tight hover:text-primary transition-colors">
                           {post.title}
                         </span>
                       </div>
@@ -124,7 +126,7 @@ export default async function StudentForumPage() {
                       <MessageSquare className="size-4" />{" "}
                       {post._count.replies}
                     </div>
-                  </div>
+                  </Link>
                 ))
               )}
             </CardContent>

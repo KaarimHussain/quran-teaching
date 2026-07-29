@@ -5,21 +5,14 @@ import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { addProgressEntry } from "./actions";
 
-const subjectAreaLabel: Record<string, string> = {
-  NAZRA: "Nazra",
-  HIFZ: "Hifz",
-  TAJWEED: "Tajweed",
-  TAFSEER: "Tafseer",
-};
+const subjectAreaOptions = [
+  { value: "NAZRA", label: "Nazra" },
+  { value: "HIFZ", label: "Hifz" },
+  { value: "TAJWEED", label: "Tajweed" },
+  { value: "TAFSEER", label: "Tafseer" },
+];
 
 export function ProgressForm({ studentUserId, courseId }: { studentUserId: string; courseId: string }) {
   const [state, formAction, pending] = useActionState(addProgressEntry, undefined);
@@ -30,19 +23,18 @@ export function ProgressForm({ studentUserId, courseId }: { studentUserId: strin
       <input type="hidden" name="courseId" value={courseId} />
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-4">
         <div className="flex flex-col gap-1.5">
-          <Label className="text-xs">Subject</Label>
-          <Select name="subjectArea" defaultValue="NAZRA" required>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Subject" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(subjectAreaLabel).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Label className="text-xs" htmlFor={`subjectArea-${studentUserId}-${courseId}`}>Subject</Label>
+          <select
+            id={`subjectArea-${studentUserId}-${courseId}`}
+            name="subjectArea"
+            defaultValue="NAZRA"
+            required
+            className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {subjectAreaOptions.map(({ value, label }) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
+          </select>
         </div>
         <div className="flex flex-col gap-1.5 sm:col-span-2">
           <Label className="text-xs">Note</Label>

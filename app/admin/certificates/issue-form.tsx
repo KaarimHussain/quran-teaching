@@ -4,13 +4,6 @@ import { useActionState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { issueCertificate } from "./actions";
 
 type Option = { id: string; name: string };
@@ -32,46 +25,42 @@ export function IssueCertificateForm({
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div className="flex flex-col gap-1.5">
           <Label>Student</Label>
-          <Select name="studentUserId" required>
-            <SelectTrigger>
-              <SelectValue placeholder="Select student" />
-            </SelectTrigger>
-            <SelectContent>
-              {students.map((s) => (
-                <SelectItem key={s.id} value={s.id}>
-                  {s.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <select
+            name="studentUserId"
+            required
+            className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="">Select student</option>
+            {students.map((s) => (
+              <option key={s.id} value={s.id}>{s.name}</option>
+            ))}
+          </select>
         </div>
         <div className="flex flex-col gap-1.5">
           <Label>Course</Label>
-          <Select name="courseId" required>
-            <SelectTrigger>
-              <SelectValue placeholder="Select course" />
-            </SelectTrigger>
-            <SelectContent>
-              {courses.map((c) => (
-                <SelectItem key={c.id} value={c.id}>
-                  {c.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <select
+            name="courseId"
+            required
+            className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="">Select course</option>
+            {courses.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
         </div>
         <div className="flex flex-col gap-1.5">
           <Label>Pathway Level</Label>
-          <Select name="pathwayLevel" defaultValue="BEGINNER" required>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="BEGINNER">Beginner</SelectItem>
-              <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
-              <SelectItem value="ADVANCED">Advanced</SelectItem>
-            </SelectContent>
-          </Select>
+          <select
+            name="pathwayLevel"
+            defaultValue="BEGINNER"
+            required
+            className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="BEGINNER">Beginner</option>
+            <option value="INTERMEDIATE">Intermediate</option>
+            <option value="ADVANCED">Advanced</option>
+          </select>
         </div>
       </div>
       <div>

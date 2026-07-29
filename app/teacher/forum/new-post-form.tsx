@@ -6,13 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { createForumPost } from "./actions";
 
 type Option = { id: string; name: string };
@@ -29,19 +22,17 @@ export function NewPostForm({ courses }: { courses: Option[] }) {
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="post-course">Category</Label>
-          <Select name="courseId" defaultValue="none">
-            <SelectTrigger id="post-course" className="w-full">
-              <SelectValue placeholder="General Discussion" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">General Discussion</SelectItem>
-              {courses.map((course) => (
-                <SelectItem key={course.id} value={course.id}>
-                  {course.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <select
+            id="post-course"
+            name="courseId"
+            defaultValue="none"
+            className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="none">General Discussion</option>
+            {courses.map((course) => (
+              <option key={course.id} value={course.id}>{course.name}</option>
+            ))}
+          </select>
         </div>
         <div className="flex flex-col gap-2 sm:col-span-3">
           <Label htmlFor="post-body">Message</Label>

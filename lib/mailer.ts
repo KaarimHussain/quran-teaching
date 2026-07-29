@@ -335,6 +335,211 @@ export async function sendClassReminderEmail(
   await send(to, subject, html, text);
 }
 
+export type DailyReportData = {
+  progressEntries: Array<{
+    courseName: string;
+    subjectArea: string;
+    description: string;
+    percentComplete: number | null;
+  }>;
+  attendances: Array<{
+    courseName: string;
+    status: string;
+    sessionStart: Date;
+  }>;
+  upcomingAssignments: Array<{
+    title: string;
+    courseName: string;
+    dueDate: Date;
+  }>;
+  gradedSubmissions: Array<{
+    assignmentTitle: string;
+    grade: string | null;
+    feedback: string | null;
+  }>;
+};
+
+export async function sendDailyProgressReportEmail(
+  to: string,
+  recipientName: string,
+  studentName: string,
+  report: DailyReportData
+): Promise<void> {
+  const { progressEntries, attendances, upcomingAssignments, gradedSubmissions } = report;
+  const hasContent =
+    progressEntries.length > 0 ||
+    attendances.length > 0 ||
+    upcomingAssignments.length > 0 ||
+    gradedSubmissions.length > 0;
+  if (!hasContent) return;
+
+  const isParent = recipientName !== studentName;
+  const subject = isParent
+    ? `Daily progress report: ${studentName}`
+    : "Your daily Quran learning progress report";
+  const greeting = isParent
+    ? `Hi ${recipientName}, here is today's learning summary for <strong>${studentName}</strong>:`
+    : `Hi ${recipientName}, here is your daily Quranic learning summary:`;
+
+  let body = h1("Daily Progress Report 📊") + p(greeting);
+
+  // Attendance section
+  if (attendances.length > 0) {
+    const attRows = attendances
+      .map((a) => {
+        const time = a.sessionStart.toLocaleString("en-GB", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+        const badge = a.status === "PRESENT"
+          ? `<span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;">Present</span>`
+          : `<span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;">Absent</span>`;
+        return `<tr>
+          <td style="padding:9px 12px;font-size:13px;color:#1e3528;border-bottom:1px solid #e8ede8;">${a.courseName}</td>
+          <td style="padding:9px 12px;font-size:13px;color:#5a7a64;border-bottom:1px solid #e8ede8;">${time}</td>
+          <td style="padding:9px 12px;border-bottom:1px solid #e8ede8;">${badge}</td>
+        </tr>`;
+      })
+      .join("");
+    body += `<p style="margin:20px 0 8px;font-size:13px;font-weight:700;color:#1e3528;text-transform:uppercase;letter-spacing:0.6px;">📅 Class Attendance</p>
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border-radius:8px;border:1px solid #e8ede8;overflow:hidden;margin:0 0 20px;">
+      <thead><tr style="background:#f2f7f2;">
+        <th style="padding:9px 12px;font-size:11px;font-weight:600;color:#5a7a64;text-align:left;text-transform:uppercase;letter-spacing:0.5px;">Course</th>
+        <th style="padding:9px 12px;font-size:11px;font-weight:600;color:#5a7a64;text-align:left;text-transform:uppercase;letter-spacing:0.5px;">Session</th>
+        <th style="padding:9px 12px;font-size:11px;font-weight:600;color:#5a7a64;text-align:left;text-transform:uppercase;letter-spacing:0.5px;">Status</th>
+      </tr></thead>
+      <tbody>${attRows}</tbody>
+    </table>`;
+  }
+
+  // Progress entries section
+  if (progressEntries.length > 0) {
+    const progRows = progressEntries
+      .map(
+        (e) => `<tr>
+        <td style="padding:9px 12px;font-size:13px;color:#1e3528;border-bottom:1px solid #e8ede8;">${e.courseName}</td>
+        <td style="padding:9px 12px;font-size:13px;color:#3d5244;border-bottom:1px solid #e8ede8;">${e.subjectArea}</td>
+        <td style="padding:9px 12px;font-size:13px;color:#3d5244;border-bottom:1px solid #e8ede8;">${e.description}</td>
+        <td style="padding:9px 12px;font-size:13px;font-weight:600;color:#2a4a3a;border-bottom:1px solid #e8ede8;">${e.percentComplete != null ? `${e.percentComplete}%` : "—"}</td>
+      </tr>`
+      )
+      .join("");
+    body += `<p style="margin:20px 0 8px;font-size:13px;font-weight:700;color:#1e3528;text-transform:uppercase;letter-spacing:0.6px;">📖 Learning Progress</p>
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border-radius:8px;border:1px solid #e8ede8;overflow:hidden;margin:0 0 20px;">
+      <thead><tr style="background:#f2f7f2;">
+        <th style="padding:9px 12px;font-size:11px;font-weight:600;color:#5a7a64;text-align:left;text-transform:uppercase;letter-spacing:0.5px;">Course</th>
+        <th style="padding:9px 12px;font-size:11px;font-weight:600;color:#5a7a64;text-align:left;text-transform:uppercase;letter-spacing:0.5px;">Subject</th>
+        <th style="padding:9px 12px;font-size:11px;font-weight:600;color:#5a7a64;text-align:left;text-transform:uppercase;letter-spacing:0.5px;">Note</th>
+        <th style="padding:9px 12px;font-size:11px;font-weight:600;color:#5a7a64;text-align:left;text-transform:uppercase;letter-spacing:0.5px;">%</th>
+      </tr></thead>
+      <tbody>${progRows}</tbody>
+    </table>`;
+  }
+
+  // Graded submissions section
+  if (gradedSubmissions.length > 0) {
+    body += `<p style="margin:20px 0 8px;font-size:13px;font-weight:700;color:#1e3528;text-transform:uppercase;letter-spacing:0.6px;">✅ Graded Work</p>`;
+    for (const sub of gradedSubmissions) {
+      body += `<div style="background:#f2f7f2;border-radius:10px;padding:14px 16px;margin:0 0 10px;">
+        <p style="margin:0 0 4px;font-size:14px;font-weight:600;color:#1e3528;">${sub.assignmentTitle}</p>
+        ${sub.grade ? `<p style="margin:0 0 4px;font-size:13px;color:#2a4a3a;"><strong>Grade:</strong> ${sub.grade}</p>` : ""}
+        ${sub.feedback ? `<p style="margin:0;font-size:13px;color:#3d5244;"><strong>Feedback:</strong> ${sub.feedback}</p>` : ""}
+      </div>`;
+    }
+  }
+
+  // Upcoming assignments section
+  if (upcomingAssignments.length > 0) {
+    body += `<p style="margin:20px 0 8px;font-size:13px;font-weight:700;color:#1e3528;text-transform:uppercase;letter-spacing:0.6px;">📝 Due Soon</p>`;
+    for (const a of upcomingAssignments) {
+      const due = a.dueDate.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+      body += `<div style="display:flex;align-items:center;justify-content:space-between;background:#fff8e6;border-radius:10px;padding:12px 16px;margin:0 0 8px;border-left:4px solid #d97706;">
+        <div>
+          <p style="margin:0 0 2px;font-size:14px;font-weight:600;color:#1e3528;">${a.title}</p>
+          <p style="margin:0;font-size:12px;color:#5a7a64;">${a.courseName}</p>
+        </div>
+        <p style="margin:0;font-size:12px;font-weight:600;color:#d97706;white-space:nowrap;padding-left:12px;">Due ${due}</p>
+      </div>`;
+    }
+  }
+
+  body += divider() + btn(`${BASE}/student/progress`, "View full dashboard") +
+    small("You receive this daily report because you are enrolled on Quran Learning.");
+
+  const text = [
+    `Daily progress report${isParent ? ` for ${studentName}` : ""}\n`,
+    attendances.length > 0
+      ? `Attendance:\n${attendances.map((a) => `  ${a.courseName}: ${a.status}`).join("\n")}\n`
+      : "",
+    progressEntries.length > 0
+      ? `Progress:\n${progressEntries.map((e) => `  ${e.courseName} – ${e.subjectArea}: ${e.description}`).join("\n")}\n`
+      : "",
+    gradedSubmissions.length > 0
+      ? `Graded:\n${gradedSubmissions.map((s) => `  ${s.assignmentTitle}${s.grade ? ` (${s.grade})` : ""}`).join("\n")}\n`
+      : "",
+    upcomingAssignments.length > 0
+      ? `Due soon:\n${upcomingAssignments.map((a) => `  ${a.title} — ${a.courseName}`).join("\n")}\n`
+      : "",
+    `\nView at: ${BASE}/student/progress`,
+  ].join("");
+
+  await send(to, subject, layout(subject, body), text);
+}
+
+export async function sendMakeupApprovedEmail(
+  to: string,
+  name: string,
+  courseName: string,
+  proposedAt: Date,
+  joinUrl?: string | null
+): Promise<void> {
+  const time = proposedAt.toLocaleString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZoneName: "short",
+  });
+  const subject = `Makeup class approved: ${courseName}`;
+  const html = layout(
+    subject,
+    h1("Makeup Class Approved ✅") +
+    p(`Hi ${name}, your makeup class request for <strong>${courseName}</strong> has been approved!`) +
+    `<div style="background:#f2f7f2;border-radius:10px;padding:16px 20px;margin:0 0 20px;">
+      <p style="margin:0 0 4px;font-size:13px;color:#5a7a64;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Scheduled Time</p>
+      <p style="margin:0;font-size:15px;font-weight:600;color:#1e3528;">${time}</p>
+    </div>` +
+    (joinUrl ? btn(joinUrl, "Join Makeup Class") : btn(`${BASE}/student/makeup`, "View details")) +
+    divider() +
+    small("Make sure you're prepared and on time. JazakAllahu Khairan.")
+  );
+  const text = `Makeup class approved for ${courseName}.\nTime: ${time}\n${joinUrl ? `Join: ${joinUrl}` : `Details: ${BASE}/student/makeup`}`;
+  await send(to, subject, html, text);
+}
+
+export async function sendMakeupDeniedEmail(
+  to: string,
+  name: string,
+  courseName: string,
+  reason?: string | null
+): Promise<void> {
+  const subject = `Makeup request update: ${courseName}`;
+  const html = layout(
+    subject,
+    h1("Makeup Request Update") +
+    p(`Hi ${name}, unfortunately your makeup class request for <strong>${courseName}</strong> could not be approved at this time.`) +
+    (reason
+      ? `<div style="background:#f2f7f2;border-left:4px solid #d97706;border-radius:0 8px 8px 0;padding:14px 18px;margin:0 0 20px;">
+           <p style="margin:0;font-size:14px;color:#1e3528;line-height:1.6;">${reason}</p>
+         </div>`
+      : "") +
+    btn(`${BASE}/student/makeup`, "View my requests") +
+    divider() +
+    small("If you have questions, please contact an administrator.")
+  );
+  const text = `Makeup request for ${courseName} was not approved.${reason ? `\nReason: ${reason}` : ""}\n\nView: ${BASE}/student/makeup`;
+  await send(to, subject, html, text);
+}
+
 export async function sendParticipantAddedEmail(
   to: string,
   name: string,

@@ -44,7 +44,7 @@ export default async function StudentCoursesPage() {
   const user = await requireCurrentUser();
   const t = await getTranslations("pages.student");
 
-  const [enrollments, availableCourses, progressEntries] = await Promise.all([
+  const [enrollments, availableCourses, progressEntries, verifiedTeachers] = await Promise.all([
     prisma.enrollment.findMany({
       where: { studentUserId: user.id },
       include: { course: true },
@@ -60,6 +60,11 @@ export default async function StudentCoursesPage() {
     prisma.progressEntry.findMany({
       where: { studentUserId: user.id },
       orderBy: { recordedAt: "desc" },
+    }),
+    prisma.user.findMany({
+      where: { role: "TEACHER", verificationStatus: "VERIFIED", isActive: true },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
     }),
   ]);
 
@@ -101,6 +106,11 @@ export default async function StudentCoursesPage() {
                           <Badge variant={enrollment.status === "ACTIVE" ? "secondary" : "outline"} className="rounded-full">
                             {enrollment.status === "ACTIVE" ? t("coursesPage.active") : enrollment.status === "COMPLETED" ? t("coursesPage.completed") : t("coursesPage.withdrawn")}
                           </Badge>
+                          {enrollment.isTrial && enrollment.trialEndsAt && (
+                            <Badge variant="outline" className="rounded-full border-amber-500 text-amber-600">
+                              Trial · ends {new Date(enrollment.trialEndsAt).toLocaleDateString()}
+                            </Badge>
+                          )}
                         </div>
                         {enrollment.course.description && (
                           <CardDescription className="text-xs">{enrollment.course.description}</CardDescription>
@@ -160,7 +170,7 @@ export default async function StudentCoursesPage() {
                       )}
                     </CardHeader>
                     <CardContent className="mt-auto">
-                      <EnrollDialog courseId={course.id} courseName={course.name} />
+                      <EnrollDialog courseId={course.id} courseName={course.name} teachers={verifiedTeachers} />
                     </CardContent>
                   </Card>
                 );

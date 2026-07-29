@@ -162,6 +162,56 @@
   }
 }
 
+/* ── Tajweed color rules ─────────────────────────────────────────────────── */
+/* These classes are applied to <span> elements generated from the            */
+/* Quran.com API text_uthmani_tajweed field (tajweed tags converted to spans) */
+
+.tj { font-family: var(--font-arabic), serif; }
+
+/* Silence / Hamzat Wasl — gray */
+.tj-ham_wasl, .tj-slnt          { color: #9ca3af; }
+
+/* Laam Shamsiyah — steel blue */
+.tj-laam_shamsiyah              { color: #3b82f6; }
+
+/* Madd variants — blues (normal → necessary/obligatory) */
+.tj-madda_normal                { color: #60a5fa; }
+.tj-madda_permissible           { color: #3b82f6; }
+.tj-madda_necessary             { color: #1d4ed8; }
+.tj-madda_obligatory            { color: #1e40af; }
+
+/* Qalqalah — amber/orange */
+.tj-qalaqah                     { color: #f59e0b; }
+
+/* Ikhfa variants — teal */
+.tj-ikhfa                       { color: #14b8a6; }
+.tj-ikhfa_shafawi               { color: #0f766e; }
+
+/* Iqlab — rose red */
+.tj-iqlab                       { color: #f43f5e; }
+
+/* Idgham variants — green */
+.tj-idgham_ghunnah              { color: #22c55e; }
+.tj-idgham_wo_ghunnah           { color: #86efac; }
+.tj-idgham_shafawi              { color: #16a34a; }
+.tj-idgham_mutajanisain         { color: #4ade80; }
+.tj-idgham_mutaqaribain         { color: #bbf7d0; }
+
+/* Ghunnah — green */
+.tj-ghunnah                     { color: #22c55e; }
+
+/* Izhar variants — sky blue */
+.tj-izhar_shafawi               { color: #38bdf8; }
+.tj-izhar_oral                  { color: #7dd3fc; }
+
+/* Dark mode adjustments */
+.dark .tj-ham_wasl, .dark .tj-slnt         { color: #6b7280; }
+.dark .tj-laam_shamsiyah                    { color: #93c5fd; }
+.dark .tj-madda_normal                      { color: #bfdbfe; }
+.dark .tj-madda_permissible                 { color: #93c5fd; }
+.dark .tj-madda_necessary                   { color: #60a5fa; }
+.dark .tj-madda_obligatory                  { color: #3b82f6; }
+
 /* ── Stat card lift ── */
 [data-slot="card"][data-size="sm"] {
   transition: transform 0.18s ease, box-shadow 0.18s ease;

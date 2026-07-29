@@ -6,13 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { uploadResource } from "./actions";
 
 type Option = { id: string; name: string };
@@ -45,38 +38,28 @@ export function UploadResourceForm({ courses }: { courses: Option[] }) {
     }
   }
 
+  const selectCls = "h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50";
+
   return (
     <form action={formAction} className="flex flex-col gap-3">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="flex flex-col gap-2">
           <Label htmlFor="resource-course">Course</Label>
-          <Select name="courseId" defaultValue="none">
-            <SelectTrigger id="resource-course" className="w-full">
-              <SelectValue placeholder="General (no course)" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">General (no course)</SelectItem>
-              {courses.map((course) => (
-                <SelectItem key={course.id} value={course.id}>
-                  {course.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <select id="resource-course" name="courseId" defaultValue="none" className={selectCls}>
+            <option value="none">General (no course)</option>
+            {courses.map((course) => (
+              <option key={course.id} value={course.id}>{course.name}</option>
+            ))}
+          </select>
         </div>
 
         <div className="flex flex-col gap-2">
           <Label htmlFor="resource-type">Type</Label>
-          <Select name="type" defaultValue="PDF" required>
-            <SelectTrigger id="resource-type" className="w-full">
-              <SelectValue placeholder="Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="PDF">Document (PDF)</SelectItem>
-              <SelectItem value="VIDEO">Video</SelectItem>
-              <SelectItem value="AUDIO">Audio</SelectItem>
-            </SelectContent>
-          </Select>
+          <select id="resource-type" name="type" defaultValue="PDF" required className={selectCls}>
+            <option value="PDF">Document (PDF)</option>
+            <option value="VIDEO">Video</option>
+            <option value="AUDIO">Audio</option>
+          </select>
         </div>
 
         <div className="flex flex-col gap-2 sm:col-span-2">

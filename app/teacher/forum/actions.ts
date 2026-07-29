@@ -70,5 +70,7 @@ export async function createForumReply(formData: FormData) {
   });
 
   revalidatePath("/teacher/forum");
+  revalidatePath(`/teacher/forum/${postId}`);
   revalidatePath("/student/forum");
+  revalidatePath(`/student/forum/${postId}`);
 }

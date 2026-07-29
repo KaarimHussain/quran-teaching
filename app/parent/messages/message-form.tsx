@@ -6,13 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { sendMessage } from "./actions";
 
 type Course = { id: string; name: string };
@@ -40,18 +33,16 @@ export function MessageForm({ courses }: { courses: Course[] }) {
       {courses.length > 0 && (
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="msg-course">Related Course (optional)</Label>
-          <Select name="courseId">
-            <SelectTrigger id="msg-course">
-              <SelectValue placeholder="Select a course (optional)" />
-            </SelectTrigger>
-            <SelectContent>
-              {courses.map((c) => (
-                <SelectItem key={c.id} value={c.id}>
-                  {c.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <select
+            id="msg-course"
+            name="courseId"
+            className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="">Select a course (optional)</option>
+            {courses.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
         </div>
       )}
 

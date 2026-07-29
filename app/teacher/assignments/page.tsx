@@ -42,7 +42,7 @@ export default async function TeacherAssignmentsPage() {
   const t = await getTranslations("pages.teacher");
   const courseIds = await getTeacherCourseIds(currentUser.id);
 
-  const [courses, assignments] = await Promise.all([
+  const [courses, assignments, students] = await Promise.all([
     prisma.course.findMany({
       where: { id: { in: courseIds } },
       orderBy: { name: "asc" },
@@ -56,7 +56,16 @@ export default async function TeacherAssignmentsPage() {
         submissions: { include: { student: { select: { id: true, name: true } } } },
       },
     }),
+    prisma.enrollment.findMany({
+      where: { courseId: { in: courseIds }, status: "ACTIVE" },
+      select: { student: { select: { id: true, name: true } } },
+      distinct: ["studentUserId"],
+    }),
   ]);
+
+  const uniqueStudents = Array.from(
+    new Map(students.map((e) => [e.student.id, e.student])).values()
+  );
 
   return (
     <DashboardShell
@@ -78,7 +87,7 @@ export default async function TeacherAssignmentsPage() {
                 {t("assignmentsPage.noCoursesYet")}
               </p>
             ) : (
-              <CreateAssignmentForm courses={courses} />
+              <CreateAssignmentForm courses={courses} students={uniqueStudents} />
             )}
           </CardContent>
         </Card>

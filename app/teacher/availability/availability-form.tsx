@@ -4,13 +4,6 @@ import { useActionState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { TimePicker } from "@/components/ui/time-picker";
 import { addAvailability } from "./actions";
 
@@ -32,18 +25,17 @@ export function AvailabilityForm() {
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div className="flex flex-col gap-2">
           <Label htmlFor="avail-day">Day of Week</Label>
-          <Select name="dayOfWeek" defaultValue="1" required>
-            <SelectTrigger id="avail-day" className="w-full">
-              <SelectValue placeholder="Select a day" />
-            </SelectTrigger>
-            <SelectContent>
-              {days.map((day) => (
-                <SelectItem key={day.value} value={day.value}>
-                  {day.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <select
+            id="avail-day"
+            name="dayOfWeek"
+            defaultValue="1"
+            required
+            className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {days.map((day) => (
+              <option key={day.value} value={day.value}>{day.label}</option>
+            ))}
+          </select>
         </div>
 
         <div className="flex flex-col gap-2">

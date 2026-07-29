@@ -5,13 +5,6 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { sendAnnouncement } from "./actions";
 
 export function AnnouncementForm() {
@@ -29,18 +22,18 @@ export function AnnouncementForm() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="ann-target">Send to</Label>
-          <Select name="targetRole" defaultValue="ALL">
-            <SelectTrigger id="ann-target">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">All Users</SelectItem>
-              <SelectItem value="STUDENT">Students only</SelectItem>
-              <SelectItem value="TEACHER">Teachers only</SelectItem>
-              <SelectItem value="PARENT">Parents only</SelectItem>
-              <SelectItem value="SUPER_ADMIN">Super Admins only</SelectItem>
-            </SelectContent>
-          </Select>
+          <select
+            id="ann-target"
+            name="targetRole"
+            defaultValue="ALL"
+            className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="ALL">All Users</option>
+            <option value="STUDENT">Students only</option>
+            <option value="TEACHER">Teachers only</option>
+            <option value="PARENT">Parents only</option>
+            <option value="SUPER_ADMIN">Super Admins only</option>
+          </select>
         </div>
       </div>
 

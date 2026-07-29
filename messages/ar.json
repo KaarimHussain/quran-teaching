@@ -8,7 +8,9 @@
       "progress": "التقدم",
       "resources": "الموارد",
       "certificates": "الشهادات",
-      "forum": "المنتدى"
+      "forum": "المنتدى",
+      "makeup": "حصص التعويض",
+      "quran": "قارئ القرآن"
     },
     "teacher": {
       "dashboard": "لوحة التحكم",
@@ -37,6 +39,7 @@
       "resources": "مكتبة الموارد",
       "announcements": "الإعلانات",
       "forum": "إدارة المنتدى",
+      "makeup": "طلبات التعويض",
       "reports": "التقارير"
     }
   },
@@ -362,7 +365,7 @@
         "grade": "الدرجة",
         "createFirstAssignment": "أنشئ واجبك الأول أعلاه."
       },
-      "students": {
+      "studentsPage": {
         "studentRoster": "قائمة الطلاب",
         "noStudentsYet": "لا يوجد طلاب مسجلون في دوراتك بعد.",
         "enrollmentCount": "{count} تسجيلات",
