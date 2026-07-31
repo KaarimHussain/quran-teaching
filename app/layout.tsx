@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Amiri, Cinzel_Decorative, Montserrat } from "next/font/google";
+import { Amiri, Cinzel_Decorative, Montserrat, Noto_Nastaliq_Urdu, Scheherazade_New } from "next/font/google";
 import { cookies } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -16,6 +16,20 @@ const amiri = Amiri({
   subsets: ["arabic", "latin"],
   weight: ["400", "700"],
   variable: "--font-arabic",
+});
+
+const notoNastaliqUrdu = Noto_Nastaliq_Urdu({
+  subsets: ["arabic"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-nastaliq",
+  display: "swap",
+});
+
+const scheherazadeNew = Scheherazade_New({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  variable: "--font-arabic-ui",
+  display: "swap",
 });
 
 const cinzelDecorative = Cinzel_Decorative({
@@ -55,6 +69,8 @@ export default async function RootLayout({
         montserrat.variable,
         cinzelDecorative.variable,
         amiri.variable,
+        notoNastaliqUrdu.variable,
+        scheherazadeNew.variable,
         "font-sans",
         isDark && "dark"
       )}

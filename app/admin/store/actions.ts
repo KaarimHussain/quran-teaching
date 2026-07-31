@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireCurrentUser } from "@/lib/dal";
@@ -23,26 +24,40 @@ export async function createStoreItem(
   const user = await requireCurrentUser();
   if (user.role !== "SUPER_ADMIN") return { error: "Forbidden." };
 
-  const title        = (formData.get("title")        as string | null)?.trim() ?? "";
-  const description  = (formData.get("description")  as string | null)?.trim() || null;
-  const type         = (formData.get("type")         as string | null) ?? "";
-  const level        = (formData.get("level")        as string | null) ?? "ALL_LEVELS";
-  const language     = (formData.get("language")     as string | null) ?? "EN";
-  const priceRaw     = (formData.get("price")        as string | null) ?? "";
-  const contentUrl   = (formData.get("contentUrl")   as string | null)?.trim() || null;
+  const title         = (formData.get("title")         as string | null)?.trim() ?? "";
+  const description   = (formData.get("description")   as string | null)?.trim() || null;
+  const type          = (formData.get("type")          as string | null) ?? "";
+  const level         = (formData.get("level")         as string | null) ?? "ALL_LEVELS";
+  const language      = (formData.get("language")      as string | null) ?? "EN";
+  const hasPrice      = formData.get("hasPrice") === "true";
+  const priceRaw      = (formData.get("price")         as string | null) ?? "";
+  const contentUrl    = (formData.get("contentUrl")    as string | null)?.trim() || null;
   const coverImageUrl = (formData.get("coverImageUrl") as string | null)?.trim() || null;
-  const durationRaw  = (formData.get("durationMins") as string | null) ?? "";
-  const publish      = formData.get("publish") === "true";
+  const durationHrsRaw  = (formData.get("durationHours") as string | null) ?? "";
+  const durationMinsRaw = (formData.get("durationMins")  as string | null) ?? "";
+  const publish         = formData.get("publish") === "true";
 
   const fieldErrors: Record<string, string[]> = {};
+
   if (!title) fieldErrors.title = ["Title is required."];
-  if (!VALID_TYPES.includes(type as ItemType))   fieldErrors.type  = ["Select a valid type."];
+  if (!VALID_TYPES.includes(type as ItemType))    fieldErrors.type  = ["Select a valid type."];
   if (!VALID_LEVELS.includes(level as ItemLevel)) fieldErrors.level = ["Select a valid level."];
-  const price = parseFloat(priceRaw);
-  if (!priceRaw || isNaN(price) || price < 0) fieldErrors.price = ["Enter a valid price."];
+
+  let pricePence = 0;
+  if (hasPrice) {
+    const price = parseFloat(priceRaw);
+    if (!priceRaw || isNaN(price) || price < 0) {
+      fieldErrors.price = ["Enter a valid price."];
+    } else {
+      pricePence = Math.round(price * 100);
+    }
+  }
+
   if (Object.keys(fieldErrors).length) return { fieldErrors };
 
-  const durationMins = durationRaw ? parseInt(durationRaw, 10) || null : null;
+  const hrs  = durationHrsRaw  ? parseInt(durationHrsRaw,  10) || 0 : 0;
+  const mins = durationMinsRaw ? parseInt(durationMinsRaw, 10) || 0 : 0;
+  const durationMins = (hrs * 60 + mins) || null;
 
   try {
     await prisma.storeItem.create({
@@ -52,7 +67,7 @@ export async function createStoreItem(
         type:     type     as ItemType,
         level:    level    as ItemLevel,
         language: language as ItemLang,
-        pricePence: Math.round(price * 100),
+        pricePence,
         contentUrl,
         coverImageUrl,
         durationMins,
@@ -62,11 +77,12 @@ export async function createStoreItem(
       },
     });
   } catch {
-    return { error: "Could not save the item. Please try again." };
+    return { error: "Could not save the product. Please try again." };
   }
 
   revalidatePath("/admin/store");
   revalidatePath("/store");
+  redirect("/admin/store");
 }
 
 export async function addStoreModule(formData: FormData) {
@@ -74,9 +90,9 @@ export async function addStoreModule(formData: FormData) {
   if (user.role !== "SUPER_ADMIN") return;
 
   const storeItemId  = formData.get("storeItemId")  as string;
-  const title        = (formData.get("title") as string | null)?.trim() ?? "";
-  const description  = (formData.get("description") as string | null)?.trim() || null;
-  const contentUrl   = (formData.get("contentUrl")  as string | null)?.trim() || null;
+  const title        = (formData.get("title")        as string | null)?.trim() ?? "";
+  const description  = (formData.get("description")  as string | null)?.trim() || null;
+  const contentUrl   = (formData.get("contentUrl")   as string | null)?.trim() || null;
   const durationRaw  = (formData.get("durationMins") as string | null) ?? "";
   const durationMins = durationRaw ? parseInt(durationRaw, 10) || null : null;
 
@@ -106,7 +122,7 @@ export async function toggleStoreItemPublished(formData: FormData) {
   const user = await requireCurrentUser();
   if (user.role !== "SUPER_ADMIN") return;
 
-  const id          = formData.get("id") as string;
+  const id          = formData.get("id")          as string;
   const isPublished = formData.get("isPublished") === "true";
 
   try {

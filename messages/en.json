@@ -291,6 +291,82 @@
         "rankedByEnrolledStudents": "Ranked by number of enrolled students",
         "enrolled": "{count} enrolled",
         "noCourses": "No courses yet."
+      },
+      "store": {
+        "title": "Store Management",
+        "desc": "Manage all store products — courses, documents, videos, audios, and historical stories.",
+        "addProduct": "Add Product",
+        "listTitle": "All Products",
+        "listDesc": "{count} products · {published} published",
+        "noItems": "No products yet — add your first one.",
+        "draft": "Draft",
+        "published": "Published",
+        "publish": "Publish",
+        "unpublish": "Unpublish",
+        "publishing": "Publishing…",
+        "unpublishing": "Unpublishing…",
+        "delete": "Delete",
+        "deleting": "Deleting…",
+        "modules": "Modules ({count})",
+        "addModule": "Add Module",
+        "moduleTitle": "Module Title",
+        "moduleDuration": "Duration (min)",
+        "moduleUrl": "Content URL (optional)",
+        "moduleTitlePlaceholder": "e.g. Introduction to Makharij",
+        "free": "Free",
+        "totalProducts": "Total Products",
+        "statPublished": "Published",
+        "statDraft": "Draft",
+        "by": "by",
+        "form": {
+          "pageTitle": "Add New Product",
+          "pageDesc": "Fill in the details below to create a new store product.",
+          "backToList": "Back to Store",
+          "type": "Type",
+          "typePlaceholder": "Select a type…",
+          "itemTitle": "Title",
+          "itemTitlePlaceholder": "e.g. Introduction to Tajweed",
+          "description": "Description",
+          "descPlaceholder": "What will the learner gain from this?",
+          "level": "Level",
+          "language": "Language",
+          "hasPrice": "This item has a price",
+          "price": "Price (£)",
+          "pricePlaceholder": "9.99",
+          "duration": "Duration",
+          "durationHours": "Hours",
+          "durationMinutes": "Minutes",
+          "durationHrsLabel": "hrs",
+          "durationMinsLabel": "min",
+          "durationHint": "Enter hours and/or minutes. Example: 1 hr 30 min = 90 minutes total.",
+          "contentUrl": "Content URL",
+          "contentUrlHint": "PDF link",
+          "contentUrlHintArticle": "article / PDF link",
+          "contentUrlHintMedia": "video / audio link",
+          "coverImage": "Cover Image",
+          "coverImageHint": "Click to select a cover image (JPG, PNG, WebP)",
+          "publishNow": "Publish immediately",
+          "submit": "Add Product",
+          "submitting": "Saving…",
+          "uploading": "Uploading cover…",
+          "courseModuleNote": "Modules are added after the course is created from the product list.",
+          "errorGeneric": "Could not save the product. Please try again.",
+          "errorTitle": "Title is required.",
+          "errorType": "Select a valid type.",
+          "errorPrice": "Enter a valid price.",
+          "typeCourse": "Course",
+          "typeDocument": "Document",
+          "typeVideo": "Video",
+          "typeAudio": "Audio",
+          "typeStory": "Historical Story",
+          "levelAll": "All Levels",
+          "levelBeginner": "Beginner",
+          "levelIntermediate": "Intermediate",
+          "levelAdvanced": "Advanced",
+          "langEn": "English",
+          "langUr": "Urdu",
+          "langAr": "Arabic"
+        }
       }
     },
     "teacher": {
@@ -673,6 +749,88 @@
       "submitting": "Creating account…",
       "haveAccount": "Already have an account?",
       "signIn": "Sign in"
+    },
+    "publicStore": {
+      "heroBadge": "Curriculum Marketplace",
+      "heroTitle": "Learn at Your Own Pace",
+      "heroSubtitle": "Premium courses, documents, videos, audios, and historical stories — crafted by qualified teachers to deepen your Islamic knowledge.",
+      "searchPlaceholder": "Search courses, topics, teachers...",
+      "filters": {
+        "all": "All Items",
+        "COURSE": "Courses",
+        "DOCUMENT": "Documents",
+        "VIDEO": "Videos",
+        "AUDIO": "Audio",
+        "HISTORICAL_STORY": "History"
+      },
+      "levels": {
+        "all": "All Levels",
+        "BEGINNER": "Beginner",
+        "INTERMEDIATE": "Intermediate",
+        "ADVANCED": "Advanced",
+        "ALL_LEVELS": "All Levels"
+      },
+      "priceFilter": {
+        "all": "All Prices",
+        "free": "Free Only",
+        "paid": "Paid Only"
+      },
+      "sort": {
+        "label": "Sort by",
+        "newest": "Newest",
+        "priceAsc": "Price: Low to High",
+        "priceDesc": "Price: High to Low",
+        "duration": "Duration"
+      },
+      "status": {
+        "available": "Available Now",
+        "comingSoon": "Coming Soon",
+        "itemCount": "{count} item available",
+        "itemCountPlural": "{count} items available",
+        "showingFiltered": "Showing {count} matching item(s)"
+      },
+      "typeLabel": {
+        "COURSE": "Course",
+        "DOCUMENT": "Document",
+        "VIDEO": "Video",
+        "AUDIO": "Audio",
+        "HISTORICAL_STORY": "Historical Story"
+      },
+      "cta": {
+        "COURSE": "Enroll Now",
+        "DOCUMENT": "Download",
+        "VIDEO": "Watch",
+        "AUDIO": "Listen",
+        "HISTORICAL_STORY": "Read",
+        "free": "Free Access",
+        "quickView": "Quick View",
+        "close": "Close"
+      },
+      "emptyState": {
+        "title": "No products match your criteria",
+        "desc": "Try resetting your search query or changing filters to find what you are looking for.",
+        "clearFilters": "Clear Filters",
+        "noPublishedTitle": "Nothing listed yet",
+        "noPublishedDesc": "Our teachers are preparing premium courses and resources. Check back soon!"
+      },
+      "trust": {
+        "teachers": "Expert Teachers",
+        "teachersSub": "Content created by qualified Islamic scholars",
+        "payment": "Secure Access",
+        "paymentSub": "Instant verification & seamless learning",
+        "access": "Lifetime Access",
+        "accessSub": "Learn anytime, revisit whenever you need"
+      },
+      "modal": {
+        "modulesCount": "Included Modules ({count})",
+        "teacher": "Teacher",
+        "by": "Created by",
+        "level": "Level",
+        "language": "Language",
+        "duration": "Total Duration",
+        "freeItem": "Free Resource",
+        "priceItem": "Price"
+      }
     }
   },
   "common": {

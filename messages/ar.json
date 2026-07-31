@@ -291,6 +291,82 @@
         "rankedByEnrolledStudents": "مرتبة حسب عدد الطلاب المسجّلين",
         "enrolled": "{count} مسجّل",
         "noCourses": "لا توجد دورات بعد."
+      },
+      "store": {
+        "title": "إدارة المتجر",
+        "desc": "إدارة جميع منتجات المتجر — الدورات والمستندات ومقاطع الفيديو والملفات الصوتية والقصص التاريخية.",
+        "addProduct": "إضافة منتج",
+        "listTitle": "جميع المنتجات",
+        "listDesc": "{count} منتجات · {published} منشور",
+        "noItems": "لا توجد منتجات بعد — أضف أول منتج.",
+        "draft": "مسودة",
+        "published": "منشور",
+        "publish": "نشر",
+        "unpublish": "إلغاء النشر",
+        "publishing": "جارٍ النشر…",
+        "unpublishing": "جارٍ إلغاء النشر…",
+        "delete": "حذف",
+        "deleting": "جارٍ الحذف…",
+        "modules": "الوحدات ({count})",
+        "addModule": "إضافة وحدة",
+        "moduleTitle": "عنوان الوحدة",
+        "moduleDuration": "المدة (دقيقة)",
+        "moduleUrl": "رابط المحتوى (اختياري)",
+        "moduleTitlePlaceholder": "مثلاً: مقدمة في المخارج",
+        "free": "مجاني",
+        "totalProducts": "إجمالي المنتجات",
+        "statPublished": "منشور",
+        "statDraft": "مسودة",
+        "by": "بواسطة",
+        "form": {
+          "pageTitle": "إضافة منتج جديد",
+          "pageDesc": "أكمل التفاصيل أدناه لإنشاء منتج جديد في المتجر.",
+          "backToList": "العودة إلى المتجر",
+          "type": "النوع",
+          "typePlaceholder": "اختر نوعاً…",
+          "itemTitle": "العنوان",
+          "itemTitlePlaceholder": "مثلاً: مقدمة في التجويد",
+          "description": "الوصف",
+          "descPlaceholder": "ماذا سيكتسب المتعلم من هذا؟",
+          "level": "المستوى",
+          "language": "اللغة",
+          "hasPrice": "هذا المنتج له سعر",
+          "price": "السعر (£)",
+          "pricePlaceholder": "9.99",
+          "duration": "المدة",
+          "durationHours": "ساعات",
+          "durationMinutes": "دقائق",
+          "durationHrsLabel": "س",
+          "durationMinsLabel": "د",
+          "durationHint": "أدخل الساعات و/أو الدقائق. مثال: ساعة و30 دقيقة = 90 دقيقة إجمالاً.",
+          "contentUrl": "رابط المحتوى",
+          "contentUrlHint": "رابط PDF",
+          "contentUrlHintArticle": "رابط مقال / PDF",
+          "contentUrlHintMedia": "رابط فيديو / صوت",
+          "coverImage": "صورة الغلاف",
+          "coverImageHint": "انقر لاختيار صورة الغلاف (JPG, PNG, WebP)",
+          "publishNow": "نشر فوراً",
+          "submit": "إضافة المنتج",
+          "submitting": "جارٍ الحفظ…",
+          "uploading": "جارٍ رفع الغلاف…",
+          "courseModuleNote": "تُضاف الوحدات بعد إنشاء الدورة من قائمة المنتجات.",
+          "errorGeneric": "تعذّر حفظ المنتج. يرجى المحاولة مرة أخرى.",
+          "errorTitle": "العنوان مطلوب.",
+          "errorType": "اختر نوعاً صحيحاً.",
+          "errorPrice": "أدخل سعراً صحيحاً.",
+          "typeCourse": "دورة",
+          "typeDocument": "مستند",
+          "typeVideo": "فيديو",
+          "typeAudio": "صوت",
+          "typeStory": "قصة تاريخية",
+          "levelAll": "جميع المستويات",
+          "levelBeginner": "مبتدئ",
+          "levelIntermediate": "متوسط",
+          "levelAdvanced": "متقدم",
+          "langEn": "الإنجليزية",
+          "langUr": "الأردية",
+          "langAr": "العربية"
+        }
       }
     },
     "teacher": {
@@ -673,6 +749,88 @@
       "submitting": "جارٍ إنشاء الحساب…",
       "haveAccount": "لديك حساب بالفعل؟",
       "signIn": "تسجيل الدخول"
+    },
+    "publicStore": {
+      "heroBadge": "سوق المناهج الدراسية",
+      "heroTitle": "تعلم بحريتك وبسرعتك الخاصة",
+      "heroSubtitle": "دورات متميزة، وثائق، مقاطع فيديو، تسجيلات صوتية، وقصص تاريخية — من إعداد معلمين مؤهلين لتعميق معرفتك الإسلامية.",
+      "searchPlaceholder": "ابحث عن الدورات، الموضوعات، أو المعلمين...",
+      "filters": {
+        "all": "جميع المواد",
+        "COURSE": "الدورات",
+        "DOCUMENT": "الوثائق",
+        "VIDEO": "الفيديوهات",
+        "AUDIO": "الصوتيات",
+        "HISTORICAL_STORY": "قصص تاريخية"
+      },
+      "levels": {
+        "all": "جميع المستويات",
+        "BEGINNER": "مبتدئ",
+        "INTERMEDIATE": "متوسط",
+        "ADVANCED": "متقدم",
+        "ALL_LEVELS": "جميع المستويات"
+      },
+      "priceFilter": {
+        "all": "جميع الأسعار",
+        "free": "مجاني فقط",
+        "paid": "مدفوع فقط"
+      },
+      "sort": {
+        "label": "ترتيب حسب",
+        "newest": "الأحدث",
+        "priceAsc": "السعر: من الأقل للأعلى",
+        "priceDesc": "السعر: من الأعلى للأقل",
+        "duration": "المدة"
+      },
+      "status": {
+        "available": "المتاح حالياً",
+        "comingSoon": "قريباً",
+        "itemCount": "{count} مادة متاحة",
+        "itemCountPlural": "{count} مواد متاحة",
+        "showingFiltered": "عرض {count} من المواد المطابقة"
+      },
+      "typeLabel": {
+        "COURSE": "دورة دراسية",
+        "DOCUMENT": "وثيقة",
+        "VIDEO": "فيديو",
+        "AUDIO": "تسجيل صوتي",
+        "HISTORICAL_STORY": "قصة تاريخية"
+      },
+      "cta": {
+        "COURSE": "سجل الآن",
+        "DOCUMENT": "تحميل",
+        "VIDEO": "مشاهدة",
+        "AUDIO": "استماع",
+        "HISTORICAL_STORY": "قراءة",
+        "free": "وصول مجاني",
+        "quickView": "معاينة سريعة",
+        "close": "إغلاق"
+      },
+      "emptyState": {
+        "title": "لا تتوفر نتائج تطابق بحثك",
+        "desc": "جرب إعادة ضبط البحث أو تغيير الفلاتر للعثور على ما تبحث عنه.",
+        "clearFilters": "مسح الفلاتر",
+        "noPublishedTitle": "لا يوجد محتوى مدرج بعد",
+        "noPublishedDesc": "يقوم معلمونا بإعداد دورات وموارد متميزة. يرجى التحقق لاحقاً!"
+      },
+      "trust": {
+        "teachers": "معلمون متخصصون",
+        "teachersSub": "محتوى معد من قبل علماء ومعلمين مؤهلين",
+        "payment": "وصول آمن",
+        "paymentSub": "تأكيد فوري وتعلم سلس بدون تعقيدات",
+        "access": "وصول مدى الحياة",
+        "accessSub": "تعلم في أي وقت وراجع المحتوى متى تشاء"
+      },
+      "modal": {
+        "modulesCount": "الوحدات الدراسية المشمولة ({count})",
+        "teacher": "المعلم",
+        "by": "تم الإنشاء بواسطة",
+        "level": "المستوى",
+        "language": "اللغة",
+        "duration": "المدة الإجمالية",
+        "freeItem": "مورد مجاني",
+        "priceItem": "السعر"
+      }
     }
   },
   "common": {
