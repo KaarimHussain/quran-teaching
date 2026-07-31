@@ -178,6 +178,9 @@ model User {
   blogPosts     BlogPost[]
   hostedEvents  PublicEvent[]
 
+  // Curriculum Store
+  storeItems StoreItem[]
+
   // Assessments
   assessmentsCreated  Assessment[]       @relation("TeacherAssessments")
   assessmentResults   AssessmentResult[] @relation("StudentAssessmentResults")
@@ -927,6 +930,63 @@ model MakeupRequest {
 
   @@unique([studentUserId, originalSessionId])
   @@map("makeup_requests")
+}
+
+// ---------------------------------------------------------------------------
+// Curriculum Store
+// ---------------------------------------------------------------------------
+
+enum StoreItemType {
+  COURSE
+  DOCUMENT
+  VIDEO
+  AUDIO
+  HISTORICAL_STORY
+}
+
+enum StoreItemLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  ALL_LEVELS
+}
+
+model StoreItem {
+  id              String         @id @default(uuid()) @db.VarChar(36)
+  title           String
+  description     String?        @db.Text
+  type            StoreItemType
+  level           StoreItemLevel @default(ALL_LEVELS)
+  language        Language       @default(EN)
+  pricePence      Int
+  coverImageUrl   String?        @db.Text
+  contentUrl      String?        @db.Text
+  durationMins    Int?
+  isPublished     Boolean        @default(false)
+  publishedAt     DateTime?
+  createdByUserId String         @db.VarChar(36)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  createdBy User          @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  modules   StoreModule[]
+
+  @@map("store_items")
+}
+
+model StoreModule {
+  id           String   @id @default(uuid()) @db.VarChar(36)
+  storeItemId  String   @db.VarChar(36)
+  title        String
+  description  String?  @db.Text
+  moduleOrder  Int      @default(0)
+  durationMins Int?
+  contentUrl   String?  @db.Text
+  createdAt    DateTime @default(now())
+
+  storeItem StoreItem @relation(fields: [storeItemId], references: [id], onDelete: Cascade)
+
+  @@map("store_modules")
 }
 
 // ---------------------------------------------------------------------------

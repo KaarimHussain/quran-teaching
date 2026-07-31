@@ -19,7 +19,8 @@
       "students": "Students",
       "assignments": "Assignments",
       "resources": "Resources",
-      "forum": "Forum"
+      "forum": "Forum",
+      "store": "Store"
     },
     "parent": {
       "dashboard": "Dashboard",
@@ -40,6 +41,7 @@
       "announcements": "Announcements",
       "forum": "Forum Moderation",
       "makeup": "Makeup Requests",
+      "store": "Store",
       "reports": "Reports"
     }
   },

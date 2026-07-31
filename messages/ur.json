@@ -19,7 +19,8 @@
       "students": "طلباء",
       "assignments": "اسائنمنٹس",
       "resources": "وسائل",
-      "forum": "فورم"
+      "forum": "فورم",
+      "store": "اسٹور"
     },
     "parent": {
       "dashboard": "ڈیش بورڈ",
@@ -40,6 +41,7 @@
       "announcements": "اعلانات",
       "forum": "فورم انتظام",
       "makeup": "میک اپ درخواستیں",
+      "store": "اسٹور",
       "reports": "رپورٹس"
     }
   },

@@ -19,7 +19,8 @@
       "students": "الطلاب",
       "assignments": "الواجبات",
       "resources": "الموارد",
-      "forum": "المنتدى"
+      "forum": "المنتدى",
+      "store": "المتجر"
     },
     "parent": {
       "dashboard": "لوحة التحكم",
@@ -40,6 +41,7 @@
       "announcements": "الإعلانات",
       "forum": "إدارة المنتدى",
       "makeup": "طلبات التعويض",
+      "store": "المتجر",
       "reports": "التقارير"
     }
   },

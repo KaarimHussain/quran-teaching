@@ -17,6 +17,7 @@ type Language = "EN" | "UR" | "AR";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/courses", label: "Courses" },
+  { href: "/store", label: "Store" },
   { href: "/#features", label: "Features" },
   { href: "/#about", label: "About" },
 ];

@@ -17,6 +17,7 @@ import {
   FolderOpen,
   CalendarX2,
   BookMarked,
+  ShoppingBag,
 } from "lucide-react";
 
 export type NavItem = {
@@ -46,6 +47,7 @@ export const teacherNav: NavItem[] = [
   { href: "/teacher/assignments", labelKey: "assignments", icon: ClipboardList },
   { href: "/teacher/resources", labelKey: "resources", icon: Library },
   { href: "/teacher/forum", labelKey: "forum", icon: MessagesSquare },
+  { href: "/teacher/store", labelKey: "store", icon: ShoppingBag },
 ];
 
 export const parentNav: NavItem[] = [
@@ -68,6 +70,7 @@ export const adminNav: NavItem[] = [
   { href: "/admin/announcements", labelKey: "announcements", icon: Bell },
   { href: "/admin/forum", labelKey: "forum", icon: Megaphone },
   { href: "/admin/makeup", labelKey: "makeup", icon: CalendarX2 },
+  { href: "/admin/store", labelKey: "store", icon: ShoppingBag },
   { href: "/admin/reports", labelKey: "reports", icon: BarChart3 },
 ];
 

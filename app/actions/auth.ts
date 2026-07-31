@@ -22,6 +22,7 @@ export type AuthFormState =
   | {
       error?: string;
       fieldErrors?: Record<string, string[]>;
+      email?: string;
     }
   | undefined;
 
@@ -34,21 +35,30 @@ export async function login(
     password: formData.get("password"),
   });
 
+  const rawEmail = (formData.get("email") as string) ?? "";
+
   if (!result.success) {
-    return { fieldErrors: result.error.flatten().fieldErrors };
+    return { fieldErrors: result.error.flatten().fieldErrors, email: rawEmail };
   }
 
   const { email, password } = result.data;
 
-  const user = await prisma.user.findUnique({ where: { email } });
+  let redirectPath: string;
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
 
-  if (!user || !user.isActive || !verifyPassword(password, user.passwordHash)) {
-    return { error: "Invalid email or password." };
+    if (!user || !user.isActive || !verifyPassword(password, user.passwordHash)) {
+      return { error: "Invalid email or password.", email: rawEmail };
+    }
+
+    await createSession(user.id, user.role);
+    await setLocaleCookie(user.preferredLanguage ?? "EN");
+    redirectPath = roleToBasePath[user.role];
+  } catch {
+    return { error: "Unable to sign in right now. Please try again in a moment.", email: rawEmail };
   }
 
-  await createSession(user.id, user.role);
-  await setLocaleCookie(user.preferredLanguage ?? "EN");
-  redirect(roleToBasePath[user.role]);
+  redirect(redirectPath);
 }
 
 export async function register(
@@ -71,29 +81,40 @@ export async function register(
 
   const { role, name, email, password, language } = result.data;
 
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
-    return { fieldErrors: { email: ["An account with this email already exists."] } };
+  let redirectPath: string;
+  try {
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing) {
+      return { fieldErrors: { email: ["An account with this email already exists."] } };
+    }
+
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        passwordHash: hashPassword(password),
+        role,
+        preferredLanguage: language,
+        ...(role === "TEACHER" ? { isVolunteer: true, verificationStatus: "PENDING" } : {}),
+      },
+    });
+
+    await sendWelcomeEmail(user.email, user.name, user.role);
+    await createSession(user.id, user.role);
+    await setLocaleCookie(language ?? "EN");
+    redirectPath = roleToBasePath[user.role];
+  } catch {
+    return { error: "Unable to create your account right now. Please try again in a moment." };
   }
 
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      passwordHash: hashPassword(password),
-      role,
-      preferredLanguage: language,
-      ...(role === "TEACHER" ? { isVolunteer: true, verificationStatus: "PENDING" } : {}),
-    },
-  });
-
-  await sendWelcomeEmail(user.email, user.name, user.role);
-  await createSession(user.id, user.role);
-  await setLocaleCookie(language ?? "EN");
-  redirect(roleToBasePath[user.role]);
+  redirect(redirectPath);
 }
 
 export async function logout() {
-  await deleteSession();
+  try {
+    await deleteSession();
+  } catch {
+    // best-effort; redirect to login regardless
+  }
   redirect("/login");
 }

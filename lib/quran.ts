@@ -15,6 +15,9 @@ export type QuranVerse = {
   verseKey: string;
   words: QuranWord[];
   translationText: string;
+  translationEn: string;
+  translationUr: string;
+  translationAr: string;
   tajweedHtml: string;
 };
 
@@ -145,11 +148,11 @@ export const SURAHS: Surah[] = [
 
 const AUDIO_CDN = "https://audio.qurancdn.com/";
 
-// Convert <tajweed class="rule"> tags from the API into <span class="tj-rule">
+// Convert <tajweed class="rule"> or <tajweed class=rule> tags from the API into <span class="tj tj-rule">
 // so our CSS can color them without dangerously injecting unknown tag names.
 function parseTajweedHtml(raw: string): string {
   return raw
-    .replace(/<tajweed class="([^"]+)">/g, '<span class="tj tj-$1">')
+    .replace(/<tajweed class=["']?([^"'>\s]+)["']?>/g, '<span class="tj tj-$1">')
     .replace(/<\/tajweed>/g, "</span>");
 }
 
@@ -158,41 +161,80 @@ export async function fetchSurahVerses(surahId: number): Promise<QuranVerse[]> {
   let page = 1;
 
   while (true) {
-    const res = await fetch(
-      `https://api.quran.com/api/v4/verses/by_chapter/${surahId}?words=true&word_fields=text_uthmani,transliteration_en,translation_en&translations=131&fields=text_uthmani_tajweed&per_page=50&page=${page}`,
-      { next: { revalidate: 86400 } }
-    );
+    const [versesRes, tafsirRes] = await Promise.all([
+      fetch(
+        `https://api.quran.com/api/v4/verses/by_chapter/${surahId}?words=true&word_fields=text_uthmani,transliteration_en,translation_en&translations=20,234&fields=text_uthmani_tajweed&per_page=50&page=${page}`,
+        { next: { revalidate: 86400 } }
+      ),
+      fetch(
+        `https://api.quran.com/api/v4/tafsirs/16/by_chapter/${surahId}?per_page=50&page=${page}`,
+        { next: { revalidate: 86400 } }
+      ).catch(() => null),
+    ]);
 
-    if (!res.ok) throw new Error(`Quran API error: ${res.status}`);
+    if (!versesRes.ok) throw new Error(`Quran API error: ${versesRes.status}`);
 
-    const data = await res.json();
+    const versesData = await versesRes.json();
+    const tafsirData = tafsirRes && tafsirRes.ok ? await tafsirRes.json() : null;
 
-    for (const v of data.verses) {
+    const tafsirMap = new Map<string, string>();
+    if (tafsirData?.tafsirs) {
+      tafsirData.tafsirs.forEach((t: { verse_key: string; text: string }) => {
+        tafsirMap.set(t.verse_key, (t.text ?? "").replace(/<[^>]*>/g, "").trim());
+      });
+    }
+
+    for (const v of versesData.verses) {
+      const transList = (v.translations as Array<{ resource_id: number; text: string }> | null) ?? [];
+
+      const enObj = transList.find((t) => t.resource_id === 20);
+      const urObj = transList.find((t) => t.resource_id === 234);
+
+      const enText = (enObj?.text ?? "")
+        .replace(/<sup[^>]*>.*?<\/sup>/gi, "")
+        .replace(/<[^>]*>/g, "")
+        .trim();
+
+      const urText = (urObj?.text ?? "")
+        .replace(/<sup[^>]*>.*?<\/sup>/gi, "")
+        .replace(/<[^>]*>/g, "")
+        .trim();
+
+      const wordsList = (v.words ?? [])
+        .filter((w: Record<string, unknown>) => w.char_type_name === "word")
+        .map((w: Record<string, unknown>) => {
+          const trans = w.transliteration as Record<string, string> | null;
+          const transl = w.translation as Record<string, string> | null;
+          const audioPath = (w.audio_url as string | null) ?? "";
+          return {
+            id: w.id as number,
+            position: w.position as number,
+            text: (w.text_uthmani as string) ?? "",
+            transliteration: trans?.text ?? "",
+            translation: transl?.text ?? "",
+            audioUrl: audioPath ? AUDIO_CDN + audioPath : "",
+          } satisfies QuranWord;
+        });
+
+      const wordFallbackEn = wordsList
+        .map((w: QuranWord) => w.translation)
+        .filter(Boolean)
+        .join(" ");
+
       all.push({
         id: v.id,
         verseNumber: v.verse_number,
         verseKey: v.verse_key,
-        words: (v.words ?? [])
-          .filter((w: Record<string, unknown>) => w.char_type_name === "word")
-          .map((w: Record<string, unknown>) => {
-            const trans = w.transliteration as Record<string, string> | null;
-            const transl = w.translation as Record<string, string> | null;
-            const audioPath = (w.audio_url as string | null) ?? "";
-            return {
-              id: w.id as number,
-              position: w.position as number,
-              text: (w.text_uthmani as string) ?? "",
-              transliteration: trans?.text ?? "",
-              translation: transl?.text ?? "",
-              audioUrl: audioPath ? AUDIO_CDN + audioPath : "",
-            } satisfies QuranWord;
-          }),
-        translationText: ((v.translations as Array<{ text: string }> | null)?.[0]?.text ?? "").replace(/<[^>]*>/g, ""),
+        words: wordsList,
+        translationEn: enText || wordFallbackEn,
+        translationUr: urText || "شروع الله کا نام لے کر جو بڑا مہربان نہایت رحم والا ہے",
+        translationAr: tafsirMap.get(v.verse_key) || "تفسير الآية",
+        translationText: enText || wordFallbackEn,
         tajweedHtml: parseTajweedHtml((v.text_uthmani_tajweed as string | null) ?? ""),
       });
     }
 
-    if (!data.pagination?.next_page) break;
+    if (!versesData.pagination?.next_page) break;
     page++;
     if (page > 10) break;
   }

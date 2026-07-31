@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-  Plus,
   Pin,
   MessageSquare,
   Megaphone,
@@ -8,7 +7,6 @@ import {
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Card,
@@ -22,6 +20,7 @@ import { prisma } from "@/lib/db";
 import { requireCurrentUser } from "@/lib/dal";
 import { roleLabel } from "@/lib/roles";
 import { formatRelativeTime } from "@/lib/format";
+import { NewDiscussionDialog } from "./new-discussion-dialog";
 
 function initials(name: string) {
   return name
@@ -76,9 +75,7 @@ export default async function StudentForumPage() {
               <p className="text-sm text-muted-foreground">
                 {t("forumPage.activeDiscussions", { count: posts.length })}
               </p>
-              <Button className="w-full sm:w-auto">
-                <Plus className="size-4" /> {t("forumPage.newDiscussion")}
-              </Button>
+              <NewDiscussionDialog courses={courses} />
             </CardContent>
           </Card>
 

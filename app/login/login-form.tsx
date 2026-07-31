@@ -44,6 +44,7 @@ export function LoginForm() {
             autoComplete="email"
             placeholder={t("emailPlaceholder")}
             required
+            defaultValue={state?.email}
             aria-invalid={!!state?.fieldErrors?.email}
             aria-describedby={state?.fieldErrors?.email ? "login-email-error" : undefined}
             className="h-11 rounded-xl ps-10"
