@@ -118,6 +118,97 @@ export async function deleteStoreModule(formData: FormData) {
   revalidatePath("/admin/store");
 }
 
+export async function updateStoreModule(formData: FormData) {
+  const user = await requireCurrentUser();
+  if (user.role !== "SUPER_ADMIN") return;
+
+  const id           = formData.get("id")           as string;
+  const title        = (formData.get("title")        as string | null)?.trim() ?? "";
+  const description  = (formData.get("description")  as string | null)?.trim() || null;
+  const contentUrl   = (formData.get("contentUrl")   as string | null)?.trim() || null;
+  const durationRaw  = (formData.get("durationMins") as string | null) ?? "";
+  const durationMins = durationRaw ? parseInt(durationRaw, 10) || null : null;
+
+  if (!id || !title) return;
+
+  try {
+    await prisma.storeModule.update({
+      where: { id },
+      data: { title, description, contentUrl, durationMins },
+    });
+  } catch { return; }
+
+  revalidatePath("/admin/store");
+  revalidatePath("/store");
+}
+
+export async function updateStoreItem(
+  _prev: StoreItemFormState,
+  formData: FormData
+): Promise<StoreItemFormState> {
+  const user = await requireCurrentUser();
+  if (user.role !== "SUPER_ADMIN") return { error: "Forbidden." };
+
+  const id            = (formData.get("id")            as string | null) ?? "";
+  const title         = (formData.get("title")         as string | null)?.trim() ?? "";
+  const description   = (formData.get("description")   as string | null)?.trim() || null;
+  const type          = (formData.get("type")          as string | null) ?? "";
+  const level         = (formData.get("level")         as string | null) ?? "ALL_LEVELS";
+  const language      = (formData.get("language")      as string | null) ?? "EN";
+  const hasPrice      = formData.get("hasPrice") === "true";
+  const priceRaw      = (formData.get("price")         as string | null) ?? "";
+  const contentUrl    = (formData.get("contentUrl")    as string | null)?.trim() || null;
+  const coverImageUrl = (formData.get("coverImageUrl") as string | null)?.trim() || null;
+  const durationHrsRaw  = (formData.get("durationHours") as string | null) ?? "";
+  const durationMinsRaw = (formData.get("durationMins")  as string | null) ?? "";
+
+  const fieldErrors: Record<string, string[]> = {};
+
+  if (!id) return { error: "Product ID missing." };
+  if (!title) fieldErrors.title = ["Title is required."];
+  if (!VALID_TYPES.includes(type as ItemType))    fieldErrors.type  = ["Select a valid type."];
+  if (!VALID_LEVELS.includes(level as ItemLevel)) fieldErrors.level = ["Select a valid level."];
+
+  let pricePence = 0;
+  if (hasPrice) {
+    const price = parseFloat(priceRaw);
+    if (!priceRaw || isNaN(price) || price < 0) {
+      fieldErrors.price = ["Enter a valid price."];
+    } else {
+      pricePence = Math.round(price * 100);
+    }
+  }
+
+  if (Object.keys(fieldErrors).length) return { fieldErrors };
+
+  const hrs  = durationHrsRaw  ? parseInt(durationHrsRaw,  10) || 0 : 0;
+  const mins = durationMinsRaw ? parseInt(durationMinsRaw, 10) || 0 : 0;
+  const durationMins = (hrs * 60 + mins) || null;
+
+  try {
+    await prisma.storeItem.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        type:     type     as ItemType,
+        level:    level    as ItemLevel,
+        language: language as ItemLang,
+        pricePence,
+        contentUrl,
+        coverImageUrl,
+        durationMins,
+      },
+    });
+  } catch {
+    return { error: "Could not update product. Please try again." };
+  }
+
+  revalidatePath("/admin/store");
+  revalidatePath("/store");
+  return { error: undefined };
+}
+
 export async function toggleStoreItemPublished(formData: FormData) {
   const user = await requireCurrentUser();
   if (user.role !== "SUPER_ADMIN") return;

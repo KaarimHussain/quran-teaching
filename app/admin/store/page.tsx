@@ -17,6 +17,9 @@ import {
   toggleStoreItemPublished, deleteStoreItem,
   addStoreModule, deleteStoreModule,
 } from "./actions";
+import { AddModuleForm } from "./add-module-form";
+import { EditModuleDialog } from "./edit-module-dialog";
+import { EditItemDialog } from "./edit-item-dialog";
 
 function formatPrice(pricePence: number, freeLabel: string) {
   if (pricePence === 0) return freeLabel;
@@ -212,68 +215,39 @@ export default async function AdminStorePage() {
                             </span>
                           )}
                         </span>
-                        <form action={deleteStoreModule}>
-                          <input type="hidden" name="id" value={mod.id} />
-                          <Button
-                            type="submit" variant="ghost" size="sm"
-                            className="size-7 rounded-full p-0 text-destructive hover:text-destructive"
-                          >
-                            <Trash2 className="size-3" />
-                          </Button>
-                        </form>
+                        <div className="flex items-center gap-1">
+                          <EditModuleDialog module={mod} />
+                          <form action={deleteStoreModule}>
+                            <input type="hidden" name="id" value={mod.id} />
+                            <Button
+                              type="submit" variant="ghost" size="sm"
+                              className="size-7 rounded-full p-0 text-destructive hover:text-destructive"
+                            >
+                              <Trash2 className="size-3" />
+                            </Button>
+                          </form>
+                        </div>
                       </div>
                     ))}
 
                     {/* Add module */}
-                    <form
-                      action={addStoreModule}
-                      className="mt-1 flex flex-col gap-2 border-t border-border pt-2"
-                    >
-                      <input type="hidden" name="storeItemId" value={item.id} />
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                        <div className="sm:col-span-2 flex flex-col gap-1">
-                          <Label htmlFor={`mod-title-${item.id}`} className="text-xs">
-                            {t("moduleTitle")}
-                          </Label>
-                          <Input
-                            id={`mod-title-${item.id}`} name="title"
-                            placeholder={t("moduleTitlePlaceholder")}
-                            className="h-8 text-xs" required
-                          />
-                        </div>
-                        <div className="flex flex-col gap-1">
-                          <Label htmlFor={`mod-dur-${item.id}`} className="text-xs">
-                            {t("moduleDuration")}
-                          </Label>
-                          <Input
-                            id={`mod-dur-${item.id}`} name="durationMins"
-                            type="number" min="1" placeholder="20"
-                            className="h-8 text-xs"
-                          />
-                        </div>
-                        <div className="sm:col-span-3 flex flex-col gap-1">
-                          <Label htmlFor={`mod-url-${item.id}`} className="text-xs">
-                            {t("moduleUrl")}
-                          </Label>
-                          <Input
-                            id={`mod-url-${item.id}`} name="contentUrl"
-                            type="url" placeholder="https://…"
-                            className="h-8 text-xs"
-                          />
-                        </div>
-                      </div>
-                      <Button
-                        type="submit" variant="outline" size="sm"
-                        className="w-fit rounded-full gap-1"
-                      >
-                        <Plus className="size-3" /> {t("addModule")}
-                      </Button>
-                    </form>
+                    <AddModuleForm
+                      storeItemId={item.id}
+                      labels={{
+                        moduleTitle: t("moduleTitle"),
+                        moduleTitlePlaceholder: t("moduleTitlePlaceholder"),
+                        moduleDuration: t("moduleDuration"),
+                        moduleUrl: t("moduleUrl"),
+                        addModule: t("addModule"),
+                      }}
+                    />
                   </div>
                 )}
 
                 {/* Item actions */}
-                <div className="flex gap-2 border-t border-border pt-2">
+                <div className="flex items-center gap-2 border-t border-border pt-2">
+                  <EditItemDialog item={item} />
+
                   <form action={toggleStoreItemPublished}>
                     <input type="hidden" name="id"          value={item.id} />
                     <input type="hidden" name="isPublished" value={String(item.isPublished)} />

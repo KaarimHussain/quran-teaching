@@ -714,6 +714,88 @@
         "replyCount": "{count} ردود",
         "noRepliesYet": "لا توجد ردود بعد."
       }
+    },
+    "publicStore": {
+      "heroBadge": "سوق المناهج الدراسية",
+      "heroTitle": "تعلم بحريتك وبسرعتك الخاصة",
+      "heroSubtitle": "دورات متميزة، وثائق، مقاطع فيديو، تسجيلات صوتية، وقصص تاريخية — من إعداد معلمين مؤهلين لتعميق معرفتك الإسلامية.",
+      "searchPlaceholder": "ابحث عن الدورات، الموضوعات، أو المعلمين...",
+      "filters": {
+        "all": "جميع المواد",
+        "COURSE": "الدورات",
+        "DOCUMENT": "الوثائق",
+        "VIDEO": "الفيديوهات",
+        "AUDIO": "الصوتيات",
+        "HISTORICAL_STORY": "قصص تاريخية"
+      },
+      "levels": {
+        "all": "جميع المستويات",
+        "BEGINNER": "مبتدئ",
+        "INTERMEDIATE": "متوسط",
+        "ADVANCED": "متقدم",
+        "ALL_LEVELS": "جميع المستويات"
+      },
+      "priceFilter": {
+        "all": "جميع الأسعار",
+        "free": "مجاني فقط",
+        "paid": "مدفوع فقط"
+      },
+      "sort": {
+        "label": "ترتيب حسب",
+        "newest": "الأحدث",
+        "priceAsc": "السعر: من الأقل للأعلى",
+        "priceDesc": "السعر: من الأعلى للأقل",
+        "duration": "المدة"
+      },
+      "status": {
+        "available": "المتاح حالياً",
+        "comingSoon": "قريباً",
+        "itemCount": "{count} مادة متاحة",
+        "itemCountPlural": "{count} مواد متاحة",
+        "showingFiltered": "عرض {count} من المواد المطابقة"
+      },
+      "typeLabel": {
+        "COURSE": "دورة دراسية",
+        "DOCUMENT": "وثيقة",
+        "VIDEO": "فيديو",
+        "AUDIO": "تسجيل صوتي",
+        "HISTORICAL_STORY": "قصة تاريخية"
+      },
+      "cta": {
+        "COURSE": "سجل الآن",
+        "DOCUMENT": "تحميل",
+        "VIDEO": "مشاهدة",
+        "AUDIO": "استماع",
+        "HISTORICAL_STORY": "قراءة",
+        "free": "وصول مجاني",
+        "quickView": "معاينة سريعة",
+        "close": "إغلاق"
+      },
+      "emptyState": {
+        "title": "لا تتوفر نتائج تطابق بحثك",
+        "desc": "جرب إعادة ضبط البحث أو تغيير الفلاتر للعثور على ما تبحث عنه.",
+        "clearFilters": "مسح الفلاتر",
+        "noPublishedTitle": "لا يوجد محتوى مدرج بعد",
+        "noPublishedDesc": "يقوم معلمونا بإعداد دورات وموارد متميزة. يرجى التحقق لاحقاً!"
+      },
+      "trust": {
+        "teachers": "معلمون متخصصون",
+        "teachersSub": "محتوى معد من قبل علماء ومعلمين مؤهلين",
+        "payment": "وصول آمن",
+        "paymentSub": "تأكيد فوري وتعلم سلس بدون تعقيدات",
+        "access": "وصول مدى الحياة",
+        "accessSub": "تعلم في أي وقت وراجع المحتوى متى تشاء"
+      },
+      "modal": {
+        "modulesCount": "الوحدات الدراسية المشمولة ({count})",
+        "teacher": "المعلم",
+        "by": "تم الإنشاء بواسطة",
+        "level": "المستوى",
+        "language": "اللغة",
+        "duration": "المدة الإجمالية",
+        "freeItem": "مورد مجاني",
+        "priceItem": "السعر"
+      }
     }
   },
   "auth": {

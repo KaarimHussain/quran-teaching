@@ -714,6 +714,88 @@
         "replyCount": "{count} replies",
         "noRepliesYet": "No replies yet."
       }
+    },
+    "publicStore": {
+      "heroBadge": "Curriculum Marketplace",
+      "heroTitle": "Learn at Your Own Pace",
+      "heroSubtitle": "Premium courses, documents, videos, audios, and historical stories — crafted by qualified teachers to deepen your Islamic knowledge.",
+      "searchPlaceholder": "Search courses, topics, teachers...",
+      "filters": {
+        "all": "All Items",
+        "COURSE": "Courses",
+        "DOCUMENT": "Documents",
+        "VIDEO": "Videos",
+        "AUDIO": "Audio",
+        "HISTORICAL_STORY": "History"
+      },
+      "levels": {
+        "all": "All Levels",
+        "BEGINNER": "Beginner",
+        "INTERMEDIATE": "Intermediate",
+        "ADVANCED": "Advanced",
+        "ALL_LEVELS": "All Levels"
+      },
+      "priceFilter": {
+        "all": "All Prices",
+        "free": "Free Only",
+        "paid": "Paid Only"
+      },
+      "sort": {
+        "label": "Sort by",
+        "newest": "Newest",
+        "priceAsc": "Price: Low to High",
+        "priceDesc": "Price: High to Low",
+        "duration": "Duration"
+      },
+      "status": {
+        "available": "Available Now",
+        "comingSoon": "Coming Soon",
+        "itemCount": "{count} item available",
+        "itemCountPlural": "{count} items available",
+        "showingFiltered": "Showing {count} matching item(s)"
+      },
+      "typeLabel": {
+        "COURSE": "Course",
+        "DOCUMENT": "Document",
+        "VIDEO": "Video",
+        "AUDIO": "Audio",
+        "HISTORICAL_STORY": "Historical Story"
+      },
+      "cta": {
+        "COURSE": "Enroll Now",
+        "DOCUMENT": "Download",
+        "VIDEO": "Watch",
+        "AUDIO": "Listen",
+        "HISTORICAL_STORY": "Read",
+        "free": "Free Access",
+        "quickView": "Quick View",
+        "close": "Close"
+      },
+      "emptyState": {
+        "title": "No products match your criteria",
+        "desc": "Try resetting your search query or changing filters to find what you are looking for.",
+        "clearFilters": "Clear Filters",
+        "noPublishedTitle": "Nothing listed yet",
+        "noPublishedDesc": "Our teachers are preparing premium courses and resources. Check back soon!"
+      },
+      "trust": {
+        "teachers": "Expert Teachers",
+        "teachersSub": "Content created by qualified Islamic scholars",
+        "payment": "Secure Access",
+        "paymentSub": "Instant verification & seamless learning",
+        "access": "Lifetime Access",
+        "accessSub": "Learn anytime, revisit whenever you need"
+      },
+      "modal": {
+        "modulesCount": "Included Modules ({count})",
+        "teacher": "Teacher",
+        "by": "Created by",
+        "level": "Level",
+        "language": "Language",
+        "duration": "Total Duration",
+        "freeItem": "Free Resource",
+        "priceItem": "Price"
+      }
     }
   },
   "auth": {

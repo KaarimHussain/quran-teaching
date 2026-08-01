@@ -714,6 +714,88 @@
         "replyCount": "{count} جوابات",
         "noRepliesYet": "ابھی تک کوئی جواب نہیں۔"
       }
+    },
+    "publicStore": {
+      "heroBadge": "نصاب کا مارکیٹ پلیس",
+      "heroTitle": "اپنی رفتار سے علم حاصل کریں",
+      "heroSubtitle": "اعلیٰ معیار کے کورسز، دستاویزات، ویڈیوز، آڈیوز، اور تاریخی قصے — ماہر اساتذہ کی طرف سے آپ کے اسلامی علم میں اضافے کے لیے۔",
+      "searchPlaceholder": "کورسز، موضوعات یا اساتذہ تلاش کریں...",
+      "filters": {
+        "all": "تمام اشیاء",
+        "COURSE": "کورسز",
+        "DOCUMENT": "دستاویزات",
+        "VIDEO": "ویڈیوز",
+        "AUDIO": "آڈیوز",
+        "HISTORICAL_STORY": "تاریخی قصے"
+      },
+      "levels": {
+        "all": "تمام درجات",
+        "BEGINNER": "ابتدائی",
+        "INTERMEDIATE": "درمیانی",
+        "ADVANCED": "اعلیٰ",
+        "ALL_LEVELS": "تمام درجات"
+      },
+      "priceFilter": {
+        "all": "تمام قیمتیں",
+        "free": "صرف مفت",
+        "paid": "صرف مدفوع"
+      },
+      "sort": {
+        "label": "ترتیب دیں",
+        "newest": "جدید ترین",
+        "priceAsc": "قیمت: کم سے زیادہ",
+        "priceDesc": "قیمت: زیادہ سے کم",
+        "duration": "دورانیہ"
+      },
+      "status": {
+        "available": "ابھی دستیاب ہیں",
+        "comingSoon": "عنقریب",
+        "itemCount": "{count} آئٹم دستیاب",
+        "itemCountPlural": "{count} آئٹمز دستیاب",
+        "showingFiltered": "{count} مطابقت رکھنے والی آئٹمز دکھائی جا رہی ہیں"
+      },
+      "typeLabel": {
+        "COURSE": "کورس",
+        "DOCUMENT": "دستاویز",
+        "VIDEO": "ویڈیو",
+        "AUDIO": "آڈیو",
+        "HISTORICAL_STORY": "تاریخی واقعہ"
+      },
+      "cta": {
+        "COURSE": "ابھی شامل ہوں",
+        "DOCUMENT": "ڈاؤن لوڈ کریں",
+        "VIDEO": "دیکھیں",
+        "AUDIO": "سنیں",
+        "HISTORICAL_STORY": "پڑھیں",
+        "free": "مفت رسائی",
+        "quickView": "فوری جھلک",
+        "close": "بند کریں"
+      },
+      "emptyState": {
+        "title": "آپ کی تلاش سے مطابقت رکھنے والا کوئی مواد نہیں ملا",
+        "desc": "اپنی تلاش کو دوبارہ سے ترتیب دیں یا فلٹرز تبدیل کریں۔",
+        "clearFilters": "فلٹرز صاف کریں",
+        "noPublishedTitle": "ابھی تک کوئی مواد شائع نہیں ہوا",
+        "noPublishedDesc": "ہمارے اساتذہ اعلیٰ معیار کا مواد تیار کر رہے ہیں۔ جلد دوبارہ دیکھئے!"
+      },
+      "trust": {
+        "teachers": "ماہر اساتذہ",
+        "teachersSub": "کوالیفائیڈ علمائے کرام اور اساتذہ کا تیار کردہ مواد",
+        "payment": "محفوظ رسائی",
+        "paymentSub": "فوری تصدیق اور آسان رسائی",
+        "access": "تادمِ حیات رسائی",
+        "accessSub": "کسی بھی وقت سیکھیں اور جب چاہیں دہرائیں"
+      },
+      "modal": {
+        "modulesCount": "شامل ماڈیولز ({count})",
+        "teacher": "استاد",
+        "by": "تخلیق کار",
+        "level": "درجہ",
+        "language": "زبان",
+        "duration": "کل دورانیہ",
+        "freeItem": "مفت ذریعہ",
+        "priceItem": "قیمت"
+      }
     }
   },
   "auth": {
