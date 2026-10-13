@@ -39,7 +39,7 @@ export async function SiteHeader() {
 
         {/* Desktop: links pushed to the end, well clear of the logo */}
         <div className="ms-auto hidden items-center gap-5 ps-8 lg:flex xl:gap-8 xl:ps-12">
-          <nav aria-label="Main" className="flex items-center gap-6 xl:gap-7">
+          <nav aria-label={t("navLabel")} className="flex items-center gap-6 xl:gap-7">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -80,7 +80,7 @@ export async function SiteHeader() {
                   Quran Learning
                 </SheetTitle>
               </SheetHeader>
-              <nav aria-label="Main" className="flex flex-col gap-1 px-4">
+              <nav aria-label={t("navLabel")} className="flex flex-col gap-1 px-4">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}

@@ -982,12 +982,13 @@
     }
   },
   "common": {
+    "changeLanguage": "زبان تبدیل کریں:",
     "errorPage": {
-      "title": "We'll be right back",
-      "description": "We couldn't load this page just now. This is usually temporary — please try again in a moment.",
-      "retry": "Try again",
-      "home": "Go to home page",
-      "reference": "Reference: {digest}"
+      "title": "ہم جلد واپس آئیں گے",
+      "description": "ہم ابھی یہ صفحہ لوڈ نہیں کر سکے۔ یہ عموماً عارضی ہوتا ہے — براہِ کرم کچھ دیر بعد دوبارہ کوشش کریں۔",
+      "retry": "دوبارہ کوشش کریں",
+      "home": "ہوم پیج پر جائیں",
+      "reference": "حوالہ: {digest}"
     },
     "active": "فعال",
     "inactive": "غیر فعال",
@@ -1007,246 +1008,261 @@
   },
   "marketing": {
     "cta": {
-      "primary": "Start learning — it's free",
-      "secondary": "See the courses",
-      "haveAccount": "I already have an account"
+      "primary": "سیکھنا شروع کریں — بالکل مفت",
+      "secondary": "کورسز دیکھیں",
+      "haveAccount": "میرا اکاؤنٹ پہلے سے موجود ہے"
     },
     "header": {
-      "home": "Home",
-      "courses": "Courses",
-      "howItWorks": "How it works",
-      "quranReader": "Quran Reader",
-      "store": "Store",
-      "login": "Log in",
-      "startFree": "Start free",
-      "openMenu": "Open menu",
-      "menuTitle": "Menu"
+      "home": "ہوم",
+      "courses": "کورسز",
+      "howItWorks": "یہ کیسے کام کرتا ہے",
+      "quranReader": "قرآن ریڈر",
+      "store": "اسٹور",
+      "login": "لاگ ان",
+      "startFree": "مفت شروع کریں",
+      "openMenu": "مینو کھولیں",
+      "menuTitle": "مینو",
+      "navLabel": "مرکزی"
     },
     "footer": {
-      "tagline": "Free Quran lessons for children, adults and new Muslims — with real teachers, in English, Urdu and Arabic.",
-      "learnTitle": "Learn",
-      "accountTitle": "Your account",
-      "languagesTitle": "Language",
-      "volunteer": "Become a volunteer teacher",
-      "copyright": "© {year} Free Quranic Learning Portal. Free for everyone, everywhere.",
-      "madeWith": "Made with care for the global Muslim community."
+      "tagline": "بچوں، بڑوں اور نو مسلموں کے لیے مفت قرآنی اسباق — حقیقی اساتذہ کے ساتھ، انگریزی، اردو اور عربی میں۔",
+      "learnTitle": "سیکھیں",
+      "accountTitle": "آپ کا اکاؤنٹ",
+      "languagesTitle": "زبان",
+      "volunteer": "رضاکار استاد بنیں",
+      "copyright": "© {year} مفت قرآنی تعلیمی پورٹل۔ ہر ایک کے لیے، ہر جگہ مفت۔",
+      "madeWith": "دنیا بھر کی مسلم امت کے لیے محبت سے تیار کیا گیا۔"
     },
     "tracks": {
       "quranReading": {
-        "description": "Start from the very beginning: the Arabic letters, their sounds, then reading the Quran fluently from the page.",
-        "audience": "For complete beginners of any age — no Arabic needed."
+        "name": "قرآن خوانی",
+        "description": "بالکل ابتدا سے شروع کریں: عربی حروف، ان کی آوازیں، پھر قرآن مجید کو روانی سے پڑھنا۔",
+        "audience": "ہر عمر کے بالکل نئے سیکھنے والوں کے لیے — عربی جاننا ضروری نہیں۔"
       },
       "tajweed": {
-        "description": "Learn Tajweed — the rules for reciting the Quran with correct pronunciation — and practise until it feels natural.",
-        "audience": "For anyone who can already read the Quran and wants to recite it correctly."
+        "name": "تجوید",
+        "description": "تجوید سیکھیں — قرآن مجید کو درست تلفظ کے ساتھ پڑھنے کے قواعد — اور اتنی مشق کریں کہ یہ آپ کی عادت بن جائے۔",
+        "audience": "ان سب کے لیے جو قرآن پڑھ سکتے ہیں اور اسے درست طریقے سے تلاوت کرنا چاہتے ہیں۔"
       },
       "hifz": {
-        "description": "Memorise the Quran (Hifz) with a proven daily routine of new lessons and revision, so you keep what you learn.",
-        "audience": "For learners who read fluently and want to memorise, a little at a time."
+        "name": "حفظ القرآن",
+        "description": "روزانہ نئے سبق اور دہرائی کے آزمودہ طریقے سے قرآن مجید حفظ کریں، تاکہ جو یاد کریں وہ محفوظ رہے۔",
+        "audience": "ان کے لیے جو روانی سے پڑھتے ہیں اور تھوڑا تھوڑا کر کے حفظ کرنا چاہتے ہیں۔"
       },
       "understanding": {
-        "description": "Understand what you recite: common Quranic words, translation, basic Arabic grammar and Tafsir (explanation of the verses).",
-        "audience": "For readers who want to know the meaning of the Quran."
+        "name": "فہمِ قرآن",
+        "description": "جو آپ تلاوت کرتے ہیں اسے سمجھیں: قرآن کے عام الفاظ، ترجمہ، بنیادی عربی گرامر اور تفسیر (آیات کی وضاحت)۔",
+        "audience": "ان کے لیے جو قرآن مجید کا مطلب جاننا چاہتے ہیں۔"
       },
       "islamicStudies": {
-        "description": "The foundations of daily Muslim life: belief, worship, the Prophet's ﷺ life and teachings, manners, duas and history.",
-        "audience": "For everyone — children, adults and new Muslims alike."
+        "name": "اسلامیات",
+        "description": "روزمرہ مسلم زندگی کی بنیادیں: عقیدہ، عبادات، نبی کریم ﷺ کی سیرت اور تعلیمات، آداب، دعائیں اور تاریخ۔",
+        "audience": "سب کے لیے — بچے، بڑے اور نو مسلم۔"
       },
       "advanced": {
-        "description": "Deeper study of the Quranic sciences, the recognised recitations (Qira'at) and research into Tafsir.",
-        "audience": "For dedicated students aged 16 and over."
+        "name": "اعلیٰ قرآنی علوم",
+        "description": "علومِ قرآن، معروف قراءات اور تفسیر میں تحقیق کا گہرا مطالعہ۔",
+        "audience": "16 سال یا اس سے زیادہ عمر کے سنجیدہ طلبہ کے لیے۔"
       },
       "teacherPreparation": {
-        "description": "Learn how to teach Qaida, Nazra and Tajweed, assess students and run classes, with supervised practice.",
-        "audience": "For experienced students preparing to teach others."
+        "name": "قرآن استاد کی تیاری",
+        "description": "قاعدہ، ناظرہ اور تجوید پڑھانا، طلبہ کی جانچ کرنا اور کلاسیں چلانا سیکھیں — نگرانی میں عملی مشق کے ساتھ۔",
+        "audience": "تجربہ کار طلبہ کے لیے جو دوسروں کو پڑھانے کی تیاری کر رہے ہیں۔"
       }
     },
     "landing": {
       "hero": {
-        "badge": "100% free · English · اردو · العربية",
-        "title": "Learn the Quran for free, step by step, with a real teacher",
-        "subtitle": "Clear lessons for children, adults and new Muslims. Start from the alphabet or continue where you are — at your own pace, on any device.",
+        "badge": "100٪ مفت · English · اردو · العربية",
+        "title": "قرآن مجید مفت سیکھیں، قدم بہ قدم، ایک حقیقی استاد کے ساتھ",
+        "subtitle": "بچوں، بڑوں اور نو مسلموں کے لیے آسان اسباق۔ حروفِ تہجی سے شروع کریں یا جہاں ہیں وہیں سے آگے بڑھیں — اپنی رفتار سے، کسی بھی ڈیوائس پر۔",
         "trust": [
-          "Free forever",
-          "English, Urdu & Arabic",
-          "Verified teachers"
+          "ہمیشہ مفت",
+          "انگریزی، اردو اور عربی",
+          "تصدیق شدہ اساتذہ"
         ]
       },
       "howItWorks": {
-        "eyebrow": "How it works",
-        "title": "Three simple steps",
-        "intro": "No fees, no complicated setup. Here is exactly what happens.",
+        "eyebrow": "یہ کیسے کام کرتا ہے",
+        "title": "تین آسان قدم",
+        "intro": "نہ کوئی فیس، نہ کوئی پیچیدگی۔ یہ ہے بالکل جو ہوتا ہے۔",
         "steps": [
           {
-            "title": "Create your free account",
-            "body": "Sign up with your name and email. It takes about a minute and costs nothing — ever."
+            "title": "اپنا مفت اکاؤنٹ بنائیں",
+            "body": "اپنے نام اور ای میل سے سائن اپ کریں۔ اس میں تقریباً ایک منٹ لگتا ہے اور کبھی کوئی خرچ نہیں۔"
           },
           {
-            "title": "Choose your track",
-            "body": "Pick where to start, for example reading from the beginning, or improving your recitation. We help you choose."
+            "title": "اپنا شعبہ منتخب کریں",
+            "body": "طے کریں کہ کہاں سے شروع کرنا ہے، مثلاً بالکل ابتدا سے پڑھنا، یا اپنی تلاوت بہتر بنانا۔ ہم انتخاب میں آپ کی مدد کرتے ہیں۔"
           },
           {
-            "title": "Learn with a teacher",
-            "body": "Work through short lessons. Your teacher checks what you have learned and signs it off before the next step opens."
+            "title": "استاد کے ساتھ سیکھیں",
+            "body": "مختصر اسباق مکمل کریں۔ آپ کے استاد جانچتے ہیں کہ آپ نے کیا سیکھا اور اگلا قدم کھلنے سے پہلے اس کی منظوری دیتے ہیں۔"
           }
         ]
       },
       "path": {
-        "eyebrow": "Your learning path",
-        "title": "A clear path from the first letter to mastery",
-        "intro": "Every learner moves through four stages. You always know where you are and what comes next.",
+        "eyebrow": "آپ کا تعلیمی راستہ",
+        "title": "پہلے حرف سے مہارت تک ایک واضح راستہ",
+        "intro": "ہر سیکھنے والا چار مراحل سے گزرتا ہے۔ آپ کو ہمیشہ معلوم رہتا ہے کہ آپ کہاں ہیں اور آگے کیا ہے۔",
+        "stageTitles": {
+          "Foundation": "بنیاد",
+          "Practice": "مشق",
+          "Understanding": "فہم",
+          "Mastery": "مہارت"
+        },
         "stages": {
-          "Foundation": "Letters, sounds and the basics of faith.",
-          "Practice": "Reading, recitation and memorisation with feedback.",
-          "Understanding": "Meaning, translation and Islamic knowledge.",
-          "Mastery": "Advanced study and preparing to teach."
+          "Foundation": "حروف، آوازیں اور ایمان کی بنیادی باتیں۔",
+          "Practice": "پڑھنا، تلاوت اور حفظ — رہنمائی کے ساتھ۔",
+          "Understanding": "معنی، ترجمہ اور دینی علم۔",
+          "Mastery": "اعلیٰ مطالعہ اور پڑھانے کی تیاری۔"
         },
         "stats": {
-          "tracks": "learning tracks",
-          "levels": "levels",
-          "modules": "modules",
-          "free": "cost to you"
+          "tracks": "تعلیمی شعبے",
+          "levels": "درجات",
+          "modules": "ماڈیولز",
+          "free": "آپ کا خرچ"
         },
         "freeValue": "£0"
       },
       "tracks": {
-        "eyebrow": "What you can learn",
-        "title": "Seven tracks, one connected journey",
-        "intro": "Each track builds on the one before it. Start wherever fits you.",
-        "levelRange": "Levels {first}–{last}",
-        "levelCount": "{count, plural, one {# level} other {# levels}}",
-        "explore": "Explore this track"
+        "eyebrow": "آپ کیا سیکھ سکتے ہیں",
+        "title": "سات شعبے، ایک مربوط سفر",
+        "intro": "ہر شعبہ پچھلے شعبے پر استوار ہوتا ہے۔ جہاں سے آپ کے لیے مناسب ہو وہیں سے شروع کریں۔",
+        "levelRange": "درجات {first}–{last}",
+        "levelCount": "{count, plural, one {# درجہ} other {# درجات}}",
+        "explore": "یہ شعبہ دیکھیں"
       },
       "learners": {
-        "eyebrow": "Made for everyone",
-        "title": "Comfortable to use, whatever your age",
+        "eyebrow": "سب کے لیے بنایا گیا",
+        "title": "ہر عمر کے لیے استعمال میں آسان",
         "items": [
           {
-            "title": "Children",
-            "body": "Short, friendly lessons. Parents can follow every step from their own dashboard."
+            "title": "بچے",
+            "body": "مختصر اور دوستانہ اسباق۔ والدین اپنے ڈیش بورڈ سے ہر قدم دیکھ سکتے ہیں۔"
           },
           {
-            "title": "Adults",
-            "body": "Learn around work and family, at your own pace, with a teacher to guide you."
+            "title": "بڑے",
+            "body": "کام اور گھر کے ساتھ ساتھ، اپنی رفتار سے سیکھیں، ایک استاد کی رہنمائی میں۔"
           },
           {
-            "title": "New Muslims",
-            "body": "Begin with the essentials of faith and prayer, explained simply and kindly."
+            "title": "نو مسلم",
+            "body": "ایمان اور نماز کی بنیادی باتوں سے آغاز کریں، آسان اور نرم انداز میں سمجھائی گئی۔"
           },
           {
-            "title": "Older learners",
-            "body": "Large, clear text, a calm layout and short lessons you can take at your own pace, with a teacher to help."
+            "title": "بزرگ سیکھنے والے",
+            "body": "بڑا اور واضح متن، پُرسکون ترتیب اور مختصر اسباق جو آپ اپنی رفتار سے لے سکیں، اور مدد کے لیے ایک استاد۔"
           }
         ]
       },
       "parentsTeachers": {
-        "eyebrow": "Parents and teachers",
-        "title": "Everyone stays connected",
+        "eyebrow": "والدین اور اساتذہ",
+        "title": "سب ایک دوسرے سے جڑے رہتے ہیں",
         "parents": {
-          "title": "For parents",
-          "body": "See your child's attendance, progress and homework, and message their teacher directly."
+          "title": "والدین کے لیے",
+          "body": "اپنے بچے کی حاضری، پیش رفت اور ہوم ورک دیکھیں، اور ان کے استاد کو براہِ راست پیغام بھیجیں۔"
         },
         "teachers": {
-          "title": "For volunteer teachers",
-          "body": "Share your knowledge. Set your own hours, teach live classes and guide students level by level.",
-          "cta": "Become a volunteer teacher"
+          "title": "رضاکار اساتذہ کے لیے",
+          "body": "اپنا علم بانٹیں۔ اپنے اوقات خود طے کریں، براہِ راست کلاسیں پڑھائیں اور طلبہ کی درجہ بدرجہ رہنمائی کریں۔",
+          "cta": "رضاکار استاد بنیں"
         }
       },
       "faq": {
-        "eyebrow": "Questions",
-        "title": "Questions people often ask",
+        "eyebrow": "سوالات",
+        "title": "اکثر پوچھے جانے والے سوالات",
         "items": [
           {
-            "question": "Is it really free?",
-            "answer": "Yes. Every course, class and lesson is free. There are no hidden fees and no subscription."
+            "question": "کیا یہ واقعی مفت ہے؟",
+            "answer": "جی ہاں۔ ہر کورس، کلاس اور سبق مفت ہے۔ نہ کوئی پوشیدہ فیس ہے اور نہ کوئی سبسکرپشن۔"
           },
           {
-            "question": "Do I need to know Arabic?",
-            "answer": "No. The Quran Reading track starts with the Arabic alphabet, one letter at a time, and explains everything in your language."
+            "question": "کیا مجھے عربی آنی چاہیے؟",
+            "answer": "نہیں۔ قرآن خوانی کا شعبہ عربی حروفِ تہجی سے، ایک ایک حرف کر کے شروع ہوتا ہے اور سب کچھ آپ کی زبان میں سمجھاتا ہے۔"
           },
           {
-            "question": "Which languages can I learn in?",
-            "answer": "English, Urdu and Arabic. You can switch language at any time from the top of the page."
+            "question": "میں کن زبانوں میں سیکھ سکتا ہوں؟",
+            "answer": "انگریزی، اردو اور عربی۔ آپ صفحے کے اوپر سے کسی بھی وقت زبان بدل سکتے ہیں۔"
           },
           {
-            "question": "What does \"teacher sign-off\" mean?",
-            "answer": "After each module your teacher checks that you have understood it — for example by listening to you read. Once they sign it off, the next module opens. This makes sure you never move on too soon."
+            "question": "\"استاد کی منظوری\" کا کیا مطلب ہے؟",
+            "answer": "ہر ماڈیول کے بعد آپ کے استاد جانچتے ہیں کہ آپ نے اسے سمجھ لیا ہے — مثلاً آپ کی تلاوت سن کر۔ ان کی منظوری کے بعد اگلا ماڈیول کھل جاتا ہے۔ اس طرح آپ کبھی جلدی آگے نہیں بڑھتے۔"
           },
           {
-            "question": "Is there an age limit?",
-            "answer": "No. Children, adults and older learners are all welcome. Only the advanced Level 19 (Ulum al-Quran) is for learners aged 16 and over."
+            "question": "کیا عمر کی کوئی حد ہے؟",
+            "answer": "نہیں۔ بچے، بڑے اور بزرگ سب خوش آمدید ہیں۔ صرف اعلیٰ درجہ 19 (علوم القرآن) 16 سال یا اس سے زیادہ عمر کے لیے ہے۔"
           }
         ]
       },
       "final": {
-        "title": "Ready to begin?",
-        "body": "Create your free account today and take your first step — we will help you find the right place to start."
+        "title": "شروع کرنے کے لیے تیار ہیں؟",
+        "body": "آج ہی اپنا مفت اکاؤنٹ بنائیں اور پہلا قدم اٹھائیں — ہم آپ کو صحیح جگہ سے شروع کرنے میں مدد کریں گے۔"
       }
     },
     "courses": {
       "hero": {
-        "eyebrow": "Courses",
-        "title": "Choose your learning path",
-        "intro": "Seven tracks take you from the Arabic alphabet to advanced study. Every track is free, taught by real teachers, in English, Urdu and Arabic."
+        "eyebrow": "کورسز",
+        "title": "اپنا تعلیمی راستہ منتخب کریں",
+        "intro": "سات شعبے آپ کو عربی حروفِ تہجی سے اعلیٰ مطالعے تک لے جاتے ہیں۔ ہر شعبہ مفت ہے، حقیقی اساتذہ پڑھاتے ہیں، انگریزی، اردو اور عربی میں۔"
       },
       "guide": {
-        "title": "Where should I start?",
-        "intro": "Choose the sentence that sounds most like you.",
+        "title": "مجھے کہاں سے شروع کرنا چاہیے؟",
+        "intro": "وہ جملہ منتخب کریں جو آپ پر سب سے زیادہ صادق آتا ہو۔",
         "items": [
           {
-            "prompt": "I can't read Arabic yet",
-            "track": "Quran Reading"
+            "prompt": "میں ابھی عربی نہیں پڑھ سکتا",
+            "slug": "quran-reading"
           },
           {
-            "prompt": "I can read, and want correct pronunciation",
-            "track": "Tajweed"
+            "prompt": "میں پڑھ سکتا ہوں، اور درست تلفظ چاہتا ہوں",
+            "slug": "tajweed"
           },
           {
-            "prompt": "I want to memorise the Quran",
-            "track": "Hifz-ul-Quran"
+            "prompt": "میں قرآن مجید حفظ کرنا چاہتا ہوں",
+            "slug": "hifz"
           }
         ],
-        "go": "Go to {track}"
+        "go": "{track} پر جائیں"
       },
       "track": {
-        "audience": "Who it's for",
-        "inside": "What's inside",
-        "level": "Level {number}",
-        "modules": "{count, plural, one {# module} other {# modules}}",
-        "outline": "See what you'll learn"
+        "audience": "یہ کس کے لیے ہے",
+        "inside": "اس میں کیا ہے",
+        "level": "درجہ {number}",
+        "modules": "{count, plural, one {# ماڈیول} other {# ماڈیولز}}",
+        "outline": "دیکھیں آپ کیا سیکھیں گے"
       },
       "other": {
-        "title": "Other courses",
-        "intro": "Extra courses taught alongside the main tracks."
+        "title": "دیگر کورسز",
+        "intro": "مرکزی شعبوں کے ساتھ پڑھائے جانے والے اضافی کورسز۔"
       },
-      "empty": "No courses are available yet. Please check back soon.",
+      "empty": "ابھی کوئی کورس دستیاب نہیں۔ براہِ کرم جلد دوبارہ دیکھیں۔",
       "notSure": {
-        "title": "Not sure where to start?",
-        "body": "Create a free account and our team will help place you on the right path based on your current level."
+        "title": "معلوم نہیں کہاں سے شروع کریں؟",
+        "body": "مفت اکاؤنٹ بنائیں اور ہماری ٹیم آپ کی موجودہ سطح کے مطابق صحیح راستے پر رکھنے میں مدد کرے گی۔"
       }
     },
     "outline": {
-      "back": "Back to all courses",
+      "back": "تمام کورسز پر واپس جائیں",
       "facts": {
-        "levels": "{count, plural, one {# level} other {# levels}}",
-        "modules": "{count, plural, one {# module} other {# modules}}",
-        "free": "Free"
+        "levels": "{count, plural, one {# درجہ} other {# درجات}}",
+        "modules": "{count, plural, one {# ماڈیول} other {# ماڈیولز}}",
+        "free": "مفت"
       },
       "progress": {
-        "title": "How you'll progress",
+        "title": "آپ کیسے آگے بڑھیں گے",
         "steps": [
-          "Work through each module's short lessons at your own pace.",
-          "Your teacher checks what you have learned and signs the module off.",
-          "The next module then opens — so you never move on too soon."
+          "ہر ماڈیول کے مختصر اسباق اپنی رفتار سے مکمل کریں۔",
+          "آپ کے استاد جانچتے ہیں کہ آپ نے کیا سیکھا اور ماڈیول کی منظوری دیتے ہیں۔",
+          "پھر اگلا ماڈیول کھل جاتا ہے — تاکہ آپ کبھی جلدی آگے نہ بڑھیں۔"
         ]
       },
-      "level": "Level {number}",
-      "age": "Ages {age}+",
-      "whatYouLearn": "What You Learn",
-      "ableTo": "By the end you'll be able to…",
-      "lessons": "{count, plural, one {# lesson} other {# lessons}}",
-      "preparing": "Lessons for this course are being prepared. Create a free account and we will let you know when they are ready.",
-      "ctaTitle": "Ready to start {course}?"
+      "level": "درجہ {number}",
+      "age": "عمر {age}+",
+      "whatYouLearn": "آپ کیا سیکھیں گے",
+      "ableTo": "آخر میں آپ یہ کر سکیں گے…",
+      "lessons": "{count, plural, one {# سبق} other {# اسباق}}",
+      "minutes": "{count} منٹ",
+      "preparing": "اس کورس کے اسباق تیار کیے جا رہے ہیں۔ مفت اکاؤنٹ بنائیں، جب یہ تیار ہوں گے ہم آپ کو بتا دیں گے۔",
+      "ctaTitle": "{course} شروع کرنے کے لیے تیار ہیں؟"
     }
   }
 }

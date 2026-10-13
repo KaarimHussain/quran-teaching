@@ -982,12 +982,13 @@
     }
   },
   "common": {
+    "changeLanguage": "تغيير اللغة:",
     "errorPage": {
-      "title": "We'll be right back",
-      "description": "We couldn't load this page just now. This is usually temporary — please try again in a moment.",
-      "retry": "Try again",
-      "home": "Go to home page",
-      "reference": "Reference: {digest}"
+      "title": "سنعود قريبًا",
+      "description": "تعذّر تحميل هذه الصفحة الآن. غالبًا ما يكون ذلك مؤقتًا — يُرجى المحاولة مرة أخرى بعد قليل.",
+      "retry": "حاول مرة أخرى",
+      "home": "الذهاب إلى الصفحة الرئيسية",
+      "reference": "المرجع: {digest}"
     },
     "active": "نشط",
     "inactive": "غير نشط",
@@ -1007,246 +1008,261 @@
   },
   "marketing": {
     "cta": {
-      "primary": "Start learning — it's free",
-      "secondary": "See the courses",
-      "haveAccount": "I already have an account"
+      "primary": "ابدأ التعلّم — مجانًا",
+      "secondary": "تصفّح الدورات",
+      "haveAccount": "لديّ حساب بالفعل"
     },
     "header": {
-      "home": "Home",
-      "courses": "Courses",
-      "howItWorks": "How it works",
-      "quranReader": "Quran Reader",
-      "store": "Store",
-      "login": "Log in",
-      "startFree": "Start free",
-      "openMenu": "Open menu",
-      "menuTitle": "Menu"
+      "home": "الرئيسية",
+      "courses": "الدورات",
+      "howItWorks": "كيف يعمل",
+      "quranReader": "قارئ القرآن",
+      "store": "المتجر",
+      "login": "تسجيل الدخول",
+      "startFree": "ابدأ مجانًا",
+      "openMenu": "فتح القائمة",
+      "menuTitle": "القائمة",
+      "navLabel": "الرئيسي"
     },
     "footer": {
-      "tagline": "Free Quran lessons for children, adults and new Muslims — with real teachers, in English, Urdu and Arabic.",
-      "learnTitle": "Learn",
-      "accountTitle": "Your account",
-      "languagesTitle": "Language",
-      "volunteer": "Become a volunteer teacher",
-      "copyright": "© {year} Free Quranic Learning Portal. Free for everyone, everywhere.",
-      "madeWith": "Made with care for the global Muslim community."
+      "tagline": "دروس قرآنية مجانية للأطفال والكبار والمسلمين الجدد — مع معلّمين حقيقيين، بالإنجليزية والأردية والعربية.",
+      "learnTitle": "تعلّم",
+      "accountTitle": "حسابك",
+      "languagesTitle": "اللغة",
+      "volunteer": "كن معلّمًا متطوعًا",
+      "copyright": "© {year} بوابة تعليم القرآن المجانية. مجانية للجميع، في كل مكان.",
+      "madeWith": "صُنعت بعناية للأمة الإسلامية في كل مكان."
     },
     "tracks": {
       "quranReading": {
-        "description": "Start from the very beginning: the Arabic letters, their sounds, then reading the Quran fluently from the page.",
-        "audience": "For complete beginners of any age — no Arabic needed."
+        "name": "قراءة القرآن",
+        "description": "ابدأ من البداية تمامًا: الحروف العربية وأصواتها، ثم قراءة القرآن بطلاقة من المصحف.",
+        "audience": "للمبتدئين تمامًا من جميع الأعمار — لا تحتاج إلى معرفة العربية."
       },
       "tajweed": {
-        "description": "Learn Tajweed — the rules for reciting the Quran with correct pronunciation — and practise until it feels natural.",
-        "audience": "For anyone who can already read the Quran and wants to recite it correctly."
+        "name": "التجويد",
+        "description": "تعلّم التجويد — قواعد تلاوة القرآن بالنطق الصحيح — وتدرّب حتى يصبح ذلك سهلًا عليك.",
+        "audience": "لكل من يستطيع قراءة القرآن ويريد تلاوته تلاوة صحيحة."
       },
       "hifz": {
-        "description": "Memorise the Quran (Hifz) with a proven daily routine of new lessons and revision, so you keep what you learn.",
-        "audience": "For learners who read fluently and want to memorise, a little at a time."
+        "name": "حفظ القرآن",
+        "description": "احفظ القرآن الكريم بطريقة يومية مجرّبة تجمع بين الدرس الجديد والمراجعة، حتى يبقى ما تحفظه ثابتًا.",
+        "audience": "لمن يقرأ بطلاقة ويريد الحفظ شيئًا فشيئًا."
       },
       "understanding": {
-        "description": "Understand what you recite: common Quranic words, translation, basic Arabic grammar and Tafsir (explanation of the verses).",
-        "audience": "For readers who want to know the meaning of the Quran."
+        "name": "فهم القرآن",
+        "description": "افهم ما تتلوه: الكلمات القرآنية الشائعة، والترجمة، وأساسيات النحو العربي، والتفسير (شرح الآيات).",
+        "audience": "لمن يريد معرفة معاني القرآن الكريم."
       },
       "islamicStudies": {
-        "description": "The foundations of daily Muslim life: belief, worship, the Prophet's ﷺ life and teachings, manners, duas and history.",
-        "audience": "For everyone — children, adults and new Muslims alike."
+        "name": "الدراسات الإسلامية",
+        "description": "أسس حياة المسلم اليومية: العقيدة والعبادات وسيرة النبي ﷺ وتعاليمه والآداب والأدعية والتاريخ.",
+        "audience": "للجميع — الأطفال والكبار والمسلمين الجدد."
       },
       "advanced": {
-        "description": "Deeper study of the Quranic sciences, the recognised recitations (Qira'at) and research into Tafsir.",
-        "audience": "For dedicated students aged 16 and over."
+        "name": "الدراسات القرآنية المتقدمة",
+        "description": "دراسة أعمق لعلوم القرآن والقراءات المعتمدة والبحث في التفسير.",
+        "audience": "للطلاب الجادّين من سن 16 فما فوق."
       },
       "teacherPreparation": {
-        "description": "Learn how to teach Qaida, Nazra and Tajweed, assess students and run classes, with supervised practice.",
-        "audience": "For experienced students preparing to teach others."
+        "name": "إعداد معلّم القرآن",
+        "description": "تعلّم كيفية تدريس القاعدة والقراءة والتجويد، وتقييم الطلاب، وإدارة الحلقات، مع تدريب عملي تحت الإشراف.",
+        "audience": "للطلاب المتمرّسين الذين يستعدّون لتعليم غيرهم."
       }
     },
     "landing": {
       "hero": {
-        "badge": "100% free · English · اردو · العربية",
-        "title": "Learn the Quran for free, step by step, with a real teacher",
-        "subtitle": "Clear lessons for children, adults and new Muslims. Start from the alphabet or continue where you are — at your own pace, on any device.",
+        "badge": "مجاني 100٪ · English · اردو · العربية",
+        "title": "تعلّم القرآن مجانًا، خطوة بخطوة، مع معلّم حقيقي",
+        "subtitle": "دروس واضحة للأطفال والكبار والمسلمين الجدد. ابدأ من الحروف أو تابع من حيث وصلت — بالسرعة التي تناسبك، وعلى أي جهاز.",
         "trust": [
-          "Free forever",
-          "English, Urdu & Arabic",
-          "Verified teachers"
+          "مجاني دائمًا",
+          "الإنجليزية والأردية والعربية",
+          "معلّمون موثَّقون"
         ]
       },
       "howItWorks": {
-        "eyebrow": "How it works",
-        "title": "Three simple steps",
-        "intro": "No fees, no complicated setup. Here is exactly what happens.",
+        "eyebrow": "كيف يعمل",
+        "title": "ثلاث خطوات بسيطة",
+        "intro": "لا رسوم ولا إعدادات معقّدة. هذا ما يحدث بالضبط.",
         "steps": [
           {
-            "title": "Create your free account",
-            "body": "Sign up with your name and email. It takes about a minute and costs nothing — ever."
+            "title": "أنشئ حسابك المجاني",
+            "body": "سجّل باسمك وبريدك الإلكتروني. يستغرق ذلك دقيقة تقريبًا ولا يكلّفك شيئًا — أبدًا."
           },
           {
-            "title": "Choose your track",
-            "body": "Pick where to start, for example reading from the beginning, or improving your recitation. We help you choose."
+            "title": "اختر مسارك",
+            "body": "حدّد من أين تبدأ، مثل القراءة من البداية أو تحسين تلاوتك. نحن نساعدك في الاختيار."
           },
           {
-            "title": "Learn with a teacher",
-            "body": "Work through short lessons. Your teacher checks what you have learned and signs it off before the next step opens."
+            "title": "تعلّم مع معلّم",
+            "body": "أكمل دروسًا قصيرة. يتحقّق معلّمك مما تعلّمته ويعتمده قبل أن تُفتح الخطوة التالية."
           }
         ]
       },
       "path": {
-        "eyebrow": "Your learning path",
-        "title": "A clear path from the first letter to mastery",
-        "intro": "Every learner moves through four stages. You always know where you are and what comes next.",
+        "eyebrow": "مسارك التعليمي",
+        "title": "طريق واضح من الحرف الأول إلى الإتقان",
+        "intro": "يمرّ كل متعلّم بأربع مراحل. تعرف دائمًا أين أنت وما الخطوة التالية.",
+        "stageTitles": {
+          "Foundation": "التأسيس",
+          "Practice": "الممارسة",
+          "Understanding": "الفهم",
+          "Mastery": "الإتقان"
+        },
         "stages": {
-          "Foundation": "Letters, sounds and the basics of faith.",
-          "Practice": "Reading, recitation and memorisation with feedback.",
-          "Understanding": "Meaning, translation and Islamic knowledge.",
-          "Mastery": "Advanced study and preparing to teach."
+          "Foundation": "الحروف والأصوات وأساسيات الإيمان.",
+          "Practice": "القراءة والتلاوة والحفظ مع التوجيه.",
+          "Understanding": "المعاني والترجمة والعلوم الإسلامية.",
+          "Mastery": "الدراسة المتقدمة والاستعداد للتعليم."
         },
         "stats": {
-          "tracks": "learning tracks",
-          "levels": "levels",
-          "modules": "modules",
-          "free": "cost to you"
+          "tracks": "مسارات تعليمية",
+          "levels": "مستويات",
+          "modules": "وحدات",
+          "free": "التكلفة عليك"
         },
         "freeValue": "£0"
       },
       "tracks": {
-        "eyebrow": "What you can learn",
-        "title": "Seven tracks, one connected journey",
-        "intro": "Each track builds on the one before it. Start wherever fits you.",
-        "levelRange": "Levels {first}–{last}",
-        "levelCount": "{count, plural, one {# level} other {# levels}}",
-        "explore": "Explore this track"
+        "eyebrow": "ماذا يمكنك أن تتعلّم",
+        "title": "سبعة مسارات، رحلة واحدة مترابطة",
+        "intro": "كل مسار يبني على ما قبله. ابدأ من حيث يناسبك.",
+        "levelRange": "المستويات {first}–{last}",
+        "levelCount": "{count, plural, one {مستوى واحد} two {مستويان} few {# مستويات} many {# مستوى} other {# مستوى}}",
+        "explore": "استكشف هذا المسار"
       },
       "learners": {
-        "eyebrow": "Made for everyone",
-        "title": "Comfortable to use, whatever your age",
+        "eyebrow": "مصمَّم للجميع",
+        "title": "سهل الاستخدام مهما كان عمرك",
         "items": [
           {
-            "title": "Children",
-            "body": "Short, friendly lessons. Parents can follow every step from their own dashboard."
+            "title": "الأطفال",
+            "body": "دروس قصيرة ولطيفة. يستطيع الآباء متابعة كل خطوة من لوحة التحكم الخاصة بهم."
           },
           {
-            "title": "Adults",
-            "body": "Learn around work and family, at your own pace, with a teacher to guide you."
+            "title": "الكبار",
+            "body": "تعلّم بجانب عملك وأسرتك، بالسرعة التي تناسبك، مع معلّم يرشدك."
           },
           {
-            "title": "New Muslims",
-            "body": "Begin with the essentials of faith and prayer, explained simply and kindly."
+            "title": "المسلمون الجدد",
+            "body": "ابدأ بأساسيات الإيمان والصلاة، مشروحة ببساطة ولطف."
           },
           {
-            "title": "Older learners",
-            "body": "Large, clear text, a calm layout and short lessons you can take at your own pace, with a teacher to help."
+            "title": "كبار السن",
+            "body": "نص كبير وواضح، وتصميم هادئ، ودروس قصيرة تأخذها بالسرعة التي تناسبك، مع معلّم يساعدك."
           }
         ]
       },
       "parentsTeachers": {
-        "eyebrow": "Parents and teachers",
-        "title": "Everyone stays connected",
+        "eyebrow": "الآباء والمعلّمون",
+        "title": "الجميع على تواصل دائم",
         "parents": {
-          "title": "For parents",
-          "body": "See your child's attendance, progress and homework, and message their teacher directly."
+          "title": "للآباء",
+          "body": "اطّلع على حضور طفلك وتقدّمه وواجباته، وراسل معلّمه مباشرة."
         },
         "teachers": {
-          "title": "For volunteer teachers",
-          "body": "Share your knowledge. Set your own hours, teach live classes and guide students level by level.",
-          "cta": "Become a volunteer teacher"
+          "title": "للمعلّمين المتطوعين",
+          "body": "شارك علمك. حدّد ساعاتك بنفسك، وقدّم حلقات مباشرة، وأرشد الطلاب مستوى بعد مستوى.",
+          "cta": "كن معلّمًا متطوعًا"
         }
       },
       "faq": {
-        "eyebrow": "Questions",
-        "title": "Questions people often ask",
+        "eyebrow": "أسئلة",
+        "title": "أسئلة شائعة",
         "items": [
           {
-            "question": "Is it really free?",
-            "answer": "Yes. Every course, class and lesson is free. There are no hidden fees and no subscription."
+            "question": "هل هو مجاني حقًا؟",
+            "answer": "نعم. كل دورة وحلقة ودرس مجاني. لا توجد رسوم خفية ولا اشتراك."
           },
           {
-            "question": "Do I need to know Arabic?",
-            "answer": "No. The Quran Reading track starts with the Arabic alphabet, one letter at a time, and explains everything in your language."
+            "question": "هل أحتاج إلى معرفة العربية؟",
+            "answer": "لا. يبدأ مسار قراءة القرآن بالحروف العربية حرفًا حرفًا، ويشرح كل شيء بلغتك."
           },
           {
-            "question": "Which languages can I learn in?",
-            "answer": "English, Urdu and Arabic. You can switch language at any time from the top of the page."
+            "question": "بأي اللغات يمكنني التعلّم؟",
+            "answer": "بالإنجليزية والأردية والعربية. يمكنك تغيير اللغة في أي وقت من أعلى الصفحة."
           },
           {
-            "question": "What does \"teacher sign-off\" mean?",
-            "answer": "After each module your teacher checks that you have understood it — for example by listening to you read. Once they sign it off, the next module opens. This makes sure you never move on too soon."
+            "question": "ماذا يعني \"اعتماد المعلّم\"؟",
+            "answer": "بعد كل وحدة يتحقّق معلّمك من أنك فهمتها — مثلًا بالاستماع إلى قراءتك. وبعد اعتماده تُفتح الوحدة التالية. وهكذا لا تنتقل قبل أن تكون مستعدًا."
           },
           {
-            "question": "Is there an age limit?",
-            "answer": "No. Children, adults and older learners are all welcome. Only the advanced Level 19 (Ulum al-Quran) is for learners aged 16 and over."
+            "question": "هل هناك حدّ للعمر؟",
+            "answer": "لا. الأطفال والكبار وكبار السن جميعهم مرحَّب بهم. فقط المستوى المتقدم 19 (علوم القرآن) مخصّص لمن هم في سن 16 فما فوق."
           }
         ]
       },
       "final": {
-        "title": "Ready to begin?",
-        "body": "Create your free account today and take your first step — we will help you find the right place to start."
+        "title": "هل أنت مستعد للبدء؟",
+        "body": "أنشئ حسابك المجاني اليوم واتخذ خطوتك الأولى — وسنساعدك على إيجاد نقطة البداية المناسبة."
       }
     },
     "courses": {
       "hero": {
-        "eyebrow": "Courses",
-        "title": "Choose your learning path",
-        "intro": "Seven tracks take you from the Arabic alphabet to advanced study. Every track is free, taught by real teachers, in English, Urdu and Arabic."
+        "eyebrow": "الدورات",
+        "title": "اختر مسارك التعليمي",
+        "intro": "سبعة مسارات تأخذك من الحروف العربية إلى الدراسة المتقدمة. كل مسار مجاني، يدرّسه معلّمون حقيقيون، بالإنجليزية والأردية والعربية."
       },
       "guide": {
-        "title": "Where should I start?",
-        "intro": "Choose the sentence that sounds most like you.",
+        "title": "من أين أبدأ؟",
+        "intro": "اختر العبارة الأقرب إلى حالك.",
         "items": [
           {
-            "prompt": "I can't read Arabic yet",
-            "track": "Quran Reading"
+            "prompt": "لا أستطيع قراءة العربية بعد",
+            "slug": "quran-reading"
           },
           {
-            "prompt": "I can read, and want correct pronunciation",
-            "track": "Tajweed"
+            "prompt": "أستطيع القراءة، وأريد النطق الصحيح",
+            "slug": "tajweed"
           },
           {
-            "prompt": "I want to memorise the Quran",
-            "track": "Hifz-ul-Quran"
+            "prompt": "أريد حفظ القرآن الكريم",
+            "slug": "hifz"
           }
         ],
-        "go": "Go to {track}"
+        "go": "انتقل إلى {track}"
       },
       "track": {
-        "audience": "Who it's for",
-        "inside": "What's inside",
-        "level": "Level {number}",
-        "modules": "{count, plural, one {# module} other {# modules}}",
-        "outline": "See what you'll learn"
+        "audience": "لمن هذا المسار",
+        "inside": "ماذا يتضمّن",
+        "level": "المستوى {number}",
+        "modules": "{count, plural, one {وحدة واحدة} two {وحدتان} few {# وحدات} many {# وحدة} other {# وحدة}}",
+        "outline": "اطّلع على ما ستتعلّمه"
       },
       "other": {
-        "title": "Other courses",
-        "intro": "Extra courses taught alongside the main tracks."
+        "title": "دورات أخرى",
+        "intro": "دورات إضافية تُدرَّس إلى جانب المسارات الرئيسية."
       },
-      "empty": "No courses are available yet. Please check back soon.",
+      "empty": "لا توجد دورات متاحة بعد. يُرجى العودة قريبًا.",
       "notSure": {
-        "title": "Not sure where to start?",
-        "body": "Create a free account and our team will help place you on the right path based on your current level."
+        "title": "لست متأكدًا من أين تبدأ؟",
+        "body": "أنشئ حسابًا مجانيًا وسيساعدك فريقنا على اختيار المسار المناسب لمستواك الحالي."
       }
     },
     "outline": {
-      "back": "Back to all courses",
+      "back": "العودة إلى كل الدورات",
       "facts": {
-        "levels": "{count, plural, one {# level} other {# levels}}",
-        "modules": "{count, plural, one {# module} other {# modules}}",
-        "free": "Free"
+        "levels": "{count, plural, one {مستوى واحد} two {مستويان} few {# مستويات} many {# مستوى} other {# مستوى}}",
+        "modules": "{count, plural, one {وحدة واحدة} two {وحدتان} few {# وحدات} many {# وحدة} other {# وحدة}}",
+        "free": "مجاني"
       },
       "progress": {
-        "title": "How you'll progress",
+        "title": "كيف ستتقدّم",
         "steps": [
-          "Work through each module's short lessons at your own pace.",
-          "Your teacher checks what you have learned and signs the module off.",
-          "The next module then opens — so you never move on too soon."
+          "أكمل الدروس القصيرة لكل وحدة بالسرعة التي تناسبك.",
+          "يتحقّق معلّمك مما تعلّمته ويعتمد الوحدة.",
+          "ثم تُفتح الوحدة التالية — حتى لا تنتقل قبل أن تكون مستعدًا."
         ]
       },
-      "level": "Level {number}",
-      "age": "Ages {age}+",
-      "whatYouLearn": "What You Learn",
-      "ableTo": "By the end you'll be able to…",
-      "lessons": "{count, plural, one {# lesson} other {# lessons}}",
-      "preparing": "Lessons for this course are being prepared. Create a free account and we will let you know when they are ready.",
-      "ctaTitle": "Ready to start {course}?"
+      "level": "المستوى {number}",
+      "age": "من سن {age}+",
+      "whatYouLearn": "ماذا ستتعلّم",
+      "ableTo": "في النهاية ستتمكّن من…",
+      "lessons": "{count, plural, one {درس واحد} two {درسان} few {# دروس} many {# درسًا} other {# درس}}",
+      "minutes": "{count} دقيقة",
+      "preparing": "يجري إعداد دروس هذه الدورة. أنشئ حسابًا مجانيًا وسنُعلمك عندما تصبح جاهزة.",
+      "ctaTitle": "هل أنت مستعد لبدء {course}؟"
     }
   }
 }

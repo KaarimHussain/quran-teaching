@@ -122,7 +122,7 @@ export default async function Home() {
               {STAGES.map((stage, i) => (
                 <li key={stage} className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-6">
                   <span className="text-base font-semibold text-primary">{i + 1}</span>
-                  <h3 className="font-sans text-xl font-semibold text-foreground">{stage}</h3>
+                  <h3 className="font-sans text-xl font-semibold text-foreground">{t(`landing.path.stageTitles.${stage}`)}</h3>
                   <p className="text-lg leading-relaxed text-muted-foreground">
                     {t(`landing.path.stages.${stage}`)}
                   </p>
@@ -162,7 +162,7 @@ export default async function Home() {
                       <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                         <Icon className="size-6" aria-hidden="true" />
                       </span>
-                      <h3 className="font-sans text-xl font-semibold text-foreground">{track.name}</h3>
+                      <h3 className="font-sans text-xl font-semibold text-foreground">{t(`tracks.${track.messageKey}.name`)}</h3>
                     </div>
                     <p className="text-lg leading-relaxed text-muted-foreground">
                       {t(`tracks.${track.messageKey}.audience`)}
@@ -255,19 +255,9 @@ export default async function Home() {
           <div className="flex flex-col items-center gap-6 rounded-3xl bg-primary px-6 py-14 text-center text-primary-foreground sm:px-12">
             <h2 className="font-heading text-3xl sm:text-4xl">{t("landing.final.title")}</h2>
             <p className="max-w-prose text-lg leading-relaxed">{t("landing.final.body")}</p>
-            <div className="flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row">
-              <Button asChild size="lg" variant="secondary" className="h-14 rounded-full px-8 text-lg shadow-md">
-                <Link href="/register">{t("cta.primary")}</Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="h-14 rounded-full border-primary-foreground/60 bg-transparent px-8 text-lg text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
-              >
-                <Link href="/login">{t("cta.haveAccount")}</Link>
-              </Button>
-            </div>
+            <Button asChild size="lg" variant="secondary" className="h-14 w-full rounded-full px-8 text-lg shadow-md sm:w-auto">
+              <Link href="/register">{t("cta.primary")}</Link>
+            </Button>
           </div>
         </section>
       </main>

@@ -61,6 +61,7 @@ export default async function CourseOutlinePage({
   if (!course) notFound();
 
   const track = trackFor(course.name);
+  const courseName = track ? t(`tracks.${track.messageKey}.name`) : course.name;
   const description = track ? t(`tracks.${track.messageKey}.description`) : course.description;
   const moduleCount =
     course.levels.reduce((n, l) => n + l.modules.length, 0) + course.modules.length;
@@ -82,7 +83,7 @@ export default async function CourseOutlinePage({
 
         {/* Header */}
         <header className="flex flex-col gap-4">
-          <h1 className="font-heading text-4xl leading-tight text-primary sm:text-5xl">{course.name}</h1>
+          <h1 className="font-heading text-4xl leading-tight text-primary sm:text-5xl">{courseName}</h1>
           {description && (
             <p className="max-w-prose text-lg leading-relaxed text-foreground sm:text-xl">{description}</p>
           )}
@@ -231,7 +232,7 @@ export default async function CourseOutlinePage({
                           {c.title}
                         </span>
                         {c.durationMins && (
-                          <span className="shrink-0 text-base text-muted-foreground">{c.durationMins} min</span>
+                          <span className="shrink-0 text-base text-muted-foreground">{t("outline.minutes", { count: c.durationMins })}</span>
                         )}
                       </li>
                     ))}
@@ -244,7 +245,7 @@ export default async function CourseOutlinePage({
 
         {/* CTA */}
         <section className="flex flex-col items-center gap-6 rounded-3xl bg-primary px-6 py-12 text-center text-primary-foreground">
-          <h2 className="font-heading text-3xl">{t("outline.ctaTitle", { course: course.name })}</h2>
+          <h2 className="font-heading text-3xl">{t("outline.ctaTitle", { course: courseName })}</h2>
           <Button asChild size="lg" variant="secondary" className="h-14 w-full rounded-full px-8 text-lg sm:w-auto">
             <Link href="/register">{t("cta.primary")}</Link>
           </Button>

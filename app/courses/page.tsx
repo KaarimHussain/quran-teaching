@@ -9,7 +9,7 @@ import { SectionHeading } from "@/components/marketing/section-heading";
 import { prisma } from "@/lib/db";
 import { partitionCourses } from "@/lib/curriculum/tracks";
 
-type GuideItem = { prompt: string; track: string };
+type GuideItem = { prompt: string; slug: string };
 
 export default async function CoursesPage() {
   const [t, courses] = await Promise.all([
@@ -29,8 +29,9 @@ export default async function CoursesPage() {
   // Curriculum tracks in learning order; every other active course goes under "Other courses".
   const { tracks, others } = partitionCourses(courses);
 
-  const presentTracks = new Map(tracks.map(({ course, track }) => [course.name, track.slug]));
-  const guide = (t.raw("courses.guide.items") as GuideItem[]).filter((g) => presentTracks.has(g.track));
+  // Guide items are keyed by track slug so translated prompts still match.
+  const presentTracks = new Map(tracks.map(({ track }) => [track.slug, track]));
+  const guide = (t.raw("courses.guide.items") as GuideItem[]).filter((g) => presentTracks.has(g.slug));
 
   return (
     <div className="flex min-h-full flex-col">
@@ -67,15 +68,15 @@ export default async function CoursesPage() {
             <SectionHeading id="guide-title" title={t("courses.guide.title")} intro={t("courses.guide.intro")} />
             <ul className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
               {guide.map((g) => (
-                <li key={g.track}>
+                <li key={g.slug}>
                   <Link
-                    href={`#${presentTracks.get(g.track)}`}
+                    href={`#${g.slug}`}
                     className="group flex h-full flex-col gap-4 rounded-2xl border-2 border-border bg-card p-6 transition-colors hover:border-primary"
                   >
                     <Compass className="size-7 text-primary" aria-hidden="true" />
                     <p className="text-xl font-semibold leading-snug text-foreground">“{g.prompt}”</p>
                     <span className="mt-auto flex items-center gap-1.5 text-base font-semibold text-primary">
-                      {t("courses.guide.go", { track: g.track })}
+                      {t("courses.guide.go", { track: t(`tracks.${presentTracks.get(g.slug)!.messageKey}.name`) })}
                       <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5 rtl:rotate-180" aria-hidden="true" />
                     </span>
                   </Link>
@@ -105,7 +106,7 @@ export default async function CoursesPage() {
                           <Icon className="size-7" aria-hidden="true" />
                         </span>
                         <h2 id={`${track.slug}-title`} className="min-w-0 font-heading text-3xl leading-tight text-primary [overflow-wrap:anywhere]">
-                          {course.name}
+                          {t(`tracks.${track.messageKey}.name`)}
                         </h2>
                       </div>
                       <p className="max-w-prose text-lg leading-relaxed text-foreground">

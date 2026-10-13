@@ -982,6 +982,7 @@
     }
   },
   "common": {
+    "changeLanguage": "Change language:",
     "errorPage": {
       "title": "We'll be right back",
       "description": "We couldn't load this page just now. This is usually temporary — please try again in a moment.",
@@ -1020,7 +1021,8 @@
       "login": "Log in",
       "startFree": "Start free",
       "openMenu": "Open menu",
-      "menuTitle": "Menu"
+      "menuTitle": "Menu",
+      "navLabel": "Main"
     },
     "footer": {
       "tagline": "Free Quran lessons for children, adults and new Muslims — with real teachers, in English, Urdu and Arabic.",
@@ -1033,30 +1035,37 @@
     },
     "tracks": {
       "quranReading": {
+        "name": "Quran Reading",
         "description": "Start from the very beginning: the Arabic letters, their sounds, then reading the Quran fluently from the page.",
         "audience": "For complete beginners of any age — no Arabic needed."
       },
       "tajweed": {
+        "name": "Tajweed",
         "description": "Learn Tajweed — the rules for reciting the Quran with correct pronunciation — and practise until it feels natural.",
         "audience": "For anyone who can already read the Quran and wants to recite it correctly."
       },
       "hifz": {
+        "name": "Hifz-ul-Quran",
         "description": "Memorise the Quran (Hifz) with a proven daily routine of new lessons and revision, so you keep what you learn.",
         "audience": "For learners who read fluently and want to memorise, a little at a time."
       },
       "understanding": {
+        "name": "Quran Understanding",
         "description": "Understand what you recite: common Quranic words, translation, basic Arabic grammar and Tafsir (explanation of the verses).",
         "audience": "For readers who want to know the meaning of the Quran."
       },
       "islamicStudies": {
+        "name": "Islamic Studies",
         "description": "The foundations of daily Muslim life: belief, worship, the Prophet's ﷺ life and teachings, manners, duas and history.",
         "audience": "For everyone — children, adults and new Muslims alike."
       },
       "advanced": {
+        "name": "Advanced Quranic Studies",
         "description": "Deeper study of the Quranic sciences, the recognised recitations (Qira'at) and research into Tafsir.",
         "audience": "For dedicated students aged 16 and over."
       },
       "teacherPreparation": {
+        "name": "Quran Teacher Preparation",
         "description": "Learn how to teach Qaida, Nazra and Tajweed, assess students and run classes, with supervised practice.",
         "audience": "For experienced students preparing to teach others."
       }
@@ -1095,6 +1104,12 @@
         "eyebrow": "Your learning path",
         "title": "A clear path from the first letter to mastery",
         "intro": "Every learner moves through four stages. You always know where you are and what comes next.",
+        "stageTitles": {
+          "Foundation": "Foundation",
+          "Practice": "Practice",
+          "Understanding": "Understanding",
+          "Mastery": "Mastery"
+        },
         "stages": {
           "Foundation": "Letters, sounds and the basics of faith.",
           "Practice": "Reading, recitation and memorisation with feedback.",
@@ -1195,15 +1210,15 @@
         "items": [
           {
             "prompt": "I can't read Arabic yet",
-            "track": "Quran Reading"
+            "slug": "quran-reading"
           },
           {
             "prompt": "I can read, and want correct pronunciation",
-            "track": "Tajweed"
+            "slug": "tajweed"
           },
           {
             "prompt": "I want to memorise the Quran",
-            "track": "Hifz-ul-Quran"
+            "slug": "hifz"
           }
         ],
         "go": "Go to {track}"
@@ -1245,6 +1260,7 @@
       "whatYouLearn": "What You Learn",
       "ableTo": "By the end you'll be able to…",
       "lessons": "{count, plural, one {# lesson} other {# lessons}}",
+      "minutes": "{count} min",
       "preparing": "Lessons for this course are being prepared. Create a free account and we will let you know when they are ready.",
       "ctaTitle": "Ready to start {course}?"
     }

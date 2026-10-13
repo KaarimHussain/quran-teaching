@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTranslations } from "next-intl";
 import { setLanguage } from "@/app/actions/preferences";
 
 const languages = [
@@ -21,6 +22,7 @@ type Language = "EN" | "UR" | "AR";
 
 export function LanguageSwitcher({ current }: { current: Language }) {
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations("common");
 
   function handleSelect(lang: Language) {
     const fd = new FormData();
@@ -38,7 +40,7 @@ export function LanguageSwitcher({ current }: { current: Language }) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-1.5 rounded-full" disabled={isPending}>
           <Globe className="size-4" />
-          <span className="sr-only">Change language: </span>
+          <span className="sr-only">{t("changeLanguage")} </span>
           <span className="text-sm">{currentLabel}</span>
         </Button>
       </DropdownMenuTrigger>
