@@ -29,27 +29,27 @@ export async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between gap-2 px-4 sm:px-6">
         <Link href="/" className="flex shrink-0 items-center gap-2.5">
           <span className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <BookOpenText className="size-5" aria-hidden="true" />
           </span>
-          <span className="font-heading text-xl text-primary">Quran Learning</span>
+          <span className="font-heading text-lg text-primary sm:text-xl">Quran Learning</span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-7 lg:flex">
+        <nav aria-label="Main" className="hidden items-center gap-5 xl:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-base font-medium text-foreground transition-colors hover:text-primary"
+              className="whitespace-nowrap text-base font-medium text-foreground transition-colors hover:text-primary"
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden items-center gap-2 xl:flex">
           <LanguageSwitcher current={language} />
           <ThemeToggle />
           <Button asChild variant="outline" className="h-12 rounded-full px-6 text-base">
@@ -60,10 +60,13 @@ export async function SiteHeader() {
           </Button>
         </div>
 
-        {/* Below lg: language, theme and a large-target menu */}
-        <div className="flex items-center gap-1 lg:hidden">
-          <LanguageSwitcher current={language} />
-          <ThemeToggle />
+        {/* Below xl: language, theme and a large-target menu */}
+        <div className="flex items-center gap-1 xl:hidden">
+          {/* On phones these move into the menu so the bar never overflows */}
+          <div className="hidden items-center gap-1 sm:flex">
+            <LanguageSwitcher current={language} />
+            <ThemeToggle />
+          </div>
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" className="h-12 gap-2 rounded-full px-4 text-base" aria-label={t("openMenu")}>
@@ -91,6 +94,10 @@ export async function SiteHeader() {
                   </Link>
                 ))}
               </nav>
+              <div className="mt-2 flex items-center gap-2 px-4 sm:hidden">
+                <LanguageSwitcher current={language} />
+                <ThemeToggle />
+              </div>
               <div className="mt-4 flex flex-col gap-3 px-4">
                 <Button asChild className="h-12 rounded-full text-base">
                   <Link href="/register">{t("startFree")}</Link>
