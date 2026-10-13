@@ -16,7 +16,10 @@ function createPrisma() {
     user: decodeURIComponent(url.username),
     password: decodeURIComponent(url.password),
     database: decodeURIComponent(url.pathname.replace(/^\//, "")),
-    connectTimeout: 10000,
+    // Fail fast when the database is unreachable (e.g. the Aiven service is
+    // powered off) so pages show the error page in ~4s instead of hanging 10s+.
+    connectTimeout: 4000,
+    acquireTimeout: 4000,
     ...(wantsSsl ? { ssl: { rejectUnauthorized: false } } : {}),
   });
   return new PrismaClient({ adapter });

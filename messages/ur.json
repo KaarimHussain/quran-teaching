@@ -982,6 +982,13 @@
     }
   },
   "common": {
+    "errorPage": {
+      "title": "We'll be right back",
+      "description": "We couldn't load this page just now. This is usually temporary — please try again in a moment.",
+      "retry": "Try again",
+      "home": "Go to home page",
+      "reference": "Reference: {digest}"
+    },
     "active": "فعال",
     "inactive": "غیر فعال",
     "beginner": "ابتدائی",
