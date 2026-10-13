@@ -67,7 +67,7 @@ function pickClientMessages(messages: Messages): Messages {
     common: messages.common,
     pages: {
       publicStore: pages.publicStore,
-      admin: { store: admin.store },
+      admin: { store: admin.store, curriculum: admin.curriculum },
     },
   };
 }

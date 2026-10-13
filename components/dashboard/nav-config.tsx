@@ -18,6 +18,8 @@ import {
   CalendarX2,
   BookMarked,
   ShoppingBag,
+  ListTree,
+  Layers,
 } from "lucide-react";
 
 export type NavItem = {
@@ -63,6 +65,8 @@ export const adminNav: NavItem[] = [
   { href: "/admin", labelKey: "dashboard", icon: LayoutDashboard },
   { href: "/admin/users", labelKey: "users", icon: Users },
   { href: "/admin/courses", labelKey: "courses", icon: BookOpen },
+  { href: "/admin/curriculum", labelKey: "curriculum", icon: ListTree },
+  { href: "/admin/modules", labelKey: "modules", icon: Layers },
   { href: "/admin/schedule", labelKey: "schedule", icon: CalendarDays },
   { href: "/admin/verifications", labelKey: "verifications", icon: UserCheck },
   { href: "/admin/certificates", labelKey: "certificates", icon: Award },

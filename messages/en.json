@@ -31,6 +31,8 @@
       "messages": "Messages"
     },
     "admin": {
+      "curriculum": "Curriculum",
+      "modules": "Modules",
       "dashboard": "Dashboard",
       "users": "Users",
       "courses": "Courses",
@@ -54,6 +56,32 @@
   },
   "pages": {
     "admin": {
+      "curriculum": {
+        "title": "Curriculum",
+        "description": "The 22-level learning path. Edit what each module teaches, requires and assesses.",
+        "stages": "Learning stages",
+        "empty": "No curriculum levels yet. Run `npm run db:seed:curriculum` to load the curriculum.",
+        "level": "Level {number}",
+        "levelNotes": "Level purpose & methodology note",
+        "purpose": "Purpose",
+        "methodologyNote": "Methodology note",
+        "gated": "Gated",
+        "open": "Open",
+        "lessons": "{count, plural, =0 {No lessons} one {# lesson} other {# lessons}}",
+        "manageLessons": "Manage lessons",
+        "onePerLine": "One item per line.",
+        "sections": {
+          "subjects": "What You Learn",
+          "mandatoryLearning": "Mandatory Learning",
+          "practice": "Practice",
+          "assessment": "Assessment"
+        },
+        "gatedLabel": "Teacher sign-off required before the next module unlocks",
+        "save": "Save module",
+        "saveLevel": "Save level notes",
+        "saving": "Saving…",
+        "saved": "Saved."
+      },
       "dashboard": "Admin Dashboard",
       "dashboardDesc": "Platform overview and pending actions.",
       "courses": "Courses",
