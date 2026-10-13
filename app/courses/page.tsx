@@ -7,7 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { prisma } from "@/lib/db";
-import { TRACKS, trackFor } from "@/lib/curriculum/tracks";
+import { partitionCourses } from "@/lib/curriculum/tracks";
 
 type GuideItem = { prompt: string; track: string };
 
@@ -26,13 +26,8 @@ export default async function CoursesPage() {
     }),
   ]);
 
-  // Curriculum tracks in learning order; anything else without levels is an "other" course.
-  const trackOrder = new Map(TRACKS.map((track, i) => [track.name as string, i]));
-  const tracks = courses
-    .filter((c) => trackFor(c.name))
-    .sort((a, b) => trackOrder.get(a.name)! - trackOrder.get(b.name)!)
-    .map((course) => ({ course, track: trackFor(course.name)! }));
-  const others = courses.filter((c) => !trackFor(c.name) && c.levels.length === 0);
+  // Curriculum tracks in learning order; every other active course goes under "Other courses".
+  const { tracks, others } = partitionCourses(courses);
 
   const presentTracks = new Map(tracks.map(({ course, track }) => [course.name, track.slug]));
   const guide = (t.raw("courses.guide.items") as GuideItem[]).filter((g) => presentTracks.has(g.track));

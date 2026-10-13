@@ -61,3 +61,24 @@ export const CURRICULUM_TOTALS = {
   levels: CURRICULUM.length,
   modules: CURRICULUM.reduce((n, l) => n + l.modules.length, 0),
 };
+
+/**
+ * Splits courses into curriculum tracks (in learning order, with their track
+ * metadata) and everything else. Every non-track course lands in `others`,
+ * including renamed or admin-created courses that have levels, so no active
+ * course ever disappears from the catalogue.
+ */
+export function partitionCourses<C extends { name: string }>(
+  courses: C[]
+): { tracks: { course: C; track: TrackInfo }[]; others: C[] } {
+  const order = new Map(TRACKS.map((t, i) => [t.name as string, i]));
+  const tracks: { course: C; track: TrackInfo }[] = [];
+  const others: C[] = [];
+  for (const course of courses) {
+    const track = trackFor(course.name);
+    if (track) tracks.push({ course, track });
+    else others.push(course);
+  }
+  tracks.sort((a, b) => order.get(a.course.name)! - order.get(b.course.name)!);
+  return { tracks, others };
+}
