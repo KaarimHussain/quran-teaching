@@ -1004,5 +1004,249 @@
     "download": "Download",
     "submit": "Submit",
     "noData": "No data available"
+  },
+  "marketing": {
+    "cta": {
+      "primary": "Start learning — it's free",
+      "secondary": "See the courses",
+      "haveAccount": "I already have an account"
+    },
+    "header": {
+      "home": "Home",
+      "courses": "Courses",
+      "howItWorks": "How it works",
+      "quranReader": "Quran Reader",
+      "store": "Store",
+      "login": "Log in",
+      "startFree": "Start free",
+      "openMenu": "Open menu",
+      "menuTitle": "Menu"
+    },
+    "footer": {
+      "tagline": "Free Quran lessons for children, adults and new Muslims — with real teachers, in English, Urdu and Arabic.",
+      "learnTitle": "Learn",
+      "accountTitle": "Your account",
+      "languagesTitle": "Language",
+      "volunteer": "Become a volunteer teacher",
+      "copyright": "© {year} Free Quranic Learning Portal. Free for everyone, everywhere.",
+      "madeWith": "Made with care for the global Muslim community."
+    },
+    "tracks": {
+      "quranReading": {
+        "description": "Start from the very beginning: the Arabic letters, their sounds, then reading the Quran fluently from the page.",
+        "audience": "For complete beginners of any age — no Arabic needed."
+      },
+      "tajweed": {
+        "description": "Learn Tajweed — the rules for reciting the Quran with correct pronunciation — and practise until it feels natural.",
+        "audience": "For anyone who can already read the Quran and wants to recite it correctly."
+      },
+      "hifz": {
+        "description": "Memorise the Quran (Hifz) with a proven daily routine of new lessons and revision, so you keep what you learn.",
+        "audience": "For learners who read fluently and want to memorise, a little at a time."
+      },
+      "understanding": {
+        "description": "Understand what you recite: common Quranic words, translation, basic Arabic grammar and Tafsir (explanation of the verses).",
+        "audience": "For readers who want to know the meaning of the Quran."
+      },
+      "islamicStudies": {
+        "description": "The foundations of daily Muslim life: belief, worship, the Prophet's ﷺ life and teachings, manners, duas and history.",
+        "audience": "For everyone — children, adults and new Muslims alike."
+      },
+      "advanced": {
+        "description": "Deeper study of the Quranic sciences, the recognised recitations (Qira'at) and research into Tafsir.",
+        "audience": "For dedicated students aged 16 and over."
+      },
+      "teacherPreparation": {
+        "description": "Learn how to teach Qaida, Nazra and Tajweed, assess students and run classes, with supervised practice.",
+        "audience": "For experienced students preparing to teach others."
+      }
+    },
+    "landing": {
+      "hero": {
+        "badge": "100% free · English · اردو · العربية",
+        "title": "Learn the Quran for free, step by step, with a real teacher",
+        "subtitle": "Clear lessons for children, adults and new Muslims. Start from the alphabet or continue where you are — at your own pace, on any device.",
+        "trust": [
+          "Free forever",
+          "English, Urdu & Arabic",
+          "Verified teachers"
+        ]
+      },
+      "howItWorks": {
+        "eyebrow": "How it works",
+        "title": "Three simple steps",
+        "intro": "No fees, no complicated setup. Here is exactly what happens.",
+        "steps": [
+          {
+            "title": "Create your free account",
+            "body": "Sign up with your name and email. It takes about a minute and costs nothing — ever."
+          },
+          {
+            "title": "Choose your track",
+            "body": "Pick where to start, for example reading from the beginning, or improving your recitation. We help you choose."
+          },
+          {
+            "title": "Learn with a teacher",
+            "body": "Work through short lessons. Your teacher checks what you have learned and signs it off before the next step opens."
+          }
+        ]
+      },
+      "path": {
+        "eyebrow": "Your learning path",
+        "title": "A clear path from the first letter to mastery",
+        "intro": "Every learner moves through four stages. You always know where you are and what comes next.",
+        "stages": {
+          "Foundation": "Letters, sounds and the basics of faith.",
+          "Practice": "Reading, recitation and memorisation with feedback.",
+          "Understanding": "Meaning, translation and Islamic knowledge.",
+          "Mastery": "Advanced study and preparing to teach."
+        },
+        "stats": {
+          "tracks": "learning tracks",
+          "levels": "levels",
+          "modules": "modules",
+          "free": "cost to you"
+        },
+        "freeValue": "£0"
+      },
+      "tracks": {
+        "eyebrow": "What you can learn",
+        "title": "Seven tracks, one connected journey",
+        "intro": "Each track builds on the one before it. Start wherever fits you.",
+        "levelRange": "Levels {first}–{last}",
+        "levelCount": "{count, plural, one {# level} other {# levels}}",
+        "explore": "Explore this track"
+      },
+      "learners": {
+        "eyebrow": "Made for everyone",
+        "title": "Comfortable to use, whatever your age",
+        "items": [
+          {
+            "title": "Children",
+            "body": "Short, friendly lessons. Parents can follow every step from their own dashboard."
+          },
+          {
+            "title": "Adults",
+            "body": "Learn around work and family, at your own pace, with a teacher to guide you."
+          },
+          {
+            "title": "New Muslims",
+            "body": "Begin with the essentials of faith and prayer, explained simply and kindly."
+          },
+          {
+            "title": "Older learners",
+            "body": "Large, clear text, audio lessons and a calm layout. Lessons work on slow connections too."
+          }
+        ]
+      },
+      "parentsTeachers": {
+        "eyebrow": "Parents and teachers",
+        "title": "Everyone stays connected",
+        "parents": {
+          "title": "For parents",
+          "body": "See your child's attendance, progress and homework, and message their teacher directly."
+        },
+        "teachers": {
+          "title": "For volunteer teachers",
+          "body": "Share your knowledge. Set your own hours, teach live classes and guide students level by level.",
+          "cta": "Become a volunteer teacher"
+        }
+      },
+      "faq": {
+        "eyebrow": "Questions",
+        "title": "Questions people often ask",
+        "items": [
+          {
+            "question": "Is it really free?",
+            "answer": "Yes. Every course, class and lesson is free. There are no hidden fees and no subscription."
+          },
+          {
+            "question": "Do I need to know Arabic?",
+            "answer": "No. The Quran Reading track starts with the Arabic alphabet, one letter at a time, and explains everything in your language."
+          },
+          {
+            "question": "Which languages can I learn in?",
+            "answer": "English, Urdu and Arabic. You can switch language at any time from the top of the page."
+          },
+          {
+            "question": "What does \"teacher sign-off\" mean?",
+            "answer": "After each module your teacher checks that you have understood it — for example by listening to you read. Once they sign it off, the next module opens. This makes sure you never move on too soon."
+          },
+          {
+            "question": "Is there an age limit?",
+            "answer": "No. Children, adults and older learners are all welcome. Only the advanced Level 19 (Ulum al-Quran) is for learners aged 16 and over."
+          }
+        ]
+      },
+      "final": {
+        "title": "Ready to begin?",
+        "body": "Create your free account today and take your first step — we will help you find the right place to start."
+      }
+    },
+    "courses": {
+      "hero": {
+        "eyebrow": "Courses",
+        "title": "Choose your learning path",
+        "intro": "Seven tracks take you from the Arabic alphabet to advanced study. Every track is free, taught by real teachers, in English, Urdu and Arabic."
+      },
+      "guide": {
+        "title": "Where should I start?",
+        "intro": "Choose the sentence that sounds most like you.",
+        "items": [
+          {
+            "prompt": "I can't read Arabic yet",
+            "track": "Quran Reading"
+          },
+          {
+            "prompt": "I can read, and want correct pronunciation",
+            "track": "Tajweed"
+          },
+          {
+            "prompt": "I want to memorise the Quran",
+            "track": "Hifz-ul-Quran"
+          }
+        ],
+        "go": "Go to {track}"
+      },
+      "track": {
+        "audience": "Who it's for",
+        "inside": "What's inside",
+        "level": "Level {number}",
+        "modules": "{count, plural, one {# module} other {# modules}}",
+        "outline": "See what you'll learn"
+      },
+      "other": {
+        "title": "Other courses",
+        "intro": "Extra courses taught alongside the main tracks."
+      },
+      "empty": "No courses are available yet. Please check back soon.",
+      "notSure": {
+        "title": "Not sure where to start?",
+        "body": "Create a free account and our team will help place you on the right path based on your current level."
+      }
+    },
+    "outline": {
+      "back": "Back to all courses",
+      "facts": {
+        "levels": "{count, plural, one {# level} other {# levels}}",
+        "modules": "{count, plural, one {# module} other {# modules}}",
+        "free": "Free"
+      },
+      "progress": {
+        "title": "How you'll progress",
+        "steps": [
+          "Work through each module's short lessons at your own pace.",
+          "Your teacher checks what you have learned and signs the module off.",
+          "The next module then opens — so you never move on too soon."
+        ]
+      },
+      "level": "Level {number}",
+      "age": "Ages {age}+",
+      "whatYouLearn": "What You Learn",
+      "ableTo": "By the end you'll be able to…",
+      "lessons": "{count, plural, one {# lesson} other {# lessons}}",
+      "preparing": "Lessons for this course are being prepared. Create a free account and we will let you know when they are ready.",
+      "ctaTitle": "Ready to start {course}?"
+    }
   }
 }

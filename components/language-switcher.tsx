@@ -38,7 +38,8 @@ export function LanguageSwitcher({ current }: { current: Language }) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-1.5 rounded-full" disabled={isPending}>
           <Globe className="size-4" />
-          <span className="text-xs">{currentLabel}</span>
+          <span className="sr-only">Change language: </span>
+          <span className="text-sm">{currentLabel}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
