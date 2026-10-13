@@ -12,28 +12,29 @@ import {
 } from "@/components/ui/card";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { prisma } from "@/lib/db";
-import { requireCurrentUser } from "@/lib/dal";
+import { requireCurrentUser, verifySession } from "@/lib/dal";
 import { roleLabel } from "@/lib/roles";
-import { getTeacherCourseIds } from "@/lib/teacher";
+import { teacherCoursesWhere } from "@/lib/teacher";
 import { CreateHifzScheduleForm } from "./create-schedule-form";
 import { MarkReviewForm } from "./mark-review-form";
 
 const qualityLabels = ["0 – Blackout", "1 – Wrong", "2 – Wrong (familiar)", "3 – Correct (hard)", "4 – Correct", "5 – Perfect"];
 
 export default async function TeacherHifzPage() {
-  const user = await requireCurrentUser();
-  if (user.role !== "TEACHER") throw new Error("Forbidden");
+  // Courses are inlined as a relation filter and the user lookup runs in the
+  // same batch (keyed off the JWT), instead of two round-trips up front.
+  const { userId: teacherId } = await verifySession();
+  const teacherCourses = teacherCoursesWhere(teacherId);
 
-  const courseIds = await getTeacherCourseIds(user.id);
-
-  const [courses, schedules, enrollments] = await Promise.all([
+  const [user, courses, schedules, enrollments] = await Promise.all([
+    requireCurrentUser(),
     prisma.course.findMany({
-      where: { id: { in: courseIds } },
+      where: teacherCourses,
       select: { id: true, name: true },
       orderBy: { name: "asc" },
     }),
     prisma.hifzReviewSchedule.findMany({
-      where: { createdByUserId: user.id },
+      where: { createdByUserId: teacherId },
       orderBy: { createdAt: "desc" },
       include: {
         student: { select: { id: true, name: true } },
@@ -42,11 +43,12 @@ export default async function TeacherHifzPage() {
       },
     }),
     prisma.enrollment.findMany({
-      where: { courseId: { in: courseIds }, status: "ACTIVE" },
+      where: { course: teacherCourses, status: "ACTIVE" },
       select: { student: { select: { id: true, name: true } } },
       distinct: ["studentUserId"],
     }),
   ]);
+  if (user.role !== "TEACHER") throw new Error("Forbidden");
 
   const students = Array.from(
     new Map(enrollments.map((e) => [e.student.id, e.student])).values()

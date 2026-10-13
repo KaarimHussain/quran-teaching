@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/card";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { prisma } from "@/lib/db";
-import { requireCurrentUser } from "@/lib/dal";
+import { requireCurrentUser, verifySession } from "@/lib/dal";
 import { roleLabel } from "@/lib/roles";
 import { formatDateTime } from "@/lib/format";
-import { getTeacherCourseIds } from "@/lib/teacher";
+import { teacherCoursesWhere } from "@/lib/teacher";
 import { CreateAssignmentForm } from "./create-assignment-form";
 import { GradeForm } from "./grade-form";
 
@@ -38,18 +38,21 @@ const submissionMeta: Record<
 };
 
 export default async function TeacherAssignmentsPage() {
-  const currentUser = await requireCurrentUser();
-  const t = await getTranslations("pages.teacher");
-  const courseIds = await getTeacherCourseIds(currentUser.id);
+  // Courses are inlined as a relation filter and the user lookup runs in the
+  // same batch (keyed off the JWT), instead of two round-trips up front.
+  const { userId: teacherId } = await verifySession();
+  const teacherCourses = teacherCoursesWhere(teacherId);
 
-  const [courses, assignments, students] = await Promise.all([
+  const [currentUser, t, courses, assignments, students] = await Promise.all([
+    requireCurrentUser(),
+    getTranslations("pages.teacher"),
     prisma.course.findMany({
-      where: { id: { in: courseIds } },
+      where: teacherCourses,
       orderBy: { name: "asc" },
       select: { id: true, name: true },
     }),
     prisma.assignment.findMany({
-      where: { teacherUserId: currentUser.id },
+      where: { teacherUserId: teacherId },
       orderBy: { dueDate: "desc" },
       include: {
         course: { select: { name: true } },
@@ -57,7 +60,7 @@ export default async function TeacherAssignmentsPage() {
       },
     }),
     prisma.enrollment.findMany({
-      where: { courseId: { in: courseIds }, status: "ACTIVE" },
+      where: { course: teacherCourses, status: "ACTIVE" },
       select: { student: { select: { id: true, name: true } } },
       distinct: ["studentUserId"],
     }),

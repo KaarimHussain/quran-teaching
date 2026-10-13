@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/card";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { prisma } from "@/lib/db";
-import { requireCurrentUser } from "@/lib/dal";
+import { requireCurrentUser, verifySession } from "@/lib/dal";
 import { roleLabel } from "@/lib/roles";
 import { formatRelativeTime } from "@/lib/format";
-import { getTeacherCourseIds } from "@/lib/teacher";
+import { teacherCoursesWhere } from "@/lib/teacher";
 import { NewPostForm } from "./new-post-form";
 
 function initials(name: string) {
@@ -28,13 +28,16 @@ function initials(name: string) {
 }
 
 export default async function TeacherForumPage() {
-  const currentUser = await requireCurrentUser();
-  const t = await getTranslations("pages.teacher");
-  const courseIds = await getTeacherCourseIds(currentUser.id);
+  // Courses are inlined as a relation filter and the user lookup runs in the
+  // same batch (keyed off the JWT), instead of two round-trips up front.
+  const { userId: teacherId } = await verifySession();
+  const teacherCourses = teacherCoursesWhere(teacherId);
 
-  const [courses, posts] = await Promise.all([
+  const [currentUser, t, courses, posts] = await Promise.all([
+    requireCurrentUser(),
+    getTranslations("pages.teacher"),
     prisma.course.findMany({
-      where: { id: { in: courseIds } },
+      where: teacherCourses,
       orderBy: { name: "asc" },
       select: { id: true, name: true },
     }),

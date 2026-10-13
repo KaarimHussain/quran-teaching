@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/card";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { prisma } from "@/lib/db";
-import { requireCurrentUser } from "@/lib/dal";
+import { requireCurrentUser, verifySession } from "@/lib/dal";
 import { roleLabel } from "@/lib/roles";
-import { getTeacherCourseIds } from "@/lib/teacher";
+import { teacherCoursesWhere } from "@/lib/teacher";
 import { CreateAssessmentForm } from "./create-assessment-form";
 import { RecordResultForm } from "./record-result-form";
 
@@ -22,19 +22,20 @@ const levelLabel: Record<string, string> = {
 };
 
 export default async function TeacherAssessmentsPage() {
-  const user = await requireCurrentUser();
-  if (user.role !== "TEACHER") throw new Error("Forbidden");
+  // Courses are inlined as a relation filter and the user lookup runs in the
+  // same batch (keyed off the JWT), instead of two round-trips up front.
+  const { userId: teacherId } = await verifySession();
+  const teacherCourses = teacherCoursesWhere(teacherId);
 
-  const courseIds = await getTeacherCourseIds(user.id);
-
-  const [courses, assessments, enrollments] = await Promise.all([
+  const [user, courses, assessments, enrollments] = await Promise.all([
+    requireCurrentUser(),
     prisma.course.findMany({
-      where: { id: { in: courseIds } },
+      where: teacherCourses,
       select: { id: true, name: true },
       orderBy: { name: "asc" },
     }),
     prisma.assessment.findMany({
-      where: { teacherUserId: user.id },
+      where: { teacherUserId: teacherId },
       orderBy: { createdAt: "desc" },
       include: {
         course: { select: { name: true } },
@@ -45,11 +46,12 @@ export default async function TeacherAssessmentsPage() {
       },
     }),
     prisma.enrollment.findMany({
-      where: { courseId: { in: courseIds }, status: "ACTIVE" },
+      where: { course: teacherCourses, status: "ACTIVE" },
       select: { student: { select: { id: true, name: true } } },
       distinct: ["studentUserId"],
     }),
   ]);
+  if (user.role !== "TEACHER") throw new Error("Forbidden");
 
   const allStudents = Array.from(
     new Map(enrollments.map((e) => [e.student.id, e.student])).values()

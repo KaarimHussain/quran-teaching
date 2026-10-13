@@ -9,9 +9,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { prisma } from "@/lib/db";
-import { requireCurrentUser } from "@/lib/dal";
+import { requireCurrentUser, verifySession } from "@/lib/dal";
 import { roleLabel } from "@/lib/roles";
-import { getTeacherCourseIds } from "@/lib/teacher";
+import { teacherCoursesWhere } from "@/lib/teacher";
 import { CreatePlanForm } from "./create-plan-form";
 import { AddStepForm } from "./add-step-form";
 import { DeletePlanButton, DeleteStepButton } from "./delete-buttons";
@@ -19,19 +19,20 @@ import { DeletePlanButton, DeleteStepButton } from "./delete-buttons";
 const LANG_LABEL: Record<string, string> = { EN: "English", UR: "Urdu", AR: "Arabic" };
 
 export default async function TeacherLessonPlansPage() {
-  const user = await requireCurrentUser();
-  if (user.role !== "TEACHER") throw new Error("Forbidden");
+  // Courses are inlined as a relation filter and the user lookup runs in the
+  // same batch (keyed off the JWT), instead of two round-trips up front.
+  const { userId: teacherId } = await verifySession();
+  const teacherCourses = teacherCoursesWhere(teacherId);
 
-  const courseIds = await getTeacherCourseIds(user.id);
-
-  const [courses, plans] = await Promise.all([
+  const [user, courses, plans] = await Promise.all([
+    requireCurrentUser(),
     prisma.course.findMany({
-      where: { id: { in: courseIds }, isActive: true },
+      where: { ...teacherCourses, isActive: true },
       select: { id: true, name: true },
       orderBy: { name: "asc" },
     }),
     prisma.lessonPlan.findMany({
-      where: { teacherUserId: user.id },
+      where: { teacherUserId: teacherId },
       orderBy: { createdAt: "desc" },
       include: {
         course: { select: { name: true } },
@@ -39,6 +40,7 @@ export default async function TeacherLessonPlansPage() {
       },
     }),
   ]);
+  if (user.role !== "TEACHER") throw new Error("Forbidden");
 
   return (
     <DashboardShell
