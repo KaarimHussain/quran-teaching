@@ -65,7 +65,7 @@ export default async function AdminModulesPage() {
             <p className="text-sm text-muted-foreground">No modules yet.</p>
           )}
           {modules.map((mod) => (
-            <Card key={mod.id} className="border-border/80">
+            <Card key={mod.id} id={mod.id} className="scroll-mt-20 border-border/80">
               <CardHeader className="pb-2">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div className="flex flex-col gap-0.5">

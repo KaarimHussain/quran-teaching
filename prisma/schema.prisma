@@ -122,19 +122,19 @@ model User {
   updatedAt         DateTime @updatedAt
 
   // Teacher-specific fields
-  isVolunteer          Boolean?
-  verificationStatus   VerificationStatus?
-  bio                  String?   @db.Text
-  teachingHoursLogged  Int?
-  verifiedLanguages    Json?
-  specialNeedsNote     String?   @db.Text
+  isVolunteer         Boolean?
+  verificationStatus  VerificationStatus?
+  bio                 String?             @db.Text
+  teachingHoursLogged Int?
+  verifiedLanguages   Json?
+  specialNeedsNote    String?             @db.Text
 
   // Parent <-> Student links
   childLinks  ParentStudentLink[] @relation("ParentLinks")
   parentLinks ParentStudentLink[] @relation("StudentLinks")
 
   // Enrollments (student)
-  enrollments              Enrollment[]
+  enrollments                    Enrollment[]
   preferredTeacherForEnrollments Enrollment[] @relation("PreferredTeacherEnrollments")
 
   // Teacher availability & sessions
@@ -149,9 +149,9 @@ model User {
   markedAttendances Attendance[] @relation("MarkerAttendance")
 
   // Assignments & submissions
-  assignmentsCreated   Assignment[] @relation("AssignmentTeacher")
-  worksheetsReceived   Assignment[] @relation("WorksheetTarget")
-  submissions          Submission[]
+  assignmentsCreated Assignment[] @relation("AssignmentTeacher")
+  worksheetsReceived Assignment[] @relation("WorksheetTarget")
+  submissions        Submission[]
 
   // Progress
   progressEntries  ProgressEntry[] @relation("StudentProgress")
@@ -175,23 +175,23 @@ model User {
   badgesAwarded TeacherBadge[] @relation("BadgeAwarder")
 
   // Blog & Events
-  blogPosts     BlogPost[]
-  hostedEvents  PublicEvent[]
+  blogPosts    BlogPost[]
+  hostedEvents PublicEvent[]
 
   // Curriculum Store
   storeItems StoreItem[]
 
   // Assessments
-  assessmentsCreated  Assessment[]       @relation("TeacherAssessments")
-  assessmentResults   AssessmentResult[] @relation("StudentAssessmentResults")
-  assessmentsGraded   AssessmentResult[] @relation("AssessmentGrader")
+  assessmentsCreated Assessment[]       @relation("TeacherAssessments")
+  assessmentResults  AssessmentResult[] @relation("StudentAssessmentResults")
+  assessmentsGraded  AssessmentResult[] @relation("AssessmentGrader")
 
   // Hifz Reviews
-  hifzSchedules         HifzReviewSchedule[] @relation("StudentHifzSchedules")
-  hifzSchedulesCreated  HifzReviewSchedule[] @relation("HifzScheduleCreator")
+  hifzSchedules        HifzReviewSchedule[] @relation("StudentHifzSchedules")
+  hifzSchedulesCreated HifzReviewSchedule[] @relation("HifzScheduleCreator")
 
   // Teacher Performance Reviews
-  performanceReviews    TeacherPerformanceReview[] @relation("TeacherReviewed")
+  performanceReviews      TeacherPerformanceReview[] @relation("TeacherReviewed")
   performanceReviewsGiven TeacherPerformanceReview[] @relation("ReviewerAdmin")
 
   // Lesson Plans
@@ -210,6 +210,9 @@ model User {
   stripeCustomer StripeCustomer?
   paymentRecords PaymentRecord[]
   subscriptions  Subscription[]
+
+  moduleSignOffs ModuleSignOff[] @relation("StudentSignOffs")
+  givenSignOffs  ModuleSignOff[] @relation("TeacherSignOffs")
 
   @@map("users")
 }
@@ -239,35 +242,36 @@ model Course {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  enrollments       Enrollment[]
-  classSessions     ClassSession[]
-  assignments       Assignment[]
-  resources         Resource[]
-  certificates      Certificate[]
-  progressEntries   ProgressEntry[]
-  forumPosts        ForumPost[]
-  assessments       Assessment[]
-  hifzSchedules     HifzReviewSchedule[]
-  lessonPlans       LessonPlan[]
-  modules           CourseModule[]
+  enrollments     Enrollment[]
+  classSessions   ClassSession[]
+  assignments     Assignment[]
+  resources       Resource[]
+  certificates    Certificate[]
+  progressEntries ProgressEntry[]
+  forumPosts      ForumPost[]
+  assessments     Assessment[]
+  hifzSchedules   HifzReviewSchedule[]
+  lessonPlans     LessonPlan[]
+  modules         CourseModule[]
+  levels          CurriculumLevel[]
 
   @@map("courses")
 }
 
 model Enrollment {
-  id              String           @id @default(uuid()) @db.VarChar(36)
-  studentUserId   String           @db.VarChar(36)
-  courseId        String           @db.VarChar(36)
-  pathwayLevel    PathwayLevel     @default(BEGINNER)
-  enrolledAt      DateTime         @default(now())
-  status          EnrollmentStatus @default(ACTIVE)
-  isTrial         Boolean          @default(false)
-  trialEndsAt     DateTime?
-  preferredTeacherId String?       @db.VarChar(36)
+  id                 String           @id @default(uuid()) @db.VarChar(36)
+  studentUserId      String           @db.VarChar(36)
+  courseId           String           @db.VarChar(36)
+  pathwayLevel       PathwayLevel     @default(BEGINNER)
+  enrolledAt         DateTime         @default(now())
+  status             EnrollmentStatus @default(ACTIVE)
+  isTrial            Boolean          @default(false)
+  trialEndsAt        DateTime?
+  preferredTeacherId String?          @db.VarChar(36)
 
-  student          User    @relation(fields: [studentUserId], references: [id], onDelete: Cascade)
-  course           Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  preferredTeacher User?   @relation("PreferredTeacherEnrollments", fields: [preferredTeacherId], references: [id])
+  student          User   @relation(fields: [studentUserId], references: [id], onDelete: Cascade)
+  course           Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  preferredTeacher User?  @relation("PreferredTeacherEnrollments", fields: [preferredTeacherId], references: [id])
 
   @@unique([studentUserId, courseId])
   @@map("enrollments")
@@ -292,32 +296,32 @@ model TeacherAvailability {
 }
 
 model ClassSession {
-  id                  String             @id @default(uuid()) @db.VarChar(36)
-  courseId            String             @db.VarChar(36)
-  teacherUserId       String             @db.VarChar(36)
-  type                ClassType
-  genderRestriction   GenderRestriction  @default(MIXED)
-  maxParticipants     Int?
-  scheduledStart      DateTime
-  scheduledEnd        DateTime
-  status              ClassStatus        @default(SCHEDULED)
-  joinUrl             String?            @db.Text
-  parentJoinUrl       String?            @db.Text
-  roomId              String?
-  makeupForSessionId  String?            @db.VarChar(36)
-  createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
+  id                 String            @id @default(uuid()) @db.VarChar(36)
+  courseId           String            @db.VarChar(36)
+  teacherUserId      String            @db.VarChar(36)
+  type               ClassType
+  genderRestriction  GenderRestriction @default(MIXED)
+  maxParticipants    Int?
+  scheduledStart     DateTime
+  scheduledEnd       DateTime
+  status             ClassStatus       @default(SCHEDULED)
+  joinUrl            String?           @db.Text
+  parentJoinUrl      String?           @db.Text
+  roomId             String?
+  makeupForSessionId String?           @db.VarChar(36)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
 
-  course          Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  teacher         User               @relation("TeacherSessions", fields: [teacherUserId], references: [id], onDelete: Cascade)
-  makeupForSession ClassSession?     @relation("MakeupSessions", fields: [makeupForSessionId], references: [id])
-  makeupSessions  ClassSession[]     @relation("MakeupSessions")
-  participants      ClassParticipant[]
-  parentObservers   ParentSessionObserver[]
-  attendances       Attendance[]
-  assignments       Assignment[]
-  recording         Recording?
-  makeupRequests    MakeupRequest[]
+  course           Course                  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacher          User                    @relation("TeacherSessions", fields: [teacherUserId], references: [id], onDelete: Cascade)
+  makeupForSession ClassSession?           @relation("MakeupSessions", fields: [makeupForSessionId], references: [id])
+  makeupSessions   ClassSession[]          @relation("MakeupSessions")
+  participants     ClassParticipant[]
+  parentObservers  ParentSessionObserver[]
+  attendances      Attendance[]
+  assignments      Assignment[]
+  recording        Recording?
+  makeupRequests   MakeupRequest[]
 
   @@map("class_sessions")
 }
@@ -378,11 +382,11 @@ model Assignment {
   isWorksheet         Boolean  @default(false)
   createdAt           DateTime @default(now())
 
-  course         Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  classSession   ClassSession? @relation(fields: [classSessionId], references: [id])
-  teacher        User          @relation("AssignmentTeacher", fields: [teacherUserId], references: [id], onDelete: Cascade)
-  targetStudent  User?         @relation("WorksheetTarget", fields: [targetStudentUserId], references: [id])
-  submissions    Submission[]
+  course        Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  classSession  ClassSession? @relation(fields: [classSessionId], references: [id])
+  teacher       User          @relation("AssignmentTeacher", fields: [teacherUserId], references: [id], onDelete: Cascade)
+  targetStudent User?         @relation("WorksheetTarget", fields: [targetStudentUserId], references: [id])
+  submissions   Submission[]
 
   @@map("assignments")
 }
@@ -547,9 +551,9 @@ model Assessment {
   passMark      Int          @default(70)
   createdAt     DateTime     @default(now())
 
-  course   Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  teacher  User               @relation("TeacherAssessments", fields: [teacherUserId], references: [id], onDelete: Cascade)
-  results  AssessmentResult[]
+  course  Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacher User               @relation("TeacherAssessments", fields: [teacherUserId], references: [id], onDelete: Cascade)
+  results AssessmentResult[]
 
   @@map("assessments")
 }
@@ -577,16 +581,16 @@ model AssessmentResult {
 // ---------------------------------------------------------------------------
 
 model TeacherPerformanceReview {
-  id              String   @id @default(uuid()) @db.VarChar(36)
-  teacherUserId   String   @db.VarChar(36)
-  reviewerUserId  String   @db.VarChar(36)
-  score           Int
-  strengths       String?  @db.Text
-  areasToImprove  String?  @db.Text
-  reviewedAt      DateTime @default(now())
+  id             String   @id @default(uuid()) @db.VarChar(36)
+  teacherUserId  String   @db.VarChar(36)
+  reviewerUserId String   @db.VarChar(36)
+  score          Int
+  strengths      String?  @db.Text
+  areasToImprove String?  @db.Text
+  reviewedAt     DateTime @default(now())
 
-  teacher   User @relation("TeacherReviewed", fields: [teacherUserId], references: [id], onDelete: Cascade)
-  reviewer  User @relation("ReviewerAdmin", fields: [reviewerUserId], references: [id], onDelete: Cascade)
+  teacher  User @relation("TeacherReviewed", fields: [teacherUserId], references: [id], onDelete: Cascade)
+  reviewer User @relation("ReviewerAdmin", fields: [reviewerUserId], references: [id], onDelete: Cascade)
 
   @@map("teacher_performance_reviews")
 }
@@ -602,30 +606,30 @@ enum HifzReviewStatus {
 }
 
 model HifzReviewSchedule {
-  id            String   @id @default(uuid()) @db.VarChar(36)
-  studentUserId String   @db.VarChar(36)
-  courseId      String   @db.VarChar(36)
-  surah         String
-  ayahFrom      Int
-  ayahTo        Int
-  createdByUserId String @db.VarChar(36)
-  createdAt     DateTime @default(now())
+  id              String   @id @default(uuid()) @db.VarChar(36)
+  studentUserId   String   @db.VarChar(36)
+  courseId        String   @db.VarChar(36)
+  surah           String
+  ayahFrom        Int
+  ayahTo          Int
+  createdByUserId String   @db.VarChar(36)
+  createdAt       DateTime @default(now())
 
-  student    User              @relation("StudentHifzSchedules", fields: [studentUserId], references: [id], onDelete: Cascade)
-  course     Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  createdBy  User              @relation("HifzScheduleCreator", fields: [createdByUserId], references: [id], onDelete: Cascade)
-  sessions   HifzReviewSession[]
+  student   User                @relation("StudentHifzSchedules", fields: [studentUserId], references: [id], onDelete: Cascade)
+  course    Course              @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdBy User                @relation("HifzScheduleCreator", fields: [createdByUserId], references: [id], onDelete: Cascade)
+  sessions  HifzReviewSession[]
 
   @@map("hifz_review_schedules")
 }
 
 model HifzReviewSession {
-  id         String            @id @default(uuid()) @db.VarChar(36)
-  scheduleId String            @db.VarChar(36)
+  id         String           @id @default(uuid()) @db.VarChar(36)
+  scheduleId String           @db.VarChar(36)
   dueDate    DateTime
-  status     HifzReviewStatus  @default(SCHEDULED)
+  status     HifzReviewStatus @default(SCHEDULED)
   quality    Int?
-  notes      String?           @db.Text
+  notes      String?          @db.Text
   reviewedAt DateTime?
 
   schedule HifzReviewSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
@@ -675,16 +679,16 @@ model NewsletterSubscriber {
 // ---------------------------------------------------------------------------
 
 model PublicEvent {
-  id          String    @id @default(uuid()) @db.VarChar(36)
+  id          String   @id @default(uuid()) @db.VarChar(36)
   title       String
-  description String?   @db.Text
-  language    Language  @default(EN)
+  description String?  @db.Text
+  language    Language @default(EN)
   scheduledAt DateTime
-  joinUrl     String?   @db.Text
-  isPublished Boolean   @default(false)
-  hostUserId  String    @db.VarChar(36)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  joinUrl     String?  @db.Text
+  isPublished Boolean  @default(false)
+  hostUserId  String   @db.VarChar(36)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   host User @relation(fields: [hostUserId], references: [id], onDelete: Cascade)
 
@@ -706,8 +710,8 @@ model LessonPlan {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  teacher User         @relation(fields: [teacherUserId], references: [id], onDelete: Cascade)
-  course  Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacher User             @relation(fields: [teacherUserId], references: [id], onDelete: Cascade)
+  course  Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
   steps   LessonPlanStep[]
 
   @@map("lesson_plans")
@@ -764,10 +768,55 @@ model CourseModule {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  course   Course          @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  // Curriculum structure (null levelId = legacy admin-created module, never gated)
+  levelId           String? @db.VarChar(36)
+  code              String? @unique // e.g. "1.1"
+  subjects          Json? // string[] — "What You Learn"
+  mandatoryLearning Json? // string[]
+  practice          Json? // string[]
+  assessment        Json? // string[]
+  isGated           Boolean @default(true)
+
+  course   Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  level    CurriculumLevel? @relation(fields: [levelId], references: [id], onDelete: SetNull)
   contents ModuleContent[]
+  signOffs ModuleSignOff[]
 
   @@map("course_modules")
+}
+
+model CurriculumLevel {
+  id              String   @id @default(uuid()) @db.VarChar(36)
+  number          Int      @unique
+  title           String
+  subtitle        String?
+  purpose         String?  @db.Text
+  methodologyNote String?  @db.Text
+  minAge          Int?
+  courseId        String   @db.VarChar(36)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  course  Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  modules CourseModule[]
+
+  @@map("curriculum_levels")
+}
+
+model ModuleSignOff {
+  id                String   @id @default(uuid()) @db.VarChar(36)
+  studentUserId     String   @db.VarChar(36)
+  moduleId          String   @db.VarChar(36)
+  signedOffByUserId String   @db.VarChar(36)
+  notes             String?  @db.Text
+  signedOffAt       DateTime @default(now())
+
+  student     User         @relation("StudentSignOffs", fields: [studentUserId], references: [id], onDelete: Cascade)
+  signedOffBy User         @relation("TeacherSignOffs", fields: [signedOffByUserId], references: [id], onDelete: Cascade)
+  module      CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([studentUserId, moduleId])
+  @@map("module_sign_offs")
 }
 
 model ModuleContent {
@@ -780,19 +829,19 @@ model ModuleContent {
   videoUrl     String?     @db.Text
   durationMins Int?
 
-  module    CourseModule     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  progress  ModuleProgress[]
+  module   CourseModule     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  progress ModuleProgress[]
 
   @@map("module_contents")
 }
 
 model ModuleProgress {
-  id               String    @id @default(uuid()) @db.VarChar(36)
-  studentUserId    String    @db.VarChar(36)
-  moduleContentId  String    @db.VarChar(36)
-  completedAt      DateTime  @default(now())
+  id              String   @id @default(uuid()) @db.VarChar(36)
+  studentUserId   String   @db.VarChar(36)
+  moduleContentId String   @db.VarChar(36)
+  completedAt     DateTime @default(now())
 
-  student User         @relation(fields: [studentUserId], references: [id], onDelete: Cascade)
+  student User          @relation(fields: [studentUserId], references: [id], onDelete: Cascade)
   content ModuleContent @relation(fields: [moduleContentId], references: [id], onDelete: Cascade)
 
   @@unique([studentUserId, moduleContentId])
@@ -829,17 +878,17 @@ enum DiscountType {
 }
 
 model PricingPlan {
-  id                String      @id @default(uuid()) @db.VarChar(36)
+  id                String       @id @default(uuid()) @db.VarChar(36)
   name              String
-  description       String?     @db.Text
+  description       String?      @db.Text
   priceGbpPence     Int
   interval          PlanInterval @default(MONTHLY)
-  stripePriceId     String?     @db.VarChar(100)
-  isSiblingDiscount Boolean     @default(false)
-  isFamilyPackage   Boolean     @default(false)
+  stripePriceId     String?      @db.VarChar(100)
+  isSiblingDiscount Boolean      @default(false)
+  isFamilyPackage   Boolean      @default(false)
   maxStudents       Int?
-  isActive          Boolean     @default(true)
-  createdAt         DateTime    @default(now())
+  isActive          Boolean      @default(true)
+  createdAt         DateTime     @default(now())
 
   subscriptions Subscription[]
 

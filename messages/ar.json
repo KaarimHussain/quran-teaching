@@ -13,6 +13,7 @@
       "quran": "قارئ القرآن"
     },
     "teacher": {
+      "curriculum": "Curriculum",
       "dashboard": "لوحة التحكم",
       "availability": "التوفر",
       "classes": "الفصول",
@@ -31,6 +32,8 @@
       "messages": "الرسائل"
     },
     "admin": {
+      "curriculum": "Curriculum",
+      "modules": "Modules",
       "dashboard": "لوحة التحكم",
       "users": "المستخدمون",
       "courses": "الدورات",
@@ -54,6 +57,32 @@
   },
   "pages": {
     "admin": {
+      "curriculum": {
+        "title": "Curriculum",
+        "description": "The 22-level learning path. Edit what each module teaches, requires and assesses.",
+        "stages": "Learning stages",
+        "empty": "No curriculum levels yet. Run `npm run db:seed:curriculum` to load the curriculum.",
+        "level": "Level {number}",
+        "levelNotes": "Level purpose & methodology note",
+        "purpose": "Purpose",
+        "methodologyNote": "Methodology note",
+        "gated": "Gated",
+        "open": "Open",
+        "lessons": "{count, plural, =0 {No lessons} one {# lesson} other {# lessons}}",
+        "manageLessons": "Manage lessons",
+        "onePerLine": "One item per line.",
+        "sections": {
+          "subjects": "What You Learn",
+          "mandatoryLearning": "Mandatory Learning",
+          "practice": "Practice",
+          "assessment": "Assessment"
+        },
+        "gatedLabel": "Teacher sign-off required before the next module unlocks",
+        "save": "Save module",
+        "saveLevel": "Save level notes",
+        "saving": "Saving…",
+        "saved": "Saved."
+      },
       "dashboard": "لوحة تحكم المشرف",
       "dashboardDesc": "نظرة عامة على المنصة والإجراءات المعلّقة.",
       "courses": "الدورات",
@@ -370,6 +399,30 @@
       }
     },
     "teacher": {
+      "curriculum": {
+        "title": "Curriculum Sign-off",
+        "description": "Review each student's curriculum progress and sign off modules they have mastered.",
+        "student": "Student",
+        "chooseStudent": "Choose a student…",
+        "view": "View",
+        "noStudents": "You have no actively enrolled students yet.",
+        "noModules": "{name} has no curriculum modules in the courses you teach.",
+        "state": {
+          "completed": "Signed off",
+          "unlocked": "Ready for sign-off",
+          "locked": "Locked"
+        },
+        "notGated": "No sign-off needed",
+        "level": "Level {number} — {title}",
+        "mandatoryLearning": "Mandatory Learning",
+        "assessment": "Assessment",
+        "signedOffOn": "Signed off on {date}",
+        "lockedHint": "Unlocks once the previous module is signed off.",
+        "notesPlaceholder": "Notes (optional)",
+        "signOff": "Sign off",
+        "revoke": "Revoke",
+        "saving": "Saving…"
+      },
       "dashboard": "لوحة تحكم المعلم",
       "dashboardDesc": "إليك ما ينتظرك اليوم.",
       "availability": "التوفر",
@@ -481,6 +534,19 @@
       }
     },
     "student": {
+      "learn": {
+        "stages": "Learning stages",
+        "level": "Level {number}",
+        "otherModules": "Other modules",
+        "lockedHint": "Complete the previous module with your teacher to unlock.",
+        "signedOff": "Signed off",
+        "sections": {
+          "subjects": "What You Learn",
+          "mandatoryLearning": "Mandatory Learning",
+          "practice": "Practice",
+          "assessment": "Assessment"
+        }
+      },
       "dashboard": "لوحة تحكم الطالب",
       "dashboardDesc": "أهلاً بك، {name} — واصل المثابرة!",
       "courses": "دوراتي",
@@ -916,6 +982,13 @@
     }
   },
   "common": {
+    "errorPage": {
+      "title": "We'll be right back",
+      "description": "We couldn't load this page just now. This is usually temporary — please try again in a moment.",
+      "retry": "Try again",
+      "home": "Go to home page",
+      "reference": "Reference: {digest}"
+    },
     "active": "نشط",
     "inactive": "غير نشط",
     "beginner": "مبتدئ",

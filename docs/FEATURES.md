@@ -280,6 +280,39 @@ Features:
 
 ---
 
+## 16. Structured Curriculum & Module Sign-off **[SA+T+S]**
+
+The 22-level curriculum (Foundation → Practice → Understanding → Mastery) from
+`docs/Quran App Curriclum.docx`. Every module lists **What You Learn**, **Mandatory
+Learning**, **Practice** and **Assessment**.
+
+- **User story (Super Admin)**: As a super admin, I want to edit what each curriculum module
+  teaches, requires and assesses, and add lessons to it, at `/admin/curriculum`.
+- **User story (Teacher)**: As a teacher, I want to review a student's Mandatory Learning and
+  Assessment checklist and sign off the module when they have mastered it, at
+  `/teacher/curriculum`.
+- **User story (Student)**: As a student, I want to see my path level by level and know what
+  I must demonstrate before moving on, at `/student/learn`.
+
+Rules:
+- Modules are ordered by level, then module order. A gated module that is not signed off
+  locks every later module in that course; signed-off modules always show as completed.
+- Revoking a sign-off re-locks later modules (their lesson progress is kept).
+- A teacher may sign off only for courses they teach and students actively enrolled in them.
+- Lessons in locked modules are hidden and cannot be marked complete (enforced server-side).
+- Completing a level or course is never described as an "Ijazah". Level 22 states that an
+  Ijazah is granted only by a qualified scholar/teacher according to the relevant tradition.
+- Level 12 (Fiqh) shows a methodology note naming the school/methodology used; admins must
+  replace the seeded generic note with the actual school.
+
+**Acceptance criteria**
+- Seeding twice creates 22 levels on the first run and nothing on the second; admin edits survive re-seeding.
+- A new student sees module 1.1 unlocked and 1.2 locked; after a teacher signs off 1.1, 1.2 unlocks.
+- A teacher cannot sign off a module for a student outside their courses.
+- Legacy modules without a level remain visible and unlocked.
+
+---
+
 ## Non-Functional Requirements
 
 - **Mobile-first, responsive** UI across all roles.
