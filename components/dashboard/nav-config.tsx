@@ -20,6 +20,7 @@ import {
   ShoppingBag,
   ListTree,
   Layers,
+  ListChecks,
 } from "lucide-react";
 
 export type NavItem = {
@@ -46,6 +47,7 @@ export const teacherNav: NavItem[] = [
   { href: "/teacher/availability", labelKey: "availability", icon: CalendarDays },
   { href: "/teacher/classes", labelKey: "classes", icon: BookOpen },
   { href: "/teacher/students", labelKey: "students", icon: Users },
+  { href: "/teacher/curriculum", labelKey: "curriculum", icon: ListChecks },
   { href: "/teacher/assignments", labelKey: "assignments", icon: ClipboardList },
   { href: "/teacher/resources", labelKey: "resources", icon: Library },
   { href: "/teacher/forum", labelKey: "forum", icon: MessagesSquare },

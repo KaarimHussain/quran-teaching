@@ -13,6 +13,7 @@
       "quran": "قرآن ریڈر"
     },
     "teacher": {
+      "curriculum": "Curriculum",
       "dashboard": "ڈیش بورڈ",
       "availability": "دستیابی",
       "classes": "کلاسز",
@@ -398,6 +399,30 @@
       }
     },
     "teacher": {
+      "curriculum": {
+        "title": "Curriculum Sign-off",
+        "description": "Review each student's curriculum progress and sign off modules they have mastered.",
+        "student": "Student",
+        "chooseStudent": "Choose a student…",
+        "view": "View",
+        "noStudents": "You have no actively enrolled students yet.",
+        "noModules": "{name} has no curriculum modules in the courses you teach.",
+        "state": {
+          "completed": "Signed off",
+          "unlocked": "Ready for sign-off",
+          "locked": "Locked"
+        },
+        "notGated": "No sign-off needed",
+        "level": "Level {number} — {title}",
+        "mandatoryLearning": "Mandatory Learning",
+        "assessment": "Assessment",
+        "signedOffOn": "Signed off on {date}",
+        "lockedHint": "Unlocks once the previous module is signed off.",
+        "notesPlaceholder": "Notes (optional)",
+        "signOff": "Sign off",
+        "revoke": "Revoke",
+        "saving": "Saving…"
+      },
       "dashboard": "استاد ڈیش بورڈ",
       "dashboardDesc": "آج آپ کے لیے کیا ہے، اس پر ایک نظر ڈالیں۔",
       "availability": "دستیابی",

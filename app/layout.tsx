@@ -68,6 +68,7 @@ function pickClientMessages(messages: Messages): Messages {
     pages: {
       publicStore: pages.publicStore,
       admin: { store: admin.store, curriculum: admin.curriculum },
+      teacher: { curriculum: ((pages.teacher ?? {}) as Messages).curriculum },
     },
   };
 }
