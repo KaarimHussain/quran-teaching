@@ -11,7 +11,8 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:generate": "prisma generate",
     "test": "vitest run",
-    "db:seed:curriculum": "tsx prisma/seed-curriculum.ts"
+    "db:seed:curriculum": "tsx prisma/seed-curriculum.ts",
+    "db:seed:test-users": "tsx prisma/seed-test-users.ts"
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.8.0",
