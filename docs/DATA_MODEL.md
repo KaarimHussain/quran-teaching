@@ -267,6 +267,66 @@ Links a `PARENT` user to one or more `STUDENT` users.
 
 ---
 
+## CurriculumLevel
+
+One of the 22 levels of the Quranic & Islamic curriculum (`docs/Quran App Curriclum.docx`).
+Content is seeded from `lib/curriculum/data.ts` via `npm run db:seed:curriculum`.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | UUID | Primary key |
+| `number` | int (unique) | 1–22 |
+| `title` / `subtitle` | string | e.g. "Tajweed Foundation" / "Correct Quranic Pronunciation" |
+| `purpose` | text | Level purpose; Level 22 carries the Ijazah disclaimer |
+| `methodologyNote` | text | Shown to students as a callout (Fiqh school for Level 12, dua sourcing for Level 16) |
+| `minAge` | int? | Level 19 = 16 (displayed, not enforced) |
+| `courseId` | FK → Course | The track course the level belongs to (see table below) |
+| `createdAt` / `updatedAt` | datetime | |
+
+| Track course | Levels |
+| --- | --- |
+| Quran Reading | 1–3 |
+| Tajweed | 4–5 |
+| Hifz-ul-Quran | 6–7 |
+| Quran Understanding | 8–10 |
+| Islamic Studies | 11–18 |
+| Advanced Quranic Studies | 19–21 |
+| Quran Teacher Preparation | 22 |
+
+---
+
+## CourseModule (curriculum fields)
+
+Existing self-paced modules gain curriculum structure. Modules with `levelId = null`
+are legacy admin-created modules and are never gated.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `levelId` | FK → CurriculumLevel? | `SET NULL` on level delete |
+| `code` | string? (unique) | e.g. `"1.1"` — the seed matches on this |
+| `subjects` | JSON `string[]` | "What You Learn" |
+| `mandatoryLearning` | JSON `string[]` | What the student must demonstrate |
+| `practice` | JSON `string[]` | |
+| `assessment` | JSON `string[]` | |
+| `isGated` | boolean (default true) | Requires teacher sign-off before the next module unlocks |
+
+---
+
+## ModuleSignOff
+
+A teacher's confirmation that a student has met a module's Mandatory Learning / Assessment.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | UUID | Primary key |
+| `studentUserId` | FK → User | |
+| `moduleId` | FK → CourseModule | Unique together with `studentUserId` |
+| `signedOffByUserId` | FK → User (Teacher) | |
+| `notes` | text? | |
+| `signedOffAt` | datetime | |
+
+---
+
 ## Notes / Open Questions for Stakeholders
 
 - Should `pathwayLevel` (Beginner/Intermediate/Advanced) be per-course-enrollment, or
