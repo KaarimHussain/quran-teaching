@@ -29,7 +29,7 @@ export async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between gap-2 px-4 sm:px-6">
+      <div className="mx-auto flex h-20 w-full max-w-7xl items-center gap-2 px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex shrink-0 items-center gap-2.5">
           <span className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <BookOpenText className="size-5" aria-hidden="true" />
@@ -37,31 +37,28 @@ export async function SiteHeader() {
           <span className="font-heading text-lg text-primary sm:text-xl">Quran Learning</span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-5 xl:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="whitespace-nowrap text-base font-medium text-foreground transition-colors hover:text-primary"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="hidden items-center gap-2 xl:flex">
-          <LanguageSwitcher current={language} />
-          <ThemeToggle />
-          <Button asChild variant="outline" className="h-12 rounded-full px-6 text-base">
-            <Link href="/login">{t("login")}</Link>
-          </Button>
-          <Button asChild className="h-12 rounded-full px-6 text-base">
-            <Link href="/register">{t("startFree")}</Link>
-          </Button>
+        {/* Desktop: links pushed to the end, well clear of the logo */}
+        <div className="ms-auto hidden items-center gap-5 ps-8 lg:flex xl:gap-8 xl:ps-12">
+          <nav aria-label="Main" className="flex items-center gap-6 xl:gap-7">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="whitespace-nowrap text-base font-medium text-foreground transition-colors hover:text-primary"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <span className="h-6 w-px bg-border" aria-hidden="true" />
+          <div className="flex items-center gap-1">
+            <LanguageSwitcher current={language} />
+            <ThemeToggle />
+          </div>
         </div>
 
-        {/* Below xl: language, theme and a large-target menu */}
-        <div className="flex items-center gap-1 xl:hidden">
+        {/* Below lg: language, theme and a large-target menu */}
+        <div className="ms-auto flex items-center gap-1 lg:hidden">
           {/* On phones these move into the menu so the bar never overflows */}
           <div className="hidden items-center gap-1 sm:flex">
             <LanguageSwitcher current={language} />
