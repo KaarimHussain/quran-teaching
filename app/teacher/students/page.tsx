@@ -12,9 +12,9 @@ import {
 } from "@/components/ui/card";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { prisma } from "@/lib/db";
-import { requireCurrentUser } from "@/lib/dal";
+import { requireCurrentUser, verifySession } from "@/lib/dal";
 import { roleLabel } from "@/lib/roles";
-import { getTeacherCourseIds } from "@/lib/teacher";
+import { teacherCoursesWhere } from "@/lib/teacher";
 import { ProgressForm } from "./progress-form";
 
 function initials(name: string) {
@@ -40,24 +40,29 @@ const subjectAreaLabel: Record<string, string> = {
 };
 
 export default async function TeacherStudentsPage() {
-  const currentUser = await requireCurrentUser();
-  const t = await getTranslations("pages.teacher");
-  const courseIds = await getTeacherCourseIds(currentUser.id);
+  // Run the user lookup alongside the enrollment query (keyed off the JWT's user
+  // id) and inline the teacher's courses as a relation filter, rather than
+  // three sequential round-trips before the enrollments even start.
+  const { userId: teacherId } = await verifySession();
 
-  const enrollments = await prisma.enrollment.findMany({
-    where: { courseId: { in: courseIds } },
-    orderBy: [{ course: { name: "asc" } }, { student: { name: "asc" } }],
-    include: {
-      student: { select: { id: true, name: true, email: true } },
-      course: { select: { id: true, name: true } },
-    },
-  });
+  const [currentUser, t, enrollments] = await Promise.all([
+    requireCurrentUser(),
+    getTranslations("pages.teacher"),
+    prisma.enrollment.findMany({
+      where: { course: teacherCoursesWhere(teacherId) },
+      orderBy: [{ course: { name: "asc" } }, { student: { name: "asc" } }],
+      include: {
+        student: { select: { id: true, name: true, email: true } },
+        course: { select: { id: true, name: true } },
+      },
+    }),
+  ]);
 
   const progressEntries = enrollments.length
     ? await prisma.progressEntry.findMany({
         where: {
           studentUserId: { in: enrollments.map((e) => e.student.id) },
-          courseId: { in: courseIds },
+          courseId: { in: [...new Set(enrollments.map((e) => e.course.id))] },
         },
         orderBy: { recordedAt: "desc" },
       })

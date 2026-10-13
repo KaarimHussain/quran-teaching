@@ -156,87 +156,92 @@ function parseTajweedHtml(raw: string): string {
     .replace(/<\/tajweed>/g, "</span>");
 }
 
+const VERSES_PER_PAGE = 50;
+
 export async function fetchSurahVerses(surahId: number): Promise<QuranVerse[]> {
+  // Verse counts are known up front, so request every page in parallel instead
+  // of walking `next_page` one round-trip at a time (Al-Baqarah = 6 pages).
+  const versesCount = SURAHS.find((s) => s.id === surahId)?.versesCount ?? VERSES_PER_PAGE;
+  const pageCount = Math.max(1, Math.ceil(versesCount / VERSES_PER_PAGE));
+  const pages = await Promise.all(
+    Array.from({ length: pageCount }, (_, i) => fetchSurahPage(surahId, i + 1))
+  );
+  return pages.flat();
+}
+
+async function fetchSurahPage(surahId: number, page: number): Promise<QuranVerse[]> {
   const all: QuranVerse[] = [];
-  let page = 1;
+  const [versesRes, tafsirRes] = await Promise.all([
+    fetch(
+      `https://api.quran.com/api/v4/verses/by_chapter/${surahId}?words=true&word_fields=text_uthmani,transliteration_en,translation_en&translations=20,234&fields=text_uthmani_tajweed&per_page=${VERSES_PER_PAGE}&page=${page}`,
+      { next: { revalidate: 86400 } }
+    ),
+    fetch(
+      `https://api.quran.com/api/v4/tafsirs/16/by_chapter/${surahId}?per_page=${VERSES_PER_PAGE}&page=${page}`,
+      { next: { revalidate: 86400 } }
+    ).catch(() => null),
+  ]);
 
-  while (true) {
-    const [versesRes, tafsirRes] = await Promise.all([
-      fetch(
-        `https://api.quran.com/api/v4/verses/by_chapter/${surahId}?words=true&word_fields=text_uthmani,transliteration_en,translation_en&translations=20,234&fields=text_uthmani_tajweed&per_page=50&page=${page}`,
-        { next: { revalidate: 86400 } }
-      ),
-      fetch(
-        `https://api.quran.com/api/v4/tafsirs/16/by_chapter/${surahId}?per_page=50&page=${page}`,
-        { next: { revalidate: 86400 } }
-      ).catch(() => null),
-    ]);
+  if (!versesRes.ok) throw new Error(`Quran API error: ${versesRes.status}`);
 
-    if (!versesRes.ok) throw new Error(`Quran API error: ${versesRes.status}`);
+  const versesData = await versesRes.json();
+  const tafsirData = tafsirRes && tafsirRes.ok ? await tafsirRes.json() : null;
 
-    const versesData = await versesRes.json();
-    const tafsirData = tafsirRes && tafsirRes.ok ? await tafsirRes.json() : null;
+  const tafsirMap = new Map<string, string>();
+  if (tafsirData?.tafsirs) {
+    tafsirData.tafsirs.forEach((t: { verse_key: string; text: string }) => {
+      tafsirMap.set(t.verse_key, (t.text ?? "").replace(/<[^>]*>/g, "").trim());
+    });
+  }
 
-    const tafsirMap = new Map<string, string>();
-    if (tafsirData?.tafsirs) {
-      tafsirData.tafsirs.forEach((t: { verse_key: string; text: string }) => {
-        tafsirMap.set(t.verse_key, (t.text ?? "").replace(/<[^>]*>/g, "").trim());
+  for (const v of versesData.verses) {
+    const transList = (v.translations as Array<{ resource_id: number; text: string }> | null) ?? [];
+
+    const enObj = transList.find((t) => t.resource_id === 20);
+    const urObj = transList.find((t) => t.resource_id === 234);
+
+    const enText = (enObj?.text ?? "")
+      .replace(/<sup[^>]*>.*?<\/sup>/gi, "")
+      .replace(/<[^>]*>/g, "")
+      .trim();
+
+    const urText = (urObj?.text ?? "")
+      .replace(/<sup[^>]*>.*?<\/sup>/gi, "")
+      .replace(/<[^>]*>/g, "")
+      .trim();
+
+    const wordsList = (v.words ?? [])
+      .filter((w: Record<string, unknown>) => w.char_type_name === "word")
+      .map((w: Record<string, unknown>) => {
+        const trans = w.transliteration as Record<string, string> | null;
+        const transl = w.translation as Record<string, string> | null;
+        const audioPath = (w.audio_url as string | null) ?? "";
+        return {
+          id: w.id as number,
+          position: w.position as number,
+          text: (w.text_uthmani as string) ?? "",
+          transliteration: trans?.text ?? "",
+          translation: transl?.text ?? "",
+          audioUrl: audioPath ? AUDIO_CDN + audioPath : "",
+        } satisfies QuranWord;
       });
-    }
 
-    for (const v of versesData.verses) {
-      const transList = (v.translations as Array<{ resource_id: number; text: string }> | null) ?? [];
+    const wordFallbackEn = wordsList
+      .map((w: QuranWord) => w.translation)
+      .filter(Boolean)
+      .join(" ");
 
-      const enObj = transList.find((t) => t.resource_id === 20);
-      const urObj = transList.find((t) => t.resource_id === 234);
-
-      const enText = (enObj?.text ?? "")
-        .replace(/<sup[^>]*>.*?<\/sup>/gi, "")
-        .replace(/<[^>]*>/g, "")
-        .trim();
-
-      const urText = (urObj?.text ?? "")
-        .replace(/<sup[^>]*>.*?<\/sup>/gi, "")
-        .replace(/<[^>]*>/g, "")
-        .trim();
-
-      const wordsList = (v.words ?? [])
-        .filter((w: Record<string, unknown>) => w.char_type_name === "word")
-        .map((w: Record<string, unknown>) => {
-          const trans = w.transliteration as Record<string, string> | null;
-          const transl = w.translation as Record<string, string> | null;
-          const audioPath = (w.audio_url as string | null) ?? "";
-          return {
-            id: w.id as number,
-            position: w.position as number,
-            text: (w.text_uthmani as string) ?? "",
-            transliteration: trans?.text ?? "",
-            translation: transl?.text ?? "",
-            audioUrl: audioPath ? AUDIO_CDN + audioPath : "",
-          } satisfies QuranWord;
-        });
-
-      const wordFallbackEn = wordsList
-        .map((w: QuranWord) => w.translation)
-        .filter(Boolean)
-        .join(" ");
-
-      all.push({
-        id: v.id,
-        verseNumber: v.verse_number,
-        verseKey: v.verse_key,
-        words: wordsList,
-        translationEn: enText || wordFallbackEn,
-        translationUr: urText || "شروع الله کا نام لے کر جو بڑا مہربان نہایت رحم والا ہے",
-        translationAr: tafsirMap.get(v.verse_key) || "تفسير الآية",
-        translationText: enText || wordFallbackEn,
-        tajweedHtml: parseTajweedHtml((v.text_uthmani_tajweed as string | null) ?? ""),
-      });
-    }
-
-    if (!versesData.pagination?.next_page) break;
-    page++;
-    if (page > 10) break;
+    all.push({
+      id: v.id,
+      verseNumber: v.verse_number,
+      verseKey: v.verse_key,
+      words: wordsList,
+      translationEn: enText || wordFallbackEn,
+      translationUr: urText || "شروع الله کا نام لے کر جو بڑا مہربان نہایت رحم والا ہے",
+      translationAr: tafsirMap.get(v.verse_key) || "تفسير الآية",
+      translationText: enText || wordFallbackEn,
+      tajweedHtml: parseTajweedHtml((v.text_uthmani_tajweed as string | null) ?? ""),
+    });
   }
 
   return all;

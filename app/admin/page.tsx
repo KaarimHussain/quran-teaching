@@ -22,7 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { EnrollmentChart } from "@/components/charts/enrollment-chart";
+import { EnrollmentChart } from "@/components/charts/lazy";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { prisma } from "@/lib/db";
 import { requireCurrentUser } from "@/lib/dal";
@@ -41,10 +41,9 @@ const usersByRoleConfig = [
 const chartColors = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
 
 export default async function AdminDashboardPage() {
-  const currentUser = await requireCurrentUser();
-  const t = await getTranslations("pages.admin");
-
   const [
+    currentUser,
+    t,
     totalUsers,
     totalEnrollments,
     pendingVerificationCount,
@@ -54,6 +53,8 @@ export default async function AdminDashboardPage() {
     coursesWithCounts,
     forumQueue,
   ] = await Promise.all([
+    requireCurrentUser(),
+    getTranslations("pages.admin"),
     prisma.user.count(),
     prisma.enrollment.count(),
     prisma.user.count({ where: { role: "TEACHER", verificationStatus: "PENDING" } }),

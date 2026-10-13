@@ -25,33 +25,27 @@ export default async function StudentLearnPage() {
   const user = await requireCurrentUser();
   if (user.role !== "STUDENT") throw new Error("Forbidden");
 
-  // Enrolled course IDs
-  const enrollments = await prisma.enrollment.findMany({
-    where: { studentUserId: user.id, status: "ACTIVE" },
-    select: { courseId: true },
-  });
-  const enrolledCourseIds = enrollments.map((e) => e.courseId);
-
-  // Fetch modules: free ones OR for enrolled courses
-  const modules = await prisma.courseModule.findMany({
-    where: {
-      OR: [
-        { isFree: true },
-        { courseId: { in: enrolledCourseIds } },
-      ],
-    },
-    orderBy: [{ courseId: "asc" }, { moduleOrder: "asc" }],
-    include: {
-      course: { select: { name: true } },
-      contents: { orderBy: { contentOrder: "asc" } },
-    },
-  });
-
-  // Completed content IDs for this student
-  const completedRecords = await prisma.moduleProgress.findMany({
-    where: { studentUserId: user.id },
-    select: { moduleContentId: true },
-  });
+  // Free modules + modules for actively-enrolled courses, fetched in parallel with
+  // the student's completion records (previously three sequential round-trips).
+  const [modules, completedRecords] = await Promise.all([
+    prisma.courseModule.findMany({
+      where: {
+        OR: [
+          { isFree: true },
+          { course: { enrollments: { some: { studentUserId: user.id, status: "ACTIVE" } } } },
+        ],
+      },
+      orderBy: [{ courseId: "asc" }, { moduleOrder: "asc" }],
+      include: {
+        course: { select: { name: true } },
+        contents: { orderBy: { contentOrder: "asc" } },
+      },
+    }),
+    prisma.moduleProgress.findMany({
+      where: { studentUserId: user.id },
+      select: { moduleContentId: true },
+    }),
+  ]);
   const completedIds = new Set(completedRecords.map((r) => r.moduleContentId));
 
   // Group by course

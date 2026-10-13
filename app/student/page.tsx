@@ -21,31 +21,33 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
-import { requireCurrentUser } from "@/lib/dal";
+import { requireCurrentUser, verifySession } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
 import { roleLabel } from "@/lib/roles";
 import { formatDateTime } from "@/lib/format";
 
 export default async function StudentDashboardPage() {
-  const user = await requireCurrentUser();
-  const t = await getTranslations("pages.student");
-  const firstName = user.name.split(" ")[0];
+  // The JWT already carries the user id, so the dashboard queries run in the same
+  // round-trip as the user lookup instead of waiting on it.
+  const { userId: studentId } = await verifySession();
 
   const now = new Date();
 
-  const [enrollments, participants, progressEntries, submissions, certCount, latestCert, attendances] =
+  const [user, t, enrollments, participants, progressEntries, submissions, certCount, latestCert, attendances] =
     await Promise.all([
+      requireCurrentUser(),
+      getTranslations("pages.student"),
       // Active enrollments with course info
       prisma.enrollment.findMany({
-        where: { studentUserId: user.id, status: "ACTIVE" },
+        where: { studentUserId: studentId, status: "ACTIVE" },
         include: { course: true },
         orderBy: { enrolledAt: "desc" },
       }),
       // Upcoming sessions this student is a participant of
       prisma.classParticipant.findMany({
         where: {
-          studentUserId: user.id,
+          studentUserId: studentId,
           classSession: {
             status: { in: ["SCHEDULED", "LIVE"] },
             scheduledStart: { gte: now },
@@ -64,31 +66,32 @@ export default async function StudentDashboardPage() {
       }),
       // Latest progress entry per subject (most recent per course)
       prisma.progressEntry.findMany({
-        where: { studentUserId: user.id },
+        where: { studentUserId: studentId },
         include: { course: true },
         orderBy: { recordedAt: "desc" },
       }),
       // Recent homework submissions
       prisma.submission.findMany({
-        where: { studentUserId: user.id },
+        where: { studentUserId: studentId },
         include: { assignment: { include: { course: true } } },
         orderBy: { assignment: { dueDate: "desc" } },
         take: 5,
       }),
       // Certificate count
-      prisma.certificate.count({ where: { studentUserId: user.id } }),
+      prisma.certificate.count({ where: { studentUserId: studentId } }),
       // Latest certificate for teaser card
       prisma.certificate.findFirst({
-        where: { studentUserId: user.id },
+        where: { studentUserId: studentId },
         include: { course: true },
         orderBy: { issuedAt: "desc" },
       }),
       // Attendance for rate calculation
       prisma.attendance.findMany({
-        where: { studentUserId: user.id },
+        where: { studentUserId: studentId },
         select: { status: true },
       }),
     ]);
+  const firstName = user.name.split(" ")[0];
 
   // Attendance rate
   const totalAttendance = attendances.length;

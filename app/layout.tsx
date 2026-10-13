@@ -10,25 +10,6 @@ import { TawkToChat } from "@/components/tawkto-chat";
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-sans",
-});
-
-const amiri = Amiri({
-  subsets: ["arabic", "latin"],
-  weight: ["400", "700"],
-  variable: "--font-arabic",
-});
-
-const notoNastaliqUrdu = Noto_Nastaliq_Urdu({
-  subsets: ["arabic"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-nastaliq",
-  display: "swap",
-});
-
-const scheherazadeNew = Scheherazade_New({
-  subsets: ["arabic"],
-  weight: ["400", "700"],
-  variable: "--font-arabic-ui",
   display: "swap",
 });
 
@@ -36,6 +17,35 @@ const cinzelDecorative = Cinzel_Decorative({
   subsets: ["latin"],
   weight: ["400", "700", "900"],
   variable: "--font-heading",
+  display: "swap",
+});
+
+// The Arabic-script fonts below are large and only used conditionally (Amiri in
+// the Quran reader, Nastaliq for the Urdu locale, Scheherazade for the Arabic
+// locale). `preload: false` keeps them out of every page's <link rel=preload>
+// set; the browser fetches them lazily only when a glyph actually uses them.
+const amiri = Amiri({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "700"],
+  variable: "--font-arabic",
+  display: "swap",
+  preload: false,
+});
+
+const notoNastaliqUrdu = Noto_Nastaliq_Urdu({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  variable: "--font-nastaliq",
+  display: "swap",
+  preload: false,
+});
+
+const scheherazadeNew = Scheherazade_New({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  variable: "--font-arabic-ui",
+  display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -44,6 +54,23 @@ export const metadata: Metadata = {
 };
 
 const rtlLocales = new Set(["UR", "AR"]);
+
+// Only these namespaces are read by client components (useTranslations); server
+// components use getTranslations and don't need the catalog serialized into HTML.
+type Messages = Record<string, unknown>;
+function pickClientMessages(messages: Messages): Messages {
+  const pages = (messages.pages ?? {}) as Messages;
+  const admin = (pages.admin ?? {}) as Messages;
+  return {
+    nav: messages.nav,
+    auth: messages.auth,
+    common: messages.common,
+    pages: {
+      publicStore: pages.publicStore,
+      admin: { store: admin.store },
+    },
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -57,7 +84,7 @@ export default async function RootLayout({
   const isDark = theme === "dark";
   const isRtl = rtlLocales.has(locale);
 
-  const messages = await getMessages();
+  const messages = pickClientMessages(await getMessages());
 
   return (
     <html

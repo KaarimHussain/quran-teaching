@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import type { Prisma } from "@/lib/generated/prisma/client";
 
 /**
  * Courses are linked to teachers only through ClassSession/Assignment rows
@@ -20,4 +21,17 @@ export async function getTeacherCourseIds(teacherUserId: string): Promise<string
   ]);
 
   return Array.from(new Set([...sessions.map((s) => s.courseId), ...assignments.map((a) => a.courseId)]));
+}
+
+/**
+ * Same set of courses as getTeacherCourseIds, expressed as a relation filter so
+ * it can be inlined into a query instead of costing a separate round-trip first.
+ */
+export function teacherCoursesWhere(teacherUserId: string): Prisma.CourseWhereInput {
+  return {
+    OR: [
+      { classSessions: { some: { teacherUserId } } },
+      { assignments: { some: { teacherUserId } } },
+    ],
+  };
 }

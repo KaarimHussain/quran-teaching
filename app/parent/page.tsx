@@ -23,7 +23,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { prisma } from "@/lib/db";
-import { requireCurrentUser } from "@/lib/dal";
+import { requireCurrentUser, verifySession } from "@/lib/dal";
 import { roleLabel } from "@/lib/roles";
 import { formatDate } from "@/lib/format";
 
@@ -46,41 +46,46 @@ const levelLabel: Record<string, string> = {
 };
 
 export default async function ParentDashboardPage() {
-  const user = await requireCurrentUser();
-  const t = await getTranslations("pages.parent");
+  // The JWT already carries the user id, so the children query runs in the same
+  // round-trip as the user lookup instead of waiting on it.
+  const { userId: parentId } = await verifySession();
 
-  const linkedStudents = await prisma.parentStudentLink.findMany({
-    where: { parentUserId: user.id },
-    include: {
-      student: {
-        include: {
-          enrollments: {
-            where: { status: "ACTIVE" },
-            include: { course: true },
-          },
-          classParticipations: {
-            include: {
-              classSession: { include: { course: true } },
+  const [user, t, linkedStudents] = await Promise.all([
+    requireCurrentUser(),
+    getTranslations("pages.parent"),
+    prisma.parentStudentLink.findMany({
+      where: { parentUserId: parentId },
+      include: {
+        student: {
+          include: {
+            enrollments: {
+              where: { status: "ACTIVE" },
+              include: { course: true },
             },
-            where: {
-              classSession: {
-                status: "SCHEDULED",
-                scheduledStart: { gte: new Date() },
+            classParticipations: {
+              include: {
+                classSession: { include: { course: true } },
+              },
+              where: {
+                classSession: {
+                  status: "SCHEDULED",
+                  scheduledStart: { gte: new Date() },
+                },
               },
             },
-          },
-          submissions: {
-            include: { assignment: { include: { course: true } } },
-            orderBy: { assignment: { dueDate: "asc" } },
-            take: 5,
-          },
-          progressEntries: {
-            orderBy: { recordedAt: "desc" },
+            submissions: {
+              include: { assignment: { include: { course: true } } },
+              orderBy: { assignment: { dueDate: "asc" } },
+              take: 5,
+            },
+            progressEntries: {
+              orderBy: { recordedAt: "desc" },
+            },
           },
         },
       },
-    },
-  });
+    }),
+  ]);
 
   if (linkedStudents.length === 0) {
     return (

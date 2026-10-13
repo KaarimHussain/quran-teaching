@@ -5,11 +5,17 @@ import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db";
 
 export async function generateStaticParams() {
-  const posts = await prisma.blogPost.findMany({
-    where: { isPublished: true },
-    select: { slug: true },
-  });
-  return posts.map((p) => ({ slug: p.slug }));
+  // Pre-rendering is best-effort: if the database is unreachable at build time,
+  // fall back to rendering posts on demand instead of failing the build.
+  try {
+    const posts = await prisma.blogPost.findMany({
+      where: { isPublished: true },
+      select: { slug: true },
+    });
+    return posts.map((p) => ({ slug: p.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {

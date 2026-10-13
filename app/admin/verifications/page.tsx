@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { DistributionPieChart } from "@/components/charts/distribution-pie-chart";
+import { DistributionPieChart } from "@/components/charts/lazy";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { prisma } from "@/lib/db";
 import { requireCurrentUser } from "@/lib/dal";

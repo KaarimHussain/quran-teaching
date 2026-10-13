@@ -28,15 +28,16 @@ export default async function StudentSubscribePage() {
   const user = await requireCurrentUser();
   if (user.role !== "STUDENT") throw new Error("Forbidden");
 
-  const plans = await prisma.pricingPlan.findMany({
-    where: { isActive: true },
-    orderBy: [{ isFamilyPackage: "asc" }, { isSiblingDiscount: "asc" }, { priceGbpPence: "asc" }],
-  });
-
-  const activeSubscription = await prisma.subscription.findFirst({
-    where: { userId: user.id, status: { in: ["ACTIVE", "TRIALING"] } },
-    include: { plan: true },
-  });
+  const [plans, activeSubscription] = await Promise.all([
+    prisma.pricingPlan.findMany({
+      where: { isActive: true },
+      orderBy: [{ isFamilyPackage: "asc" }, { isSiblingDiscount: "asc" }, { priceGbpPence: "asc" }],
+    }),
+    prisma.subscription.findFirst({
+      where: { userId: user.id, status: { in: ["ACTIVE", "TRIALING"] } },
+      include: { plan: true },
+    }),
+  ]);
 
   return (
     <DashboardShell

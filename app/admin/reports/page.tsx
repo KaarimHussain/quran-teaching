@@ -15,8 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
-import { EnrollmentChart } from "@/components/charts/enrollment-chart";
-import { DistributionPieChart } from "@/components/charts/distribution-pie-chart";
+import { DistributionPieChart, EnrollmentChart } from "@/components/charts/lazy";
 import { prisma } from "@/lib/db";
 import { requireCurrentUser } from "@/lib/dal";
 import { roleLabel } from "@/lib/roles";

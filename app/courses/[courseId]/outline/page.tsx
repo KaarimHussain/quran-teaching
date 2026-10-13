@@ -15,8 +15,14 @@ const TYPE_ICON: Record<string, React.ReactNode> = {
 };
 
 export async function generateStaticParams() {
-  const courses = await prisma.course.findMany({ select: { id: true } });
-  return courses.map((c) => ({ courseId: c.id }));
+  // Pre-rendering is best-effort: if the database is unreachable at build time,
+  // fall back to rendering outlines on demand instead of failing the build.
+  try {
+    const courses = await prisma.course.findMany({ select: { id: true } });
+    return courses.map((c) => ({ courseId: c.id }));
+  } catch {
+    return [];
+  }
 }
 
 export default async function CourseOutlinePage({

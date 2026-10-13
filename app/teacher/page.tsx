@@ -26,9 +26,9 @@ import {
 } from "@/components/ui/card";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { prisma } from "@/lib/db";
-import { requireCurrentUser } from "@/lib/dal";
+import { requireCurrentUser, verifySession } from "@/lib/dal";
 import { roleLabel } from "@/lib/roles";
-import { getTeacherCourseIds } from "@/lib/teacher";
+import { teacherCoursesWhere } from "@/lib/teacher";
 import { formatDateTime } from "@/lib/format";
 import { getTranslations } from "next-intl/server";
 
@@ -58,14 +58,17 @@ const verificationMeta: Record<
 };
 
 export default async function TeacherDashboardPage() {
-  const currentUser = await requireCurrentUser();
-  const t = await getTranslations("pages.teacher");
-  const courseIds = await getTeacherCourseIds(currentUser.id);
+  // The JWT already carries the user id, so every query below can start in the
+  // same round-trip as the user lookup instead of waiting on it.
+  const { userId: teacherId } = await verifySession();
+  const teacherCourses = teacherCoursesWhere(teacherId);
 
   const now = new Date();
   const weekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
   const [
+    currentUser,
+    t,
     activeStudents,
     classesThisWeek,
     pendingGradingCount,
@@ -75,20 +78,22 @@ export default async function TeacherDashboardPage() {
     enrollments,
     availability,
   ] = await Promise.all([
+    requireCurrentUser(),
+    getTranslations("pages.teacher"),
     prisma.enrollment.findMany({
-      where: { courseId: { in: courseIds }, status: "ACTIVE" },
+      where: { course: teacherCourses, status: "ACTIVE" },
       distinct: ["studentUserId"],
       select: { studentUserId: true },
     }),
     prisma.classSession.count({
-      where: { teacherUserId: currentUser.id, scheduledStart: { gte: now, lte: weekFromNow } },
+      where: { teacherUserId: teacherId, scheduledStart: { gte: now, lte: weekFromNow } },
     }),
     prisma.submission.count({
-      where: { status: "SUBMITTED", assignment: { teacherUserId: currentUser.id } },
+      where: { status: "SUBMITTED", assignment: { teacherUserId: teacherId } },
     }),
-    prisma.teacherBadge.count({ where: { teacherUserId: currentUser.id } }),
+    prisma.teacherBadge.count({ where: { teacherUserId: teacherId } }),
     prisma.classSession.findMany({
-      where: { teacherUserId: currentUser.id, scheduledStart: { gte: now } },
+      where: { teacherUserId: teacherId, scheduledStart: { gte: now } },
       orderBy: { scheduledStart: "asc" },
       take: 4,
       include: {
@@ -97,7 +102,7 @@ export default async function TeacherDashboardPage() {
       },
     }),
     prisma.submission.findMany({
-      where: { status: "SUBMITTED", assignment: { teacherUserId: currentUser.id } },
+      where: { status: "SUBMITTED", assignment: { teacherUserId: teacherId } },
       orderBy: { submittedAt: "desc" },
       take: 4,
       include: {
@@ -106,13 +111,13 @@ export default async function TeacherDashboardPage() {
       },
     }),
     prisma.enrollment.findMany({
-      where: { courseId: { in: courseIds }, status: "ACTIVE" },
+      where: { course: teacherCourses, status: "ACTIVE" },
       orderBy: { enrolledAt: "desc" },
       take: 6,
       include: { student: { select: { id: true, name: true } }, course: { select: { id: true, name: true } } },
     }),
     prisma.teacherAvailability.findMany({
-      where: { teacherUserId: currentUser.id },
+      where: { teacherUserId: teacherId },
       orderBy: [{ dayOfWeek: "asc" }, { startTime: "asc" }],
     }),
   ]);
