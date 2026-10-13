@@ -65,6 +65,7 @@ function pickClientMessages(messages: Messages): Messages {
     nav: messages.nav,
     auth: messages.auth,
     common: messages.common,
+    quranReader: messages.quranReader,
     pages: {
       publicStore: pages.publicStore,
       admin: { store: admin.store, curriculum: admin.curriculum },
