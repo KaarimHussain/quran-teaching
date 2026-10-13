@@ -534,6 +534,19 @@
       }
     },
     "student": {
+      "learn": {
+        "stages": "Learning stages",
+        "level": "Level {number}",
+        "otherModules": "Other modules",
+        "lockedHint": "Complete the previous module with your teacher to unlock.",
+        "signedOff": "Signed off",
+        "sections": {
+          "subjects": "What You Learn",
+          "mandatoryLearning": "Mandatory Learning",
+          "practice": "Practice",
+          "assessment": "Assessment"
+        }
+      },
       "dashboard": "Student Dashboard",
       "dashboardDesc": "Welcome back, {name} — keep up the great work!",
       "courses": "My Courses",

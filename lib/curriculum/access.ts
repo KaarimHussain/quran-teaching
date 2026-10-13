@@ -39,3 +39,12 @@ export function computeModuleAccess(
 
   return states;
 }
+
+/** Server-side guard: may the student work on `moduleId`? Unknown modules are not gated. */
+export function isModuleOpen(
+  moduleId: string,
+  courseModules: AccessModule[],
+  signedOffIds: ReadonlySet<string>
+): boolean {
+  return computeModuleAccess(courseModules, signedOffIds).get(moduleId) !== "locked";
+}

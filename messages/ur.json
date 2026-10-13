@@ -534,6 +534,19 @@
       }
     },
     "student": {
+      "learn": {
+        "stages": "Learning stages",
+        "level": "Level {number}",
+        "otherModules": "Other modules",
+        "lockedHint": "Complete the previous module with your teacher to unlock.",
+        "signedOff": "Signed off",
+        "sections": {
+          "subjects": "What You Learn",
+          "mandatoryLearning": "Mandatory Learning",
+          "practice": "Practice",
+          "assessment": "Assessment"
+        }
+      },
       "dashboard": "طالب علم ڈیش بورڈ",
       "dashboardDesc": "خوش آمدید، {name} — اسی طرح محنت جاری رکھیں!",
       "courses": "میرے کورسز",

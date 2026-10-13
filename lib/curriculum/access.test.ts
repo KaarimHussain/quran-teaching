@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeModuleAccess, type AccessModule } from "./access";
+import { computeModuleAccess, isModuleOpen, type AccessModule } from "./access";
 
 const mod = (id: string, levelNumber: number | null, moduleOrder: number, isGated = true): AccessModule => ({
   id,
@@ -45,5 +45,23 @@ describe("computeModuleAccess", () => {
 
   it("empty path returns empty map", () => {
     expect(computeModuleAccess([], new Set()).size).toBe(0);
+  });
+});
+
+describe("isModuleOpen", () => {
+  const path = [mod("m1", 1, 0), mod("m2", 1, 1)];
+
+  it("rejects a locked module", () => {
+    expect(isModuleOpen("m2", path, new Set())).toBe(false);
+  });
+
+  it("allows unlocked and completed modules", () => {
+    expect(isModuleOpen("m1", path, new Set())).toBe(true);
+    expect(isModuleOpen("m2", path, new Set(["m1"]))).toBe(true);
+    expect(isModuleOpen("m1", path, new Set(["m1"]))).toBe(true);
+  });
+
+  it("treats a module missing from the list as open (legacy/unknown)", () => {
+    expect(isModuleOpen("other", path, new Set())).toBe(true);
   });
 });
