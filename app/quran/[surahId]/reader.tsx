@@ -1075,7 +1075,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
             <div className="absolute bottom-3 right-3 size-4 border-b-2 border-r-2 border-amber-700/60 dark:border-amber-400/60 pointer-events-none" />
 
             {/* Center Satin Ribbon Bookmark Accent */}
-            <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-3.5 h-16 bg-linear-to-b from-amber-600 via-amber-700 to-amber-800 shadow-md rounded-b-xs z-30 pointer-events-none border-x border-amber-900/30">
+            <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-3.5 h-16 bg-linear-to-b from-amber-600 via-amber-700 to-amber-800 shadow-md rounded-b-xs z-20 pointer-events-none border-x border-amber-900/30">
               <div className="w-full h-1 bg-amber-400/60 mt-1" />
             </div>
 
