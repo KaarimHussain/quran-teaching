@@ -15,6 +15,7 @@ import { requireCurrentUser } from "@/lib/dal";
 import { roleLabel } from "@/lib/roles";
 import { computeModuleAccess, type ModuleState } from "@/lib/curriculum/access";
 import { STAGES } from "@/lib/curriculum/data";
+import { studentVisibleModulesWhere } from "@/lib/curriculum/visibility";
 import { ModuleSections } from "@/components/curriculum/module-sections";
 import { CompleteButton } from "./complete-button";
 
@@ -34,12 +35,7 @@ export default async function StudentLearnPage() {
   const [t, modules, completedRecords, signOffs] = await Promise.all([
     getTranslations("pages.student.learn"),
     prisma.courseModule.findMany({
-      where: {
-        OR: [
-          { isFree: true },
-          { course: { enrollments: { some: { studentUserId: user.id, status: "ACTIVE" } } } },
-        ],
-      },
+      where: studentVisibleModulesWhere(user.id),
       orderBy: [{ courseId: "asc" }, { moduleOrder: "asc" }],
       include: {
         course: { select: { name: true } },

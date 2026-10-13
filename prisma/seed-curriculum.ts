@@ -2,6 +2,7 @@ import "dotenv/config";
 import { prisma } from "@/lib/db";
 import { CURRICULUM, TRACK_COURSES } from "@/lib/curriculum/data";
 import { planSeed } from "@/lib/curriculum/seed-plan";
+import { CURRICULUM_MODULE_DEFAULTS } from "@/lib/curriculum/visibility";
 
 // Seeds the 22-level curriculum from lib/curriculum/data.ts. Create-only and
 // idempotent: existing courses, levels and modules are never updated, so it is
@@ -49,8 +50,7 @@ async function main() {
         code: module.code,
         title: module.title,
         moduleOrder,
-        isFree: true,
-        isGated: true,
+        ...CURRICULUM_MODULE_DEFAULTS,
         subjects: module.subjects,
         mandatoryLearning: module.mandatoryLearning,
         practice: module.practice,

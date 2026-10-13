@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireCurrentUser } from "@/lib/dal";
 import { isModuleOpen } from "@/lib/curriculum/access";
+import { studentVisibleModulesWhere } from "@/lib/curriculum/visibility";
 
 export async function markContentComplete(contentId: string) {
   const user = await requireCurrentUser();
@@ -19,7 +20,7 @@ export async function markContentComplete(contentId: string) {
   // been signed off by a teacher — enforce that here, not only in the UI.
   const [courseModules, signOffs] = await Promise.all([
     prisma.courseModule.findMany({
-      where: { courseId: content.module.courseId },
+      where: studentVisibleModulesWhere(user.id, content.module.courseId),
       select: { id: true, moduleOrder: true, isGated: true, level: { select: { number: true } } },
     }),
     prisma.moduleSignOff.findMany({
@@ -27,6 +28,7 @@ export async function markContentComplete(contentId: string) {
       select: { moduleId: true },
     }),
   ]);
+  if (!courseModules.some((m) => m.id === content.module.id)) throw new Error("Forbidden");
   const open = isModuleOpen(
     content.module.id,
     courseModules.map((m) => ({
