@@ -4,7 +4,8 @@ import { prisma } from "@/lib/db";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, language } = body;
+    const { language } = body;
+    const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : body.email;
 
     if (typeof email !== "string" || !email.includes("@")) {
       return NextResponse.json({ error: "Invalid email address." }, { status: 400 });

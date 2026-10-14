@@ -44,3 +44,6 @@ next-env.d.ts
 
 # PGlite embedded database files
 /prisma/pglite-data
+
+# local agent scratch space (may contain backups of secrets)
+.superpowers/

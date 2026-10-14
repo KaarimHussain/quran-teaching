@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import { SURAHS, fetchSurahVerses } from "@/lib/quran";
 import { QuranReader } from "./reader";
 
@@ -25,13 +26,16 @@ export default async function SurahPage({ params }: Props) {
   const surah = SURAHS.find((s) => s.id === id);
   if (!surah) notFound();
 
-  const verses = await fetchSurahVerses(id);
+  const [verses, cookieStore] = await Promise.all([fetchSurahVerses(id), cookies()]);
+  const raw = cookieStore.get("locale")?.value;
+  const language = raw === "UR" || raw === "AR" ? raw : "EN";
 
   return (
     <QuranReader
       surah={surah}
       verses={verses}
       allSurahs={SURAHS}
+      language={language}
     />
   );
 }

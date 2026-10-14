@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
 // ---------------------------------------------------------------------------
@@ -645,7 +645,7 @@ model BlogPost {
   id            String    @id @default(uuid()) @db.VarChar(36)
   title         String
   slug          String    @unique
-  body          String    @db.LongText
+  body          String    @db.Text
   excerpt       String?   @db.Text
   coverImageUrl String?   @db.Text
   language      Language  @default(EN)
@@ -825,7 +825,7 @@ model ModuleContent {
   contentOrder Int         @default(0)
   title        String
   contentType  ContentType @default(TEXT)
-  body         String?     @db.LongText
+  body         String?     @db.Text
   videoUrl     String?     @db.Text
   durationMins Int?
 

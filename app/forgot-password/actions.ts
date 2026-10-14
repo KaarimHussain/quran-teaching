@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db";
 import { sendPasswordResetEmail } from "@/lib/mailer";
 
 const Schema = z.object({
-  email: z.string().trim().email("Please enter a valid email address."),
+  email: z.string().trim().toLowerCase().email("Please enter a valid email address."),
 });
 
 export type ForgotState =

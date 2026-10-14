@@ -1,26 +1,18 @@
 import "dotenv/config";
 import { PrismaClient } from "@/lib/generated/prisma/client";
-import { PrismaMariaDb } from "@prisma/adapter-mariadb";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
 };
 
 function createPrisma() {
-  const url = new URL(process.env.DATABASE_URL!);
-  const wantsSsl =
-    url.searchParams.get("ssl") === "true" || url.searchParams.has("ssl-mode");
-  const adapter = new PrismaMariaDb({
-    host: url.hostname,
-    port: Number(url.port || 3306),
-    user: decodeURIComponent(url.username),
-    password: decodeURIComponent(url.password),
-    database: decodeURIComponent(url.pathname.replace(/^\//, "")),
-    // Fail fast when the database is unreachable (e.g. the Aiven service is
-    // powered off) so pages show the error page in ~4s instead of hanging 10s+.
-    connectTimeout: 4000,
-    acquireTimeout: 4000,
-    ...(wantsSsl ? { ssl: { rejectUnauthorized: false } } : {}),
+  const adapter = new PrismaPg({
+    // TLS is taken from the URL itself (e.g. `?sslmode=require` for Prisma Postgres).
+    connectionString: process.env.DATABASE_URL!,
+    // Fail fast when the database is unreachable so pages show the error page
+    // in ~4s instead of hanging.
+    connectionTimeoutMillis: 4000,
   });
   return new PrismaClient({ adapter });
 }

@@ -98,9 +98,9 @@ export function StoreClient({ items }: StoreClientProps) {
   const t = useTranslations("pages.publicStore");
 
   // Robust safe translation helper with instant English fallbacks to prevent raw key leaks
-  const tr = (key: string, fallback: string) => {
+  const tr = (key: string, fallback: string, values?: Record<string, string | number>) => {
     try {
-      const res = t(key as any);
+      const res = t(key as any, values as any);
       if (!res || typeof res !== "string" || res.startsWith("pages.publicStore") || res.startsWith("PAGES.")) {
         return fallback;
       }
@@ -370,10 +370,10 @@ export function StoreClient({ items }: StoreClientProps) {
         <div className="mb-4">
           <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             {hasActiveFilters
-              ? tr("status.showingFiltered", `Showing ${filteredItems.length} matching item(s)`).replace("{count}", String(filteredItems.length))
+              ? tr("status.showingFiltered", `Showing ${filteredItems.length} matching item(s)`, { count: filteredItems.length })
               : filteredItems.length === 1
-                ? tr("status.itemCount", "1 item available").replace("{count}", "1")
-                : tr("status.itemCountPlural", `${filteredItems.length} items available`).replace("{count}", String(filteredItems.length))}
+                ? tr("status.itemCount", "1 item available", { count: 1 })
+                : tr("status.itemCountPlural", `${filteredItems.length} items available`, { count: filteredItems.length })}
           </p>
         </div>
 
@@ -715,7 +715,7 @@ export function StoreClient({ items }: StoreClientProps) {
                 {activeItem.modules && activeItem.modules.length > 0 && (
                   <div className="space-y-2">
                     <h4 className="font-heading text-xs font-bold text-foreground">
-                      {tr("modal.modulesCount", `Included Modules (${activeItem.modules.length})`).replace("{count}", String(activeItem.modules.length))}
+                      {tr("modal.modulesCount", `Included Modules (${activeItem.modules.length})`, { count: activeItem.modules.length })}
                     </h4>
                     <div className="max-h-36 overflow-y-auto rounded-lg border border-border/80 divide-y divide-border/60 bg-card">
                       {activeItem.modules.map((m, idx) => (

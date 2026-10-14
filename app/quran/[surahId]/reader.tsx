@@ -19,12 +19,15 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 type Props = {
   surah: Surah;
   verses: QuranVerse[];
   allSurahs: Surah[];
+  language: "EN" | "UR" | "AR";
 };
 
 type AudioMode = "continuous" | "word-by-word" | "none";
@@ -147,8 +150,9 @@ function toArabicDigits(num: number): string {
 
 const VERSES_PER_PAGE = 6;
 
-export function QuranReader({ surah, verses, allSurahs }: Props) {
+export function QuranReader({ surah, verses, allSurahs, language }: Props) {
   const router = useRouter();
+  const t = useTranslations("quranReader");
 
   const [state, dispatch] = useReducer(readerReducer, {
     currentPage: 1,
@@ -157,7 +161,8 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
     verseProgress: 0,
     tajweedMode: false,
     showTranslation: true,
-    translationLang: "en",
+    // Start the Tarjuma in the visitor's site language; the pills still switch it.
+    translationLang: language === "UR" ? "ur" : language === "AR" ? "ar" : "en",
     viewFormat: "mushaf",
     pageDirection: "none",
     playingVerseKey: null,
@@ -451,7 +456,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
               ? "border-primary bg-primary text-primary-foreground shadow-md scale-110 animate-pulse"
               : "border-amber-700/40 bg-amber-100/60 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 hover:border-primary hover:bg-primary/20"
           }`}
-          title={`Verse ${verse.verseNumber} - Click to play audio`}
+          title={t("verseTitle", { number: verse.verseNumber })}
         >
           {/* Inner Dashed Ring */}
           <span className="absolute inset-0.5 rounded-full border border-dashed border-amber-700/30 pointer-events-none" />
@@ -467,7 +472,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
                 toggleVerseAudio(verse, "continuous");
               }}
               className="p-1 hover:bg-muted rounded-full text-primary transition-colors"
-              title="Continuous Recitation"
+              title={t("continuousRecitation")}
             >
               <Volume2 className="size-3.5" />
             </button>
@@ -477,7 +482,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
                 toggleVerseAudio(verse, "word-by-word");
               }}
               className="p-1 hover:bg-muted rounded-full text-secondary-foreground transition-colors"
-              title="Word Sync Mode"
+              title={t("wordSyncMode")}
             >
               <AudioWaveform className="size-3.5" />
             </button>
@@ -621,14 +626,14 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
               size="sm"
               className="h-8 rounded-full gap-1 px-2.5 text-[11px] font-medium"
               onClick={() => toggleVerseAudio(verse, "continuous")}
-              title="Play Continuous Recitation (Alafasy)"
+              title={t("verseContinuous")}
             >
               {isPlayingThisVerse && state.audioMode === "continuous" ? (
                 <VolumeX className="size-3.5 text-primary-foreground animate-pulse" />
               ) : (
                 <Volume2 className="size-3.5 text-muted-foreground" />
               )}
-              <span>Recitation</span>
+              <span>{t("recitation")}</span>
             </Button>
 
             <Button
@@ -640,7 +645,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
               size="sm"
               className="h-8 rounded-full gap-1 px-2.5 text-[11px] font-medium"
               onClick={() => toggleVerseAudio(verse, "word-by-word")}
-              title="Play Word Sync Mode (100% Exact Character Highlight)"
+              title={t("verseWordSync")}
             >
               <AudioWaveform
                 className={`size-3.5 ${
@@ -649,7 +654,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
                     : "text-secondary-foreground"
                 }`}
               />
-              <span>Word Sync</span>
+              <span>{t("wordSync")}</span>
             </Button>
           </div>
         </div>
@@ -803,20 +808,18 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
           size="lg"
           className="rounded-full shadow-2xl gap-2.5 px-5 py-6 bg-primary text-primary-foreground hover:scale-105 transition-all border-2 border-primary-foreground/20"
           title={
-            state.viewFormat === "mushaf"
-              ? "Switch to Card View"
-              : "Switch to 2-Page Mushaf Book View"
+            state.viewFormat === "mushaf" ? t("switchToCard") : t("switchToBook")
           }
         >
           {state.viewFormat === "mushaf" ? (
             <>
               <LayoutGrid className="size-5" />
-              <span className="font-semibold text-sm">Card View</span>
+              <span className="font-semibold text-sm">{t("cardView")}</span>
             </>
           ) : (
             <>
               <BookOpen className="size-5" />
-              <span className="font-semibold text-sm">2-Page Book View</span>
+              <span className="font-semibold text-sm">{t("bookView")}</span>
             </>
           )}
         </Button>
@@ -832,8 +835,8 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
               variant="ghost"
               size="icon"
               className="rounded-full"
-              aria-label="Back to Dashboard"
-              title="Back to Dashboard"
+              aria-label={t("backToDashboard")}
+              title={t("backToDashboard")}
             >
               <Link href="/student" onClick={stopAudio}>
                 <ArrowLeft className="size-5" />
@@ -844,7 +847,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
                 <BookOpen className="size-4" />
               </span>
               <span className="font-heading text-base sm:text-lg font-bold text-primary tracking-wide">
-                Quran Reader
+                {t("title")}
               </span>
             </div>
           </div>
@@ -860,7 +863,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
               {surah.nameArabic}
             </span>
             <span className="text-xs text-muted-foreground font-medium">
-              Surah {surah.id} &middot; {surah.nameSimple} ({surah.nameTranslated})
+              {t("surahLine", { id: surah.id, name: surah.nameSimple, meaning: surah.nameTranslated })}
             </span>
           </div>
 
@@ -885,13 +888,14 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
               size="sm"
               onClick={() => dispatch({ type: "TOGGLE_TAJWEED" })}
               className="rounded-full gap-1.5 px-3 text-xs font-semibold"
-              title={state.tajweedMode ? "Disable Tajweed rules" : "Enable Tajweed rules"}
+              title={state.tajweedMode ? t("disableTajweed") : t("enableTajweed")}
             >
               <Palette className="size-3.5" />
-              <span className="hidden sm:inline">Tajweed</span>
+              <span className="hidden sm:inline">{t("tajweed")}</span>
             </Button>
 
-            {/* Theme Toggle */}
+            {/* Language + Theme */}
+            <LanguageSwitcher current={language} />
             <ThemeToggle />
           </div>
         </div>
@@ -900,12 +904,12 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
         {state.tajweedMode && (
           <div className="border-t border-border bg-muted/60 px-4 py-2 text-xs">
             <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-4 gap-y-1 text-muted-foreground font-medium">
-              <span className="text-[#f59e0b]">&#9679; Qalqalah</span>
-              <span className="text-[#22c55e]">&#9679; Ghunnah / Idgham</span>
-              <span className="text-[#14b8a6]">&#9679; Ikhfa</span>
-              <span className="text-[#f43f5e]">&#9679; Iqlab</span>
-              <span className="text-[#3b82f6]">&#9679; Madd</span>
-              <span className="text-[#9ca3af]">&#9679; Silent / Wasl</span>
+              <span className="text-[#f59e0b]">&#9679; {t("legendQalqalah")}</span>
+              <span className="text-[#22c55e]">&#9679; {t("legendGhunnah")}</span>
+              <span className="text-[#14b8a6]">&#9679; {t("legendIkhfa")}</span>
+              <span className="text-[#f43f5e]">&#9679; {t("legendIqlab")}</span>
+              <span className="text-[#3b82f6]">&#9679; {t("legendMadd")}</span>
+              <span className="text-[#9ca3af]">&#9679; {t("legendSilent")}</span>
             </div>
           </div>
         )}
@@ -916,7 +920,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
         {/* Surah Header Block */}
         <div className="mb-1 sm:mb-2 text-center flex flex-col items-center gap-1.5">
           <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
-            Surah {surah.id} of 114 &middot; {surah.versesCount} Verses
+            {t("surahMeta", { id: surah.id, count: surah.versesCount })}
           </span>
           <h1
             className="font-heading text-3xl sm:text-4xl text-primary font-bold mt-0.5"
@@ -941,17 +945,17 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
               size="sm"
               onClick={() => toggleFullSurahAudio("continuous")}
               className="rounded-full gap-2 px-3.5 h-8 font-semibold text-xs shadow-xs"
-              title="Play continuous Tajweed recitation (Alafasy)"
+              title={t("continuousTitle")}
             >
               {state.isPlayingFullSurah && state.audioMode === "continuous" ? (
                 <>
                   <Pause className="size-3.5 fill-current animate-pulse" />
-                  <span>Pause Recitation</span>
+                  <span>{t("pauseRecitation")}</span>
                 </>
               ) : (
                 <>
                   <Play className="size-3.5 fill-current text-primary" />
-                  <span>Continuous Recitation</span>
+                  <span>{t("continuousRecitation")}</span>
                 </>
               )}
             </Button>
@@ -966,17 +970,17 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
               size="sm"
               onClick={() => toggleFullSurahAudio("word-by-word")}
               className="rounded-full gap-2 px-3.5 h-8 font-semibold text-xs shadow-xs border-primary/30"
-              title="Play word-by-word recitation with 100% exact character highlighting"
+              title={t("wordSyncTitle")}
             >
               {state.isPlayingFullSurah && state.audioMode === "word-by-word" ? (
                 <>
                   <Pause className="size-3.5 fill-current animate-pulse" />
-                  <span>Pause Word Sync</span>
+                  <span>{t("pauseWordSync")}</span>
                 </>
               ) : (
                 <>
                   <AudioWaveform className="size-3.5 text-primary" />
-                  <span>Word Sync Mode</span>
+                  <span>{t("wordSyncMode")}</span>
                 </>
               )}
             </Button>
@@ -988,13 +992,11 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
               onClick={() => dispatch({ type: "TOGGLE_TRANSLATION" })}
               className="rounded-full gap-1.5 px-3 h-8 text-xs font-medium"
               title={
-                state.showTranslation
-                  ? "Hide Translation (Tarjuma)"
-                  : "Show Translation (Tarjuma)"
+                state.showTranslation ? t("hideTranslationTitle") : t("showTranslationTitle")
               }
             >
               <Languages className="size-3.5" />
-              <span>{state.showTranslation ? "Hide Tarjuma" : "Show Tarjuma"}</span>
+              <span>{state.showTranslation ? t("hideTarjuma") : t("showTarjuma")}</span>
             </Button>
 
             {/* 3-Language Selector Pills: English, Urdu, Arabic */}
@@ -1007,7 +1009,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
-                  title="English Translation"
+                  title={t("englishTranslation")}
                 >
                   English
                 </button>
@@ -1018,7 +1020,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
-                  title="Urdu Translation"
+                  title={t("urduTranslation")}
                 >
                   اردو
                 </button>
@@ -1029,7 +1031,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
-                  title="Arabic Tafseer / Explanation"
+                  title={t("arabicTafseer")}
                 >
                   العربية
                 </button>
@@ -1041,8 +1043,8 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
           <div className="mt-1 text-center">
             <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-primary/10 text-primary font-bold text-xs border border-primary/20 shadow-2xs">
               {state.viewFormat === "mushaf"
-                ? `Spread ${state.currentPage} of ${totalPages}`
-                : `Page ${state.currentPage} of ${totalPages}`}
+                ? t("spreadOf", { current: state.currentPage, total: totalPages })
+                : t("pageOf", { current: state.currentPage, total: totalPages })}
             </span>
           </div>
 
@@ -1075,7 +1077,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
             <div className="absolute bottom-3 right-3 size-4 border-b-2 border-r-2 border-amber-700/60 dark:border-amber-400/60 pointer-events-none" />
 
             {/* Center Satin Ribbon Bookmark Accent */}
-            <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-3.5 h-16 bg-linear-to-b from-amber-600 via-amber-700 to-amber-800 shadow-md rounded-b-xs z-30 pointer-events-none border-x border-amber-900/30">
+            <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-3.5 h-16 bg-linear-to-b from-amber-600 via-amber-700 to-amber-800 shadow-md rounded-b-xs z-20 pointer-events-none border-x border-amber-900/30">
               <div className="w-full h-1 bg-amber-400/60 mt-1" />
             </div>
 
@@ -1123,7 +1125,7 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
                     renderMushafPageText(leftPageVerses)
                   ) : (
                     <div className="h-full min-h-40 flex items-center justify-center text-muted-foreground/50 text-xs italic font-serif">
-                      End of Surah
+                      {t("endOfSurah")}
                     </div>
                   )}
                 </div>
@@ -1178,10 +1180,10 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
               >
                 <ChevronLeft className="size-4" />
                 {state.currentPage > 1
-                  ? "Previous Spread"
+                  ? t("previousSpread")
                   : prevSurah
-                  ? `Previous Surah (${prevSurah.nameSimple})`
-                  : "Previous"}
+                  ? t("previousSurah", { name: prevSurah.nameSimple })
+                  : t("previous")}
               </Button>
 
               <Button
@@ -1191,10 +1193,10 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
                 className="min-h-10 rounded-xl gap-2 font-medium px-4 text-xs bg-background/80 hover:bg-muted"
               >
                 {state.currentPage < totalPages
-                  ? "Next Spread"
+                  ? t("nextSpread")
                   : nextSurah
-                  ? `Next Surah (${nextSurah.nameSimple})`
-                  : "Next"}
+                  ? t("nextSurah", { name: nextSurah.nameSimple })
+                  : t("next")}
                 <ChevronRight className="size-4" />
               </Button>
             </div>
@@ -1225,10 +1227,10 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
               >
                 <ChevronLeft className="size-4" />
                 {state.currentPage > 1
-                  ? "Previous Page"
+                  ? t("previousPage")
                   : prevSurah
-                  ? `Previous Surah (${prevSurah.nameSimple})`
-                  : "Previous"}
+                  ? t("previousSurah", { name: prevSurah.nameSimple })
+                  : t("previous")}
               </Button>
 
               <Button
@@ -1238,10 +1240,10 @@ export function QuranReader({ surah, verses, allSurahs }: Props) {
                 className="min-h-11 rounded-xl gap-2 font-medium px-5"
               >
                 {state.currentPage < totalPages
-                  ? "Next Page"
+                  ? t("nextPage")
                   : nextSurah
-                  ? `Next Surah (${nextSurah.nameSimple})`
-                  : "Next"}
+                  ? t("nextSurah", { name: nextSurah.nameSimple })
+                  : t("next")}
                 <ChevronRight className="size-4" />
               </Button>
             </div>
