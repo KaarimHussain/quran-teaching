@@ -52,8 +52,8 @@ export default async function AdminUsersPage({
       where: query
         ? {
             OR: [
-              { name: { contains: query } },
-              { email: { contains: query } },
+              { name: { contains: query, mode: "insensitive" } },
+              { email: { contains: query, mode: "insensitive" } },
             ],
           }
         : undefined,

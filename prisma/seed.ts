@@ -7,7 +7,7 @@ async function main() {
   // This seed only ensures the Super Admin account exists so the app is usable.
   // All other data (teachers, students, courses, etc.) is created through the UI.
 
-  const email = process.env.ADMIN_EMAIL;
+  const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
   const password = process.env.ADMIN_PASSWORD;
 
   if (!email || !password) {
